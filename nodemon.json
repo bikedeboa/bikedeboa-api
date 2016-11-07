@@ -1,0 +1,13 @@
+{
+	"restartable": "rs",
+	"ignore": [
+		".git",
+		"*.md",
+		"coverage",
+		"node_modules/*",
+		"public/",
+		"src/*"
+	],
+	"verbose": true,
+	"ext": "js html"
+}

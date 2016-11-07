@@ -1,0 +1,10 @@
+{
+  "postgres" : {
+    "username": "bikedeboa",
+      "password": "bikedeboa2016",
+      "server": "bikedeboa.postgresql.dbaas.com.br",
+      "database": "bikedeboa",
+      "dialect": "postgres"
+  },
+  "jwtTokenSecret": "01bike"
+}
