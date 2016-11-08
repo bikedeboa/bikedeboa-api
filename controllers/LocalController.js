@@ -100,7 +100,7 @@ LocalController.prototype.create = function(request, response, next) {
                         structureType: body.structureType,
                         isPublic: body.isPublic === 'true' ? 1 : 0,
                         text: body.text,
-                        photo: baseUrl + image
+                        photo: image
                     })
                     .then(function(local){
                         return local.setTags(tagsResponse).then(function(){
