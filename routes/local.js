@@ -12,5 +12,6 @@ router.get('/:_id', LocalController.getById.bind(LocalController));
 router.post('/', LocalController.create.bind(LocalController));
 router.put('/:_id', LocalController.update.bind(LocalController));
 router.delete('/:_id', LocalController.remove.bind(LocalController));
+router.delete('/', LocalController.removeAll.bind(LocalController));
 
 module.exports = router;
