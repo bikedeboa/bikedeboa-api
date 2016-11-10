@@ -34,7 +34,8 @@ LocalController.prototype.getAll = function(request, response, next) {
                 models.sequelize.literal('(SELECT COUNT(*) FROM "Checkin" WHERE "Checkin"."local_id" = "Local"."id")'),
                 'checkins'
             ]
-        ])
+        ]),
+        include: [models.Tag]
     };
 
     this.model.findAll(query)
@@ -130,8 +131,6 @@ LocalController.prototype.create = function(request, response, next) {
             
         })
         .catch(next);
-
-    
 };
 
 LocalController.prototype.update = function(request, response, next) {
