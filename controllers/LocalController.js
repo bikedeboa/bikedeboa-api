@@ -82,34 +82,52 @@ LocalController.prototype.create = function(request, response, next) {
     promiseTags()
         .then(function(tagsResponse){
             // image
-            var type = body.photo.split(',')[0] === 'data:image/png;base64' ? '.png' : body.photo.split(',')[0] === 'data:image/jpeg;base64' ? '.jpeg' : '',
+            if (body.photo) {
+                var type = body.photo.split(',')[0] === 'data:image/png;base64' ? '.png' : body.photo.split(',')[0] === 'data:image/jpeg;base64' ? '.jpeg' : '',
                 base64Data  =   type === '.png' ? body.photo.replace(/^data:image\/png;base64,/, "") : body.photo.replace(/^data:image\/jpeg;base64,/, "");
                 base64Data  +=  base64Data.replace('+', ' ');
                 binaryData  =   new Buffer(base64Data, 'base64').toString('binary');
 
-            var path = "images/";
-            var image = path + Date.now() + type;
+                var path = "images/";
+                var image = path + Date.now() + type;
 
-            fs.writeFile(image, binaryData, "binary", function (err) {
-                if (err) {
-                    response.json(err);
-                } else {
-                    self.model.create({
-                        lat: body.lat,
-                        lng: body.lng,
-                        structureType: body.structureType,
-                        isPublic: body.isPublic === 'true' ? 1 : 0,
-                        text: body.text,
-                        photo: image
-                    })
-                    .then(function(local){
-                        return local.setTags(tagsResponse).then(function(){
-                            response.json(local);
-                        });
-                    })
-                    .catch(next);
-                }
-            });
+                fs.writeFile(image, binaryData, "binary", function (err) {
+                    if (err) {
+                        response.json(err);
+                    } else {
+                        self.model.create({
+                            lat: body.lat,
+                            lng: body.lng,
+                            structureType: body.structureType,
+                            isPublic: body.isPublic === 'true' ? 1 : 0,
+                            text: body.text,
+                            photo: image
+                        })
+                        .then(function(local){
+                            return local.setTags(tagsResponse).then(function(){
+                                response.json(local);
+                            });
+                        })
+                        .catch(next);
+                    }
+                });
+            } else {
+                self.model.create({
+                    lat: body.lat,
+                    lng: body.lng,
+                    structureType: body.structureType,
+                    isPublic: body.isPublic === 'true' ? 1 : 0,
+                    text: body.text,
+                    photo: ''
+                })
+                .then(function(local){
+                    return local.setTags(tagsResponse).then(function(){
+                        response.json(local);
+                    });
+                })
+                .catch(next);
+            }
+            
         })
         .catch(next);
 
