@@ -19,7 +19,6 @@ function LocalController(LocalModel) {
 }
 
 LocalController.prototype.getAll = function(request, response, next) {
-
     var query = {
         attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'photo'].concat([
             [
@@ -36,6 +35,18 @@ LocalController.prototype.getAll = function(request, response, next) {
             ]
         ]),
         include: [models.Tag]
+    };
+
+    this.model.findAll(query)
+    .then(function(data) {
+        response.json(data);
+    })
+    .catch(next);
+};
+
+LocalController.prototype.getAllLight = function(request, response, next) {
+    var query = {
+        attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'photo']
     };
 
     this.model.findAll(query)

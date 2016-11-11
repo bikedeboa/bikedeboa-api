@@ -16,6 +16,7 @@ module.exports = function(sequelize, DataTypes) {
             associate: function(models) {
                 // associations can be defined here
                 Tag.belongsToMany(models.Local, {through: 'Local_Tags', foreignKey: 'tag_id', otherKey: 'local_id', hooks: true});
+                Tag.belongsToMany(models.Review, {through: 'Review_Tags', foreignKey: 'tag_id', otherKey: 'review_id', hooks: true});
             }
         }
     });

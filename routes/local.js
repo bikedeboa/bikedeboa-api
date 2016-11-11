@@ -8,6 +8,7 @@ var AuthController = require('../controllers/AuthController')(models.User);
 router.use(AuthController.middlewareAuth);
 
 router.get('/', LocalController.getAll.bind(LocalController));
+router.get('/light', LocalController.getAllLight.bind(LocalController));
 router.get('/:_id', LocalController.getById.bind(LocalController));
 router.post('/', LocalController.create.bind(LocalController));
 router.put('/:_id', LocalController.update.bind(LocalController));
