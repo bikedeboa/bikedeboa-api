@@ -59,7 +59,7 @@ LocalController.prototype.getAllLight = function(request, response, next) {
 LocalController.prototype.getById = function(request, response, next) {
     var query = {
         where: {id : request.params._id},
-        include: [models.Tag, models.Review, models.Checkin]
+        include: [{model: models.Tag},{model: models.Review, include: models.Tag},{model: models.Checkin}]
     };
 
   	this.model.find(query)
