@@ -78,7 +78,8 @@ ReviewController.prototype.create = function(request, response, next) {
         .then(function(tagsResponse){
             self.model.create(review)
                 .then(function(review){
-                    return review.setTags(tagsResponse).then(function(){
+                    return review.setTags(tagsResponse)
+                            .then(function(){
                                 response.json(review);
                             });
                 })

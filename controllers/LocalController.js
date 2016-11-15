@@ -18,6 +18,35 @@ function LocalController(LocalModel) {
     this.model = LocalModel;
 }
 
+// ---------------- private functions ---------------- //
+
+function promiseContTags(local) { 
+    return new Promise(function(resolve, reject) {
+        
+        models.sequelize.query('SELECT t.name, COUNT(*) FROM "Tag" t inner join "Review_Tags" rt on T.id = rt.tag_id inner join "Review" r on r.id = rt.review_id inner join "Local" l on r.local_id = l.id WHERE l.id = '+local.id+' GROUP BY t.id')
+            .then(function(result, metatag) {
+                local.dataValues.tags = result[0];
+                resolve(local);
+            });
+    });    
+}
+
+function getLocalsAndTags(locals) {
+    return new Promise(function(resolve, reject) {
+        var promises = [];
+
+        locals.map(function(local){
+            promises.push(promiseContTags(local));
+        });
+
+        Promise.all(promises).then(function(resp){
+            resolve(resp);
+        })
+    });
+}
+
+// ---------------- private functions ---------------- //
+
 LocalController.prototype.getAll = function(request, response, next) {
     var query = {
         attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'photo'].concat([
@@ -33,15 +62,16 @@ LocalController.prototype.getAll = function(request, response, next) {
                 models.sequelize.literal('(SELECT COUNT(*) FROM "Checkin" WHERE "Checkin"."local_id" = "Local"."id")'),
                 'checkins'
             ]
-        ]),
-        include: [models.Tag]
+        ])
     };
 
     this.model.findAll(query)
-    .then(function(data) {
-        response.json(data);
-    })
-    .catch(next);
+        .then(function(locals) {    
+            return getLocalsAndTags(locals).then(function(resp){
+                response.json(resp);
+            });        
+        })
+        .catch(next);
 };
 
 LocalController.prototype.getAllLight = function(request, response, next) {
@@ -116,9 +146,10 @@ LocalController.prototype.create = function(request, response, next) {
                             photo: image
                         })
                         .then(function(local){
-                            return local.setTags(tagsResponse).then(function(){
-                                response.json(local);
-                            });
+                            return local.setTags(tagsResponse)
+                                    .then(function(){
+                                        response.json(local);
+                                    });
                         })
                         .catch(next);
                     }

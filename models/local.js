@@ -36,6 +36,8 @@ module.exports = function(sequelize, DataTypes) {
                 Local.hasMany(models.Review, {foreignKey: 'local_id', onDelete: 'cascade', hooks: true});
                 Local.hasOne(models.Checkin, {foreignKey: 'local_id', onDelete: 'cascade', hooks: true});
             }
+        },
+        instanceMethods: {
         }
     });
     return Local;
