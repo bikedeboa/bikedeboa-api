@@ -20,15 +20,15 @@ function LocalController(LocalModel) {
 
 // ---------------- private functions ---------------- //
 
-function promiseContTags(local) { 
+function promiseContTags(local) {
     return new Promise(function(resolve, reject) {
-        
+
         models.sequelize.query('SELECT t.name, COUNT(*) FROM "Tag" t inner join "Review_Tags" rt on T.id = rt.tag_id inner join "Review" r on r.id = rt.review_id inner join "Local" l on r.local_id = l.id WHERE l.id = '+local.id+' GROUP BY t.id')
             .then(function(result, metatag) {
                 local.dataValues.tags = result[0];
                 resolve(local);
             });
-    });    
+    });
 }
 
 function getLocalsAndTags(locals) {
@@ -62,14 +62,12 @@ LocalController.prototype.getAll = function(request, response, next) {
                 models.sequelize.literal('(SELECT COUNT(*) FROM "Checkin" WHERE "Checkin"."local_id" = "Local"."id")'),
                 'checkins'
             ]
-        ]) 
+        ])
     };
 
     this.model.findAll(query)
-        .then(function(locals) {    
-            return getLocalsAndTags(locals).then(function(resp){
-                response.json(resp);
-            });        
+        .then(function(locals) {
+            response.json(locals);
         })
         .catch(next);
 };
@@ -93,14 +91,26 @@ LocalController.prototype.getAllLight = function(request, response, next) {
 
 LocalController.prototype.getById = function(request, response, next) {
     var query = {
-        where: {id : request.params._id},
-        include: [{model: models.Tag},{model: models.Review, include: models.Tag},{model: models.Checkin}]
-    };
+      attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'photo'].concat([
+          [
+              models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
+              'reviews'
+          ],
+          [
+              models.sequelize.literal('(SELECT COUNT(*) FROM "Checkin" WHERE "Checkin"."local_id" = "Local"."id")'),
+              'checkins'
+          ]
+      ]),
+      where: {id : request.params._id}
+    }
 
   	this.model.find(query)
         .then(handleNotFound)
-        .then(function(data){
-            response.json(data);
+        .then(function(local){
+            return promiseContTags(local)
+              .then(function(resp){
+                response.json(resp);
+              });
         })
     .catch(next);
 };
@@ -111,8 +121,8 @@ LocalController.prototype.create = function(request, response, next) {
 
     var _tags = body.tags || [];
     var tagsReturn = [];
-    
-    function promiseTags() { 
+
+    function promiseTags() {
         return new Promise(function(resolve, reject) {
             var promises = [];
 
@@ -123,7 +133,7 @@ LocalController.prototype.create = function(request, response, next) {
             Promise.all(promises).then(function(tags) {
                 resolve(tags);
             });
-        });    
+        });
     }
 
     promiseTags()
@@ -175,7 +185,7 @@ LocalController.prototype.create = function(request, response, next) {
                 })
                 .catch(next);
             }
-            
+
         })
         .catch(next);
 };
