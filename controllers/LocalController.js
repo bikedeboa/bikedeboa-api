@@ -74,7 +74,7 @@ LocalController.prototype.getAll = function(request, response, next) {
 
 LocalController.prototype.getAllLight = function(request, response, next) {
     var query = {
-        attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text'].concat([
+        attributes: ['id', 'lat', 'lng'].concat([
             [
                 models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
                 'average'
@@ -156,7 +156,7 @@ LocalController.prototype.create = function(request, response, next) {
                             lat: body.lat,
                             lng: body.lng,
                             structureType: body.structureType,
-                            isPublic: body.isPublic === 'true' ? 1 : 0,
+                            isPublic: body.isPublic && (body.isPublic === 'true' ? 1 : 0),
                             text: body.text,
                             photo: image
                         })
@@ -174,8 +174,8 @@ LocalController.prototype.create = function(request, response, next) {
                     lat: body.lat,
                     lng: body.lng,
                     structureType: body.structureType,
-                    isPublic: body.isPublic === 'true' ? 1 : 0,
-                    text: body.text,
+                    isPublic: body.isPublic && (body.isPublic === 'true' ? 1 : 0),
+                    text: body.text, 
                     photo: ''
                 })
                 .then(function(local){
@@ -198,7 +198,7 @@ LocalController.prototype.update = function(request, response, next) {
         lat: body.lat,
         lng: body.lng,
         structureType: body.structureType,
-        isPublic: body.isPublic === 'true' ? 1 : 0,
+        isPublic: body.isPublic && (body.isPublic === 'true' ? 1 : 0),
         text: body.text,
         photo: body.photo
     };
