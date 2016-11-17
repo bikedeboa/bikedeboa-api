@@ -62,7 +62,7 @@ LocalController.prototype.getAll = function(request, response, next) {
                 models.sequelize.literal('(SELECT COUNT(*) FROM "Checkin" WHERE "Checkin"."local_id" = "Local"."id")'),
                 'checkins'
             ]
-        ])
+        ]) 
     };
 
     this.model.findAll(query)
@@ -76,7 +76,12 @@ LocalController.prototype.getAll = function(request, response, next) {
 
 LocalController.prototype.getAllLight = function(request, response, next) {
     var query = {
-        attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'photo']
+        attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text'].concat([
+            [
+                models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
+                'average'
+            ],
+        ])
     };
 
     this.model.findAll(query)
