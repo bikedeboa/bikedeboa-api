@@ -194,14 +194,13 @@ LocalController.prototype.update = function(request, response, next) {
     var _id  = request.params._id,
         body = request.body;
 
-    var _local = {
-        lat: body.lat,
-        lng: body.lng,
-        structureType: body.structureType,
-        isPublic: body.isPublic && (body.isPublic === 'true' ? 1 : 0),
-        text: body.text,
-        photo: body.photo
-    };
+    var _local = {};
+    if (body.lat) _local.lat = body.lat;
+    if (body.lng) _local.lng = body.lng;
+    if (body.structureType) _local.structureType = body.structureType;
+    if (body.isPublic) _local.isPublic = body.isPublic && (body.isPublic === 'true' ? 1 : 0);
+    if (body.text) _local.text = body.text;
+    if (body.photo) _local.photo = body.photo;
 
   	var query = {
         where: {id : _id}
