@@ -45,6 +45,45 @@ function getLocalsAndTags(locals) {
     });
 }
 
+function getTags(arrTagsId) {
+    return new Promise(function(resolve, reject) {
+        var promises = [];
+
+        arrTagsId.map(function(tag) {
+            promises.push(models.Tag.find({where: {id: tag.id}}));
+        });
+
+        Promise.all(promises).then(function(tags) {
+            resolve(tags);
+        });
+    });
+}
+
+function saveImage(photo) {
+    return new Promise(function(resolve, reject) {
+        // valid photo exists
+        if (!photo) resolve("");
+        // get base64 and type image for save
+        var type = photo.split(',')[0] === 'data:image/png;base64' ? '.png' : photo.split(',')[0] === 'data:image/jpeg;base64' ? '.jpeg' : '',
+        base64Data  =   type === '.png' ? photo.replace(/^data:image\/png;base64,/, "") : photo.replace(/^data:image\/jpeg;base64,/, "");
+        base64Data  +=  base64Data.replace('+', ' ');
+        binaryData  =   new Buffer(base64Data, 'base64').toString('binary');
+        // path image
+        var path = "images/";
+        var image = path + Date.now() + type;
+        // type invalid return
+        if (!type) resolve(photo);
+        // save image
+        fs.writeFile(image, binaryData, "binary", function (err) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(image);
+            }
+        });
+    });
+}
+
 // ---------------- private functions ---------------- //
 
 LocalController.prototype.getAll = function(request, response, next) {
@@ -122,77 +161,35 @@ LocalController.prototype.create = function(request, response, next) {
     var _tags = body.tags || [];
     var tagsReturn = [];
 
-    function promiseTags() {
-        return new Promise(function(resolve, reject) {
-            var promises = [];
-
-            _tags.map(function(tag) {
-                promises.push(models.Tag.find({where: {id: tag.id}}));
-            });
-
-            Promise.all(promises).then(function(tags) {
-                resolve(tags);
-            });
-        });
-    }
-
-    promiseTags()
+    getTags(_tags)
         .then(function(tagsResponse){
-            // image
-            if (body.photo) {
-                var type = body.photo.split(',')[0] === 'data:image/png;base64' ? '.png' : body.photo.split(',')[0] === 'data:image/jpeg;base64' ? '.jpeg' : '',
-                base64Data  =   type === '.png' ? body.photo.replace(/^data:image\/png;base64,/, "") : body.photo.replace(/^data:image\/jpeg;base64,/, "");
-                base64Data  +=  base64Data.replace('+', ' ');
-                binaryData  =   new Buffer(base64Data, 'base64').toString('binary');
-
-                var path = "images/";
-                var image = path + Date.now() + type;
-
-                fs.writeFile(image, binaryData, "binary", function (err) {
-                    if (err) {
-                        response.json(err);
-                    } else {
-                        self.model.create({
-                            lat: body.lat,
-                            lng: body.lng,
-                            structureType: body.structureType,
-                            isPublic: body.isPublic && (body.isPublic === 'true' ? 1 : 0),
-                            text: body.text,
-                            photo: image
-                        })
-                        .then(function(local){
-                            return local.setTags(tagsResponse)
-                                    .then(function(){
-                                        response.json(local);
-                                    });
-                        })
-                        .catch(next);
-                    }
-                });
-            } else {
-                self.model.create({
-                    lat: body.lat,
-                    lng: body.lng,
-                    structureType: body.structureType,
-                    isPublic: body.isPublic && (body.isPublic === 'true' ? 1 : 0),
-                    text: body.text, 
-                    photo: ''
-                })
-                .then(function(local){
-                    return local.setTags(tagsResponse).then(function(){
-                        response.json(local);
-                    });
+            saveImage(body.photo)
+                .then(function(urlImage){
+                    self.model.create({
+                        lat: body.lat,
+                        lng: body.lng,
+                        structureType: body.structureType,
+                        isPublic: body.isPublic && (body.isPublic === 'true' ? 1 : 0),
+                        text: body.text,
+                        photo: urlImage ? urlImage : ''
+                    })
+                    .then(function(local){
+                        return local.setTags(tagsResponse)
+                                .then(function(){
+                                    response.json(local);
+                                });
+                    })
+                    .catch(next);
                 })
                 .catch(next);
-            }
-
         })
         .catch(next);
 };
 
 LocalController.prototype.update = function(request, response, next) {
     var _id  = request.params._id,
-        body = request.body;
+        body = request.body,
+        self = this;
 
     var _local = {};
     if (body.lat) _local.lat = body.lat;
@@ -206,18 +203,23 @@ LocalController.prototype.update = function(request, response, next) {
         where: {id : _id}
     };
 
-    this.model.find(query)
-        .then(handleNotFound)
-        .then(function(data){
-            data.update(_local)
-                .then(function(local){
-                	response.json(local);
-                    return local;
+    saveImage(body.photo).
+        then(function(urlImage){
+            _local.photo = urlImage;
+            self.model.find(query)
+                .then(handleNotFound)
+                .then(function(data){
+                    data.update(_local)
+                        .then(function(local){
+                            response.json(local);
+                            return local;
+                        })
+                        .catch(next);
+                    return data;
                 })
-                .catch(next);
-            return data;
+            .catch(next);
         })
-    .catch(next);
+        .catch(next);
 };
 
 LocalController.prototype.remove = function(request, response, next) {
