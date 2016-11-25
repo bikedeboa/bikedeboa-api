@@ -5,11 +5,19 @@ var debug   = require('debug')('api:ctrlLocal'),
     baseUrl = path.join(__dirname, '../'),
     bluebird = require('bluebird');
 
+// Amazon S3 SDK
+var AWS = require('aws-sdk');
+var uuid = require('node-uuid');
+var s3 = new AWS.S3();
+
+var AWS_PATH_PREFIX = 'https://s3.amazonaws.com/bikedeboa/';
+
+
 var handleNotFound = function(data) {
     if(!data) {
         var err = new Error('Not Found');
         err.status = 404;
-        throw err;
+        throw err;3
     }
     return data;
 };
@@ -62,23 +70,38 @@ function getTags(arrTagsId) {
 function saveImage(photo) {
     return new Promise(function(resolve, reject) {
         // valid photo exists
-        if (!photo) resolve("");
+        if (!photo) reject('');
+
         // get base64 and type image for save
         var type = photo.split(',')[0] === 'data:image/png;base64' ? '.png' : photo.split(',')[0] === 'data:image/jpeg;base64' ? '.jpeg' : '',
         base64Data  =   type === '.png' ? photo.replace(/^data:image\/png;base64,/, "") : photo.replace(/^data:image\/jpeg;base64,/, "");
         base64Data  +=  base64Data.replace('+', ' ');
-        binaryData  =   new Buffer(base64Data, 'base64').toString('binary');
+        // binaryData  =   new Buffer(base64Data, 'base64').toString('binary');
+        binaryData  =   new Buffer(base64Data, 'base64');
+        
         // path image
         var path = "images/";
-        var image = path + Date.now() + type;
+        var imageName = path + Date.now() + type;
+        
         // type invalid return
-        if (!type) resolve(photo);
-        // save image
-        fs.writeFile(image, binaryData, "binary", function (err) {
+        if (!type) {
+            reject(photo);
+        }
+
+        // Send image blob to Amazon S3
+        s3.putObject(
+            {
+                Key: imageName,
+                Body: binaryData,
+                Bucket: 'bikedeboa',
+                ACL: 'public-read'
+            }, function(err, data){
             if (err) {
+                console.error('Error uploading image ', imageName); 
                 reject(err);
             } else {
-                resolve(image);
+                console.log('Succesfully uploaded the image', imageName);
+                resolve(AWS_PATH_PREFIX + imageName);
             }
         });
     });
@@ -164,14 +187,14 @@ LocalController.prototype.create = function(request, response, next) {
     getTags(_tags)
         .then(function(tagsResponse){
             saveImage(body.photo)
-                .then(function(urlImage){
+                .then(function(imageUrl){
                     self.model.create({
                         lat: body.lat,
                         lng: body.lng,
                         structureType: body.structureType,
                         isPublic: body.isPublic && (body.isPublic === 'true' ? 1 : 0),
                         text: body.text,
-                        photo: urlImage ? urlImage : ''
+                        photo: imageUrl
                     })
                     .then(function(local){
                         return local.setTags(tagsResponse)
@@ -204,8 +227,8 @@ LocalController.prototype.update = function(request, response, next) {
     };
 
     saveImage(body.photo).
-        then(function(urlImage){
-            _local.photo = urlImage;
+        then(function(imageUrl){
+            _local.photo = imageUrl;
             self.model.find(query)
                 .then(handleNotFound)
                 .then(function(data){
