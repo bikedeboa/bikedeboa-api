@@ -9,6 +9,7 @@ router.use(AuthController.middlewareAuth);
 
 router.get('/', ReviewController.getAll.bind(ReviewController));
 router.get('/:_id', ReviewController.getById.bind(ReviewController));
+router.delete('/:_id', ReviewController.remove.bind(ReviewController));
 router.post('/', ReviewController.create.bind(ReviewController));
 
 module.exports = router;
