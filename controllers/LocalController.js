@@ -1,23 +1,16 @@
 var debug   = require('debug')('api:ctrlLocal'),
     models  = require('../models'),
-    path    = require('path'),
-    fs      = require('fs'),
-    baseUrl = path.join(__dirname, '../'),
-    bluebird = require('bluebird');
-
-// Amazon S3 SDK
-var AWS = require('aws-sdk');
-var uuid = require('node-uuid');
-var s3 = new AWS.S3();
+    AWS     = require('aws-sdk'),
+    uuid    = require('node-uuid'),
+    s3      = new AWS.S3();
 
 var AWS_PATH_PREFIX = 'https://s3.amazonaws.com/bikedeboa/';
-
 
 var handleNotFound = function(data) {
     if(!data) {
         var err = new Error('Not Found');
         err.status = 404;
-        throw err;3
+        throw err;
     }
     return data;
 };
@@ -30,7 +23,6 @@ function LocalController(LocalModel) {
 
 function promiseContTags(local) {
     return new Promise(function(resolve, reject) {
-
         models.sequelize.query('SELECT t.name, COUNT(*) FROM "Tag" t inner join "Review_Tags" rt on T.id = rt.tag_id inner join "Review" r on r.id = rt.review_id inner join "Local" l on r.local_id = l.id WHERE l.id = '+local.id+' GROUP BY t.id')
             .then(function(result, metatag) {
                 local.dataValues.tags = result[0];
@@ -67,7 +59,7 @@ function getTags(arrTagsId) {
     });
 }
 
-function saveImage(photo) {
+function saveImage(photo, id) {
     return new Promise(function(resolve, reject) {
         // valid photo exists
         if (!photo) reject('');
@@ -78,11 +70,11 @@ function saveImage(photo) {
         base64Data  +=  base64Data.replace('+', ' ');
         // binaryData  =   new Buffer(base64Data, 'base64').toString('binary');
         binaryData  =   new Buffer(base64Data, 'base64');
-        
+
         // path image
         var path = "images/";
-        var imageName = path + Date.now() + type;
-        
+        var imageName = path + id + type;
+
         // type invalid return
         if (!type) {
             reject(photo);
@@ -96,14 +88,14 @@ function saveImage(photo) {
                 Bucket: 'bikedeboa',
                 ACL: 'public-read'
             }, function(err, data){
-            if (err) {
-                console.error('Error uploading image ', imageName); 
-                reject(err);
-            } else {
-                console.log('Succesfully uploaded the image', imageName);
-                resolve(AWS_PATH_PREFIX + imageName);
-            }
-        });
+                if (err) {
+                    debug('Error uploading image ', imageName);
+                    reject(err);
+                } else {
+                    debug('Succesfully uploaded the image', imageName);
+                    resolve(imageName);
+                }
+            });
     });
 }
 
@@ -178,35 +170,45 @@ LocalController.prototype.getById = function(request, response, next) {
 };
 
 LocalController.prototype.create = function(request, response, next) {
-  	var body = request.body,
-        self = this;
+  	var body = request.body;
 
-    var _tags = body.tags || [];
-    var tagsReturn = [];
+    var _tags  = body.tags || [];
+    var params = {
+      lat: body.lat,
+      lng: body.lng,
+      structureType: body.structureType,
+      isPublic: body.isPublic && (body.isPublic === 'true' ? 1 : 0),
+      text: body.text,
+      photo: ''
+    };
 
-    getTags(_tags)
-        .then(function(tagsResponse){
-            saveImage(body.photo)
-                .then(function(imageUrl){
-                    self.model.create({
-                        lat: body.lat,
-                        lng: body.lng,
-                        structureType: body.structureType,
-                        isPublic: body.isPublic && (body.isPublic === 'true' ? 1 : 0),
-                        text: body.text,
-                        photo: imageUrl
-                    })
-                    .then(function(local){
-                        return local.setTags(tagsResponse)
-                                .then(function(){
-                                    response.json(local);
-                                });
-                    })
-                    .catch(next);
-                })
-                .catch(next);
-        })
-        .catch(next);
+    // create local
+    this.model.create(params).then(handleGetTags).catch(next);
+
+    // get tags informed
+    function handleGetTags(local) {
+      return getTags(_tags).then(handleSetTags.bind(null, local)).catch(next);
+    }
+
+    // set tags local
+    function handleSetTags(local, tags) {
+      return local.setTags(tags).then(handleSaveImage.bind(null, local)).catch(next);
+    }
+
+    // save image local
+    function handleSaveImage(local) {
+      return saveImage(body.photo, local.id).then(handleUpdateUrlLocal.bind(null, local)).catch(next);
+    }
+
+    // update local new image url
+    function handleUpdateUrlLocal(local, url) {
+      return local.update({photo: url}).then(handleResponse).catch(next);
+    }
+
+    // return response
+    function handleResponse(local) {
+      response.json(local);
+    }
 };
 
 LocalController.prototype.update = function(request, response, next) {

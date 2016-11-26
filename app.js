@@ -1,9 +1,9 @@
-var express 		= require('express'),
-	methodOverride 	= require('method-override'),
-	bodyParser 		= require('body-parser'),
-	cors 			= require('cors'),
-	app 			= express(),
-	path    		= require('path');
+var express 		 = require('express'),
+	methodOverride = require('method-override'),
+	bodyParser 		 = require('body-parser'),
+	cors 					 = require('cors'),
+	app 					 = express(),
+	path 					 = require('path');
 
 // server config
 app.use(methodOverride('X-HTTP-Method'));
@@ -17,7 +17,6 @@ app.use(cors());
 
 // router
 app.use('/', require('./routes'));
-app.use("/images", express.static(path.join(__dirname, 'images')));
 
 // error handling
 app.use(function(request, response, next) {
