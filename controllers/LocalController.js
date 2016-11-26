@@ -6,6 +6,7 @@ var debug   = require('debug')('api:ctrlLocal'),
 
 var AWS_PATH_PREFIX = 'https://s3.amazonaws.com/bikedeboa/';
 
+
 var handleNotFound = function(data) {
     if(!data) {
         var err = new Error('Not Found');
@@ -62,7 +63,7 @@ function getTags(arrTagsId) {
 function saveImage(photo, id) {
     return new Promise(function(resolve, reject) {
         // valid photo exists
-        if (!photo) reject('');
+        if (!photo) resolve('');
 
         // get base64 and type image for save
         var type = photo.split(',')[0] === 'data:image/png;base64' ? '.png' : photo.split(',')[0] === 'data:image/jpeg;base64' ? '.jpeg' : '',
@@ -93,9 +94,41 @@ function saveImage(photo, id) {
                     reject(err);
                 } else {
                     debug('Succesfully uploaded the image', imageName);
-                    resolve(imageName);
+                    resolve(AWS_PATH_PREFIX + imageName);
                 }
             });
+    });
+}
+
+function deleteImage(id) {
+    return new Promise(function(resolve, reject) {
+        // path image
+        var path = "images/";
+        var imageName = path + id;
+        // params delete images
+        var params = {
+            Bucket: 'bikedeboa',
+            Delete: {
+                Objects: [
+                    {
+                      Key: imageName + '.jpeg'
+                    },
+                    {
+                      Key: imageName + '.png'
+                    }
+                ]
+            }
+        };
+        // delete imagens in s3
+        s3.deleteObjects(params, function(err, data) {
+            if (err){
+                debug(err, err.stack);
+                reject(err);
+            } else {
+                debug(data);
+                resolve(data);
+            }
+        });
     });
 }
 
@@ -137,10 +170,10 @@ LocalController.prototype.getAllLight = function(request, response, next) {
     };
 
     this.model.findAll(query)
-    .then(function(data) {
-        response.json(data);
-    })
-    .catch(next);
+        .then(function(data) {
+            response.json(data);
+        })
+        .catch(next);
 };
 
 LocalController.prototype.getById = function(request, response, next) {
@@ -187,22 +220,22 @@ LocalController.prototype.create = function(request, response, next) {
 
     // get tags informed
     function handleGetTags(local) {
-      return getTags(_tags).then(handleSetTags.bind(null, local)).catch(next);
+        return getTags(_tags).then(handleSetTags.bind(null, local)).catch(next);
     }
 
     // set tags local
     function handleSetTags(local, tags) {
-      return local.setTags(tags).then(handleSaveImage.bind(null, local)).catch(next);
+        return local.setTags(tags).then(handleSaveImage.bind(null, local)).catch(next);
     }
 
     // save image local
     function handleSaveImage(local) {
-      return saveImage(body.photo, local.id).then(handleUpdateUrlLocal.bind(null, local)).catch(next);
+        return saveImage(body.photo, local.id).then(handleUpdateUrlLocal.bind(null, local)).catch(next);
     }
 
     // update local new image url
     function handleUpdateUrlLocal(local, url) {
-      return local.update({photo: url}).then(handleResponse).catch(next);
+        return local.update({photo: url}).then(handleResponse).catch(next);
     }
 
     // return response
@@ -222,29 +255,52 @@ LocalController.prototype.update = function(request, response, next) {
     if (body.structureType) _local.structureType = body.structureType;
     if (body.isPublic) _local.isPublic = body.isPublic && (body.isPublic === 'true' ? 1 : 0);
     if (body.text) _local.text = body.text;
-    if (body.photo) _local.photo = body.photo;
 
   	var query = {
         where: {id : _id}
     };
 
-    saveImage(body.photo).
-        then(function(imageUrl){
-            _local.photo = imageUrl;
-            self.model.find(query)
-                .then(handleNotFound)
-                .then(function(data){
-                    data.update(_local)
-                        .then(function(local){
-                            response.json(local);
-                            return local;
-                        })
-                        .catch(next);
-                    return data;
-                })
-            .catch(next);
-        })
+    this.model.find(query)
+        .then(handleNotFound)
+        .then(handleUpdateLocal)
         .catch(next);
+
+    // update data local
+    function handleUpdateLocal(local) {
+        return local.update(_local).then(handleDeleteImage.bind(null, local)).catch(next);
+    }
+
+    // delete image local exists
+    function handleDeleteImage(local) {
+        if(body.photo){
+            return deleteImage(_id).then(handleSaveImage.bind(null, local)).catch(next);
+        } else {
+            handleSaveImage(local);
+        }
+    }
+
+    // save image local
+    function handleSaveImage(local) {
+        if (body.photo) {
+            return saveImage(body.photo, _id).then(handleUpdateUrlLocal.bind(null, local)).catch(next);
+        } else {
+            handleUpdateUrlLocal(local);
+        }
+    }
+
+    // update local new image url
+    function handleUpdateUrlLocal(local, url) {
+        if (url) {
+            return local.update({photo: url}).then(handleResponse.bind(null, local)).catch(next);
+        } else {
+            handleResponse(local);
+        }
+    }
+
+    // return response
+    function handleResponse(local) {
+        response.json(local);
+    }
 };
 
 LocalController.prototype.remove = function(request, response, next) {
@@ -255,15 +311,21 @@ LocalController.prototype.remove = function(request, response, next) {
     };
 
     this.model.destroy(query)
-        .then(handleNotFound)
-        .then(function(rowDeleted){
-            if(rowDeleted === 1){
-                response.json({
-                    message: 'Deleted successfully'
-                });
-            }
-        })
-        .catch(next);
+      .then(handleNotFound)
+      .then(handleDeleteImage.bind(null, _id))
+      .catch(next);
+
+    function handleDeleteImage(id, data) {
+        return deleteImage(id).then(handleResponse.bind(null, data)).catch(next);
+    }
+
+    function handleResponse(rowDeleted) {
+      if(rowDeleted){
+          response.json({
+              message: 'Deleted successfully'
+          });
+      }
+    }
 };
 
 LocalController.prototype.removeAll = function(request, response, next) {
