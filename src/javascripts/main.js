@@ -6,12 +6,12 @@
 
   $('.api-item-title').on('click', function(event) {
     var $apiItem = $(this).parent('.api-item').find('ul.endpoints');
-    $endpointsLists.not($apiItem).hide();
+    $endpointsLists.not($apiItem).hide("fast");
 
     if ($apiItem.is(':visible')) {
-      $apiItem.hide();
+      $apiItem.hide("fast");
     } else {
-      $apiItem.show();
+      $apiItem.show("fast");
     }
   });
 
