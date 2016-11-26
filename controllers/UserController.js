@@ -28,7 +28,8 @@ UserController.prototype.getAll = function(request, response, next) {
 
 UserController.prototype.getById = function(request, response, next) {
     var query = {
-        where: {id : request.params._id}
+        where: {id : request.params._id},
+        attributes: {exclude: ['password']}
     };
 
   	this.model.find(query)

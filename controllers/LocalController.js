@@ -6,7 +6,6 @@ var debug   = require('debug')('api:ctrlLocal'),
 
 var AWS_PATH_PREFIX = 'https://s3.amazonaws.com/bikedeboa/';
 
-
 var handleNotFound = function(data) {
     if(!data) {
         var err = new Error('Not Found');

@@ -25,9 +25,14 @@
     "node-uuid": "^1.4.7",
     "pg": "^6.1.0",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^3.24.7"
+    "sequelize": "^3.24.7",
+    "swig": "^1.4.2"
   },
   "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-uglify": "^2.0.0",
     "nodemon": "^1.11.0"
   }
 }

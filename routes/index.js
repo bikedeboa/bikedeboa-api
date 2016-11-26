@@ -18,5 +18,7 @@ router.use('/local', require('./local'));
 router.use('/checkin', require('./checkin'));
 // review
 router.use('/review', require('./review'));
+// docs
+router.use('/v1/doc', require('./doc'));
 
 module.exports = router;

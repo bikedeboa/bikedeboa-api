@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+<ul id="apis">
+  <li class="api-item">
+    <h2 class="api-item-title">Auth</h2>
+
+    <ul class="endpoints">
+    {% include 'auth/token.html' %}
+    </ul><!-- .endpoints -->
+  </li><!-- .api-item -->
+
+  <li class="api-item">
+    <h2 class="api-item-title">User CRUD</h2>
+
+    <ul class="endpoints">
+    {% include 'user/get.html' %}
+    {% include 'user/get_id.html' %}
+    {% include 'user/post.html' %}
+    {% include 'user/put.html' %}
+    {% include 'user/delete.html' %}
+    </ul><!-- .endpoints -->
+  </li><!-- .api-item -->
+
+</ul><!-- #apis -->
+
+{% endblock %}

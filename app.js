@@ -3,7 +3,8 @@ var express 		 = require('express'),
 	bodyParser 		 = require('body-parser'),
 	cors 					 = require('cors'),
 	app 					 = express(),
-	path 					 = require('path');
+	path 					 = require('path'),
+	swig					 = require('swig');
 
 // server config
 app.use(methodOverride('X-HTTP-Method'));
@@ -14,6 +15,14 @@ app.use(methodOverride('_method'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended : true, limit: '50mb' }));
 app.use(cors());
+
+// static
+app.use(express.static(path.join(__dirname, 'public')));
+
+// setup swig
+app.set('view engine', 'html');
+app.set('views', path.join(__dirname, 'views'));
+app.engine('html', swig.renderFile);
 
 // router
 app.use('/', require('./routes'));
