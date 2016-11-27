@@ -25,7 +25,13 @@ module.exports = function(sequelize, DataTypes) {
         },
         photo: {
             type: DataTypes.STRING
-        }
+        },
+        description: {
+            type: DataTypes.TEXT
+        },
+        address: {
+            type: DataTypes.TEXT
+        },
     }, {
         timestamps: true,
         freezeTableName: true,

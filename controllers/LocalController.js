@@ -135,7 +135,7 @@ function deleteImage(id) {
 
 LocalController.prototype.getAll = function(request, response, next) {
     var query = {
-        attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'photo'].concat([
+        attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'description', 'address', 'photo'].concat([
             [
                 models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
                 'reviews'
@@ -177,7 +177,7 @@ LocalController.prototype.getAllLight = function(request, response, next) {
 
 LocalController.prototype.getById = function(request, response, next) {
     var query = {
-      attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'photo'].concat([
+      attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'photo', 'description', 'address'].concat([
           [
               models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
               'reviews'
@@ -211,7 +211,9 @@ LocalController.prototype.create = function(request, response, next) {
       structureType: body.structureType,
       isPublic: body.isPublic && (body.isPublic === 'true' ? 1 : 0),
       text: body.text,
-      photo: ''
+      photo: '',
+      description: body.description,
+      address: body.address
     };
 
     // create local
@@ -254,6 +256,8 @@ LocalController.prototype.update = function(request, response, next) {
     if (body.structureType) _local.structureType = body.structureType;
     if (body.isPublic) _local.isPublic = body.isPublic && (body.isPublic === 'true' ? 1 : 0);
     if (body.text) _local.text = body.text;
+    if (body.description) _local.description = body.description;
+    if (body.address) _local.address = body.address;
 
   	var query = {
         where: {id : _id}
