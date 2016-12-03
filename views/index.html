@@ -14,7 +14,7 @@
   </li><!-- .api-item -->
 
   <li class="api-item">
-    <h2 class="api-item-title">User CRUD</h2>
+    <h2 class="api-item-title">User</h2>
 
     <ul class="endpoints">
     {% include 'user/get.html' %}
@@ -22,6 +22,53 @@
     {% include 'user/post.html' %}
     {% include 'user/put.html' %}
     {% include 'user/delete.html' %}
+    </ul><!-- .endpoints -->
+  </li><!-- .api-item -->
+
+  <li class="api-item">
+    <h2 class="api-item-title">Review</h2>
+
+    <ul class="endpoints">
+    {% include 'review/get.html' %}
+    {% include 'review/get_id.html' %}
+    {% include 'review/post.html' %}
+    {% include 'review/delete.html' %}
+    </ul><!-- .endpoints -->
+  </li><!-- .api-item -->
+
+  <li class="api-item">
+    <h2 class="api-item-title">Local</h2>
+
+    <ul class="endpoints">
+    {% include 'local/get.html' %}
+    {% include 'local/get_id.html' %}
+    {% include 'local/get_light.html' %}
+    {% include 'local/post.html' %}
+    {% include 'local/put.html' %}
+    {% include 'local/delete.html' %}
+    {% include 'local/delete_all.html' %}
+    </ul><!-- .endpoints -->
+  </li><!-- .api-item -->
+
+  <li class="api-item">
+    <h2 class="api-item-title">Checkin</h2>
+
+    <ul class="endpoints">
+    {% include 'checkin/get.html' %}
+    {% include 'checkin/get_id.html' %}
+    {% include 'checkin/post.html' %}
+    </ul><!-- .endpoints -->
+  </li><!-- .api-item -->
+
+  <li class="api-item">
+    <h2 class="api-item-title">Tag</h2>
+
+    <ul class="endpoints">
+    {% include 'local/get.html' %}
+    {% include 'local/get_id.html' %}
+    {% include 'local/post.html' %}
+    {% include 'local/put.html' %}
+    {% include 'local/delete.html' %}
     </ul><!-- .endpoints -->
   </li><!-- .api-item -->
 
