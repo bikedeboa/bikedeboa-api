@@ -45,7 +45,7 @@ AuthController.prototype.token = function(request, response, next) {
     .then(function(data) {
       	if (data) {
             if (data.validPassword(password, data.password)) {
-              
+
               var expires = moment().add(1, 'days').valueOf();
               var token = jwt.encode({
                 id: data.id,
@@ -69,6 +69,11 @@ AuthController.prototype.token = function(request, response, next) {
         }
     })
     .catch(next);
+};
+
+AuthController.prototype.middlewareLogging = function(request, response, next) {
+	debug('LOGGING OK');
+  next();
 };
 
 module.exports = function(UserModel) {
