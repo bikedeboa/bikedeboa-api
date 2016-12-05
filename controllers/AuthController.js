@@ -72,7 +72,10 @@ AuthController.prototype.token = function(request, response, next) {
 };
 
 AuthController.prototype.middlewareLogging = function(request, response, next) {
+  var fullUrl = request.protocol + '://' + request.get('host') + request.originalUrl;
 	debug('LOGGING OK');
+  debug('USER REQUEST: ' + request.user.username);
+  debug('ENDPOINT REQUEST: ' + fullUrl);
   next();
 };
 
