@@ -1,11 +1,14 @@
 var express = require('express'),
-    router  = express.Router();
+    router  = express.Router(),
+    acl 	  = require('express-acl');
 
 var models = require('../models');
 var ReviewController = require('../controllers/ReviewController')(models.Review);
 var AuthController = require('../controllers/AuthController')(models.User);
 
 router.use(AuthController.middlewareAuth);
+router.use(acl.authorize);
+router.use(AuthController.middlewareLogging);
 
 router.get('/', ReviewController.getAll.bind(ReviewController));
 router.get('/:_id', ReviewController.getById.bind(ReviewController));

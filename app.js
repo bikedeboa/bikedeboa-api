@@ -4,7 +4,8 @@ var express 		 = require('express'),
 	cors 					 = require('cors'),
 	app 					 = express(),
 	path 					 = require('path'),
-	swig					 = require('swig');
+	swig					 = require('swig'),
+	acl 					 = require('express-acl');
 
 // server config
 app.use(methodOverride('X-HTTP-Method'));
@@ -23,6 +24,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', swig.renderFile);
+
+// setup acl
+acl.config({
+	baseUrl: '/',
+  filename:'acl.json',
+  path:'config'
+});
 
 // router
 app.use('/', require('./routes'));

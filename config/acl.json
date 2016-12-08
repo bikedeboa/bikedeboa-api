@@ -1,0 +1,26 @@
+[
+  {
+    "group": "colaborator",
+    "permissions": [
+      {
+        "resource": "local",
+        "methods": [
+          "GET",
+          "POST",
+          "PUT"
+        ],
+        "action": "allow"
+      }
+    ]
+  },
+  {
+    "group": "admin",
+    "permissions": [
+      {
+        "resource": "*",
+        "methods": "*",
+        "action": "allow"
+      }
+    ]
+  }
+]

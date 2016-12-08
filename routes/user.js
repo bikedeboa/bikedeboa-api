@@ -1,11 +1,13 @@
 var express = require('express'),
-    router  = express.Router();
+    router  = express.Router(),
+    acl 	  = require('express-acl');
 
 var models = require('../models');
 var UserController = require('../controllers/UserController')(models.User);
 var AuthController = require('../controllers/AuthController')(models.User);
 
 router.use(AuthController.middlewareAuth);
+router.use(acl.authorize);
 router.use(AuthController.middlewareLogging);
 
 router.get('/', UserController.getAll.bind(UserController));

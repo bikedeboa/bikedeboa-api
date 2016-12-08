@@ -1,5 +1,5 @@
 var express = require('express'),
-  	router = express.Router();
+  	router  = express.Router();
 
 var models = require('../models');
 

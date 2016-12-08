@@ -1,11 +1,14 @@
 var express = require('express'),
-    router  = express.Router();
+    router  = express.Router(),
+    acl 	  = require('express-acl');
 
 var models = require('../models');
 var TagController = require('../controllers/TagController')(models.Tag);
 var AuthController = require('../controllers/AuthController')(models.User);
 
 router.use(AuthController.middlewareAuth);
+router.use(acl.authorize);
+router.use(AuthController.middlewareLogging);
 
 router.get('/', TagController.getAll.bind(TagController));
 router.get('/:_id', TagController.getById.bind(TagController));

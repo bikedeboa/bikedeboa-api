@@ -34,6 +34,9 @@ module.exports = function(sequelize, DataTypes) {
                     msg: 'Sua senha deve ter no mínimo 6 e no máximo 8 caracteres.'
                 }
             }
+        },
+        role: {
+            type: DataTypes.STRING
         }
     },
     {
@@ -51,7 +54,7 @@ module.exports = function(sequelize, DataTypes) {
                 }
             },
             beforeCreate: function(user, options) {
-                if (!user.password) return; 
+                if (!user.password) return;
                 user.password = bcrypt.hashSync(user.password, 10);
             }
         },

@@ -1,11 +1,14 @@
 var express = require('express'),
-    router  = express.Router();
+    router  = express.Router(),
+    acl 	  = require('express-acl');
 
 var models = require('../models');
 var LocalController = require('../controllers/LocalController')(models.Local);
 var AuthController = require('../controllers/AuthController')(models.User);
 
 router.use(AuthController.middlewareAuth);
+router.use(acl.authorize);
+router.use(AuthController.middlewareLogging);
 
 router.get('/', LocalController.getAll.bind(LocalController));
 router.get('/light', LocalController.getAllLight.bind(LocalController));

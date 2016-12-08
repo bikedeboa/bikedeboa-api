@@ -23,7 +23,7 @@ AuthController.prototype.middlewareAuth = function(request, response, next) {
         err.status = 401;
         return next(err);
     } else {
-        request.user = decoded;
+        request.decoded = decoded;
         next();
     }
 	} catch(err) {
@@ -50,7 +50,8 @@ AuthController.prototype.token = function(request, response, next) {
               var token = jwt.encode({
                 id: data.id,
                 username: data.username,
-                exp: expires
+                exp: expires,
+                role: data.role
               }, config.get('jwtTokenSecret'));
 
               response.json({
@@ -74,7 +75,7 @@ AuthController.prototype.token = function(request, response, next) {
 AuthController.prototype.middlewareLogging = function(request, response, next) {
   var fullUrl = request.protocol + '://' + request.get('host') + request.originalUrl;
 	debug('LOGGING OK');
-  debug('USER REQUEST: ' + request.user.username);
+  debug('USER REQUEST: ' + request.decoded.username);
   debug('ENDPOINT REQUEST: ' + fullUrl);
   next();
 };
