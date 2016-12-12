@@ -1,23 +1,108 @@
 [
   {
+    "group": "client",
+    "permissions": [
+      { "resource": "auth",
+        "methods": [
+          "POST"
+        ], 
+        "action": "deny"
+      },
+      { "resource": "user",
+        "methods": "*",
+        "action": "deny"
+      },
+      { "resource": "user/*",
+        "methods": "*",
+        "action": "deny"
+      },
+      { "resource": "review",
+        "methods": "*",
+        "action": "allow"
+      },
+      { "resource": "review/*",
+        "methods": "*",
+        "action": "allow"
+      },
+      { "resource": "local",
+        "methods": ["GET", "DELETE"],
+        "action": "deny"
+      },
+      { "resource": "local/light",
+        "methods": "*",
+        "action": "allow"
+      },
+      { "resource": "local/*",
+        "methods": ["GET"],
+        "action": "allow"
+      },
+      { "resource": "checkin",
+        "methods": "*",
+        "action": "deny"
+      },
+      { "resource": "tag",
+        "methods": ["GET"],
+        "action": "allow"
+      },
+      { "resource": "tag/*",
+        "methods": "*",
+        "action": "deny"
+      }
+    ]
+  },
+  {
     "group": "colaborator",
     "permissions": [
-      {
-        "resource": "local",
-        "methods": [
-          "GET",
-          "POST",
-          "PUT"
-        ],
+      { "resource": "auth",
+        "methods": ["POST"],
+        "action": "deny"
+      },
+      { "resource": "user",
+        "methods": "*",
+        "action": "deny"
+      },
+      { "resource": "user/*",
+        "methods": "*",
+        "action": "deny"
+      },
+      { "resource": "review",
+        "methods": "*",
         "action": "allow"
+      },
+      { "resource": "review/*",
+        "methods": "*",
+        "action": "allow"
+      },
+      { "resource": "local/light", 
+        "methods": "*",
+        "action": "allow"
+      },
+      { "resource": "local/*",
+        "methods": "*",
+        "action": "allow"
+      },
+      { "resource": "local",
+        "methods": ["GET"],
+        "action": "deny"
+      },
+      { "resource": "checkin",
+        "methods": "*",
+        "action": "deny"
+      },
+      { "resource": "tag",
+        "methods": ["GET"],
+        "action": "allow"
+      },
+      { "resource": "tag/*",
+        "methods": "*",
+        "action": "deny"
       }
     ]
   },
   {
     "group": "admin",
     "permissions": [
-      {
-        "resource": "*",
+      { "resource": "*",
         "methods": "*",
         "action": "allow"
       }
