@@ -252,9 +252,9 @@ LocalController.prototype.update = function(request, response, next) {
 
     var _local = {};
 
-    _local.lat = body.lat;
-    _local.lng = body.lng;
-    _local.description = body.description;
+    if (body.lat) _local.lat = body.lat;
+    if (body.lng) _local.lng = body.lng;
+    if (body.description) _local.description = body.description;
 
     if (body.structureType) _local.structureType = body.structureType;
     if (body.isPublic) _local.isPublic = body.isPublic && (body.isPublic === 'true' ? 1 : 0);

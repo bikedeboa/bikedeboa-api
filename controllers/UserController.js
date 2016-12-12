@@ -59,11 +59,13 @@ UserController.prototype.update = function(request, response, next) {
     var _id  = request.params._id,
         body = request.body;
 
-    var _user = {
-        fullname: body.fullname,
-        username: body.username,
-        password: body.password
-    };
+    var _user = {};
+
+    if (body.fullname) _user.fullname = body.fullname;
+    if (body.username) _user.username = body.username;
+    if (body.password) _user.password = body.password;
+    if (body.role)     _user.role     = body.role;
+
 
   	var query = {
         where: {id : _id}
