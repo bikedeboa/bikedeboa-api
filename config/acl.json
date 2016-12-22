@@ -2,27 +2,28 @@
   {
     "group": "client",
     "permissions": [
-      { "resource": "token",
-        "methods": ["POST"],
-        "action": "allow"
-      },
-      { "resource": "user",
+      {
+        "resource": "user",
         "methods": "*",
         "action": "deny"
       },
-      { "resource": "review",
+      {
+        "resource": "review",
         "methods": "*",
         "action": "allow"
       },
-      { "resource": "local",
+      {
+        "resource": "local",
         "methods": ["PUT", "DELETE"],
         "action": "deny"
       },
-      { "resource": "checkin",
+      {
+        "resource": "checkin",
         "methods": "*",
         "action": "deny"
       },
-      { "resource": "tag",
+      {
+        "resource": "tag",
         "methods": ["GET"],
         "action": "allow"
       }
@@ -31,31 +32,33 @@
   {
     "group": "colaborator",
     "permissions": [
-      { "resource": "token",
-        "methods": ["POST"],
-        "action": "allow"
-      },
-      { "resource": "user",
+      {
+        "resource": "user",
         "methods": "*",
         "action": "deny"
       },
-      { "resource": "user/*",
+      {
+        "resource": "user/*",
         "methods": "*",
         "action": "deny"
       },
-      { "resource": "review",
+      {
+        "resource": "review",
         "methods": "*",
         "action": "allow"
       },
-      { "resource": "local",
+      {
+        "resource": "local",
         "methods": "*",
         "action": "allow"
       },
-      { "resource": "checkin",
+      {
+        "resource": "checkin",
         "methods": "*",
         "action": "deny"
       },
-      { "resource": "tag",
+      {
+        "resource": "tag",
         "methods": ["GET"],
         "action": "allow"
       }
@@ -64,9 +67,10 @@
   {
     "group": "admin",
     "permissions": [
-      { "resource": "*",
+      {
+        "resource": "*",
         "methods": "*",
-        "action": "allow"
+        "action": "*"
       }
     ]
   }

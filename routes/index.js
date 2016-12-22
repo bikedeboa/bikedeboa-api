@@ -2,12 +2,10 @@ var express = require('express'),
   	router  = express.Router();
 
 var models = require('../models');
-
 var AuthController = require('../controllers/AuthController')(models.User);
 
 // authentication
-router.post('/token', AuthController.token.bind(AuthController));
-
+router.use('/token', require('./auth'));
 // user
 router.use('/user', require('./user'));
 // tag
