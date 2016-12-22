@@ -4,7 +4,7 @@
     "permissions": [
       { "resource": "token",
         "methods": ["POST"],
-        "action": "deny"
+        "action": "allow"
       },
       { "resource": "user",
         "methods": "*",
@@ -33,7 +33,7 @@
     "permissions": [
       { "resource": "token",
         "methods": ["POST"],
-        "action": "deny"
+        "action": "allow"
       },
       { "resource": "user",
         "methods": "*",
