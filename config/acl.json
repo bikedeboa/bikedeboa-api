@@ -70,7 +70,7 @@
       {
         "resource": "*",
         "methods": "*",
-        "action": "*"
+        "action": "allow"
       }
     ]
   }
