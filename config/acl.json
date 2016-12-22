@@ -2,7 +2,7 @@
   {
     "group": "client",
     "permissions": [
-      { "resource": "auth",
+      { "resource": "token",
         "methods": ["POST"],
         "action": "deny"
       },
@@ -31,7 +31,7 @@
   {
     "group": "colaborator",
     "permissions": [
-      { "resource": "auth",
+      { "resource": "token",
         "methods": ["POST"],
         "action": "deny"
       },
