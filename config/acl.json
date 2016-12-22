@@ -38,11 +38,6 @@
         "action": "deny"
       },
       {
-        "resource": "user/*",
-        "methods": "*",
-        "action": "deny"
-      },
-      {
         "resource": "review",
         "methods": "*",
         "action": "allow"
