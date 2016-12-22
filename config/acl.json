@@ -3,16 +3,10 @@
     "group": "client",
     "permissions": [
       { "resource": "auth",
-        "methods": [
-          "POST"
-        ], 
+        "methods": ["POST"],
         "action": "deny"
       },
       { "resource": "user",
-        "methods": "*",
-        "action": "deny"
-      },
-      { "resource": "user/*",
         "methods": "*",
         "action": "deny"
       },
@@ -20,21 +14,9 @@
         "methods": "*",
         "action": "allow"
       },
-      { "resource": "review/*",
-        "methods": "*",
-        "action": "allow"
-      },
       { "resource": "local",
-        "methods": ["GET", "DELETE"],
+        "methods": ["PUT", "DELETE"],
         "action": "deny"
-      },
-      { "resource": "local/light",
-        "methods": "*",
-        "action": "allow"
-      },
-      { "resource": "local/*",
-        "methods": ["GET"],
-        "action": "allow"
       },
       { "resource": "checkin",
         "methods": "*",
@@ -43,10 +25,6 @@
       { "resource": "tag",
         "methods": ["GET"],
         "action": "allow"
-      },
-      { "resource": "tag/*",
-        "methods": "*",
-        "action": "deny"
       }
     ]
   },
@@ -69,21 +47,9 @@
         "methods": "*",
         "action": "allow"
       },
-      { "resource": "review/*",
-        "methods": "*",
-        "action": "allow"
-      },
-      { "resource": "local/light", 
-        "methods": "*",
-        "action": "allow"
-      },
-      { "resource": "local/*",
-        "methods": "*",
-        "action": "allow"
-      },
       { "resource": "local",
-        "methods": ["GET"],
-        "action": "deny"
+        "methods": "*",
+        "action": "allow"
       },
       { "resource": "checkin",
         "methods": "*",
@@ -92,10 +58,6 @@
       { "resource": "tag",
         "methods": ["GET"],
         "action": "allow"
-      },
-      { "resource": "tag/*",
-        "methods": "*",
-        "action": "deny"
       }
     ]
   },
