@@ -5,7 +5,7 @@ var jwt     = require('jwt-simple'),
     models  = require('../models'),
     fs      = require('fs'),
     path    = require('path'),
-    winston = require('winston'),
+  //  winston = require('winston'),
     AWS     = require('aws-sdk'),
     uuid    = require('node-uuid'),
     s3      = new AWS.S3();
@@ -79,39 +79,39 @@ AuthController.prototype.token = function(request, response, next) {
 };
 
 AuthController.prototype.middlewareLogging = function(request, response, next) {
-  var fullUrl = request.protocol + '://' + request.get('host') + request.originalUrl;
-  var info = {
-    user: request.decoded.username,
-    enpoint: fullUrl,
-    role: request.decoded.role
-  };
-  var filename = path.join(__dirname + '/../log', 'logfile.log');
-
-  var logger = new (winston.Logger)({
-    transports: [
-      new (winston.transports.Console)(),
-      new (winston.transports.File)({ filename: filename })
-    ]
-  });
-
-  logger.log('info', 'ok', info);
-
-  var fileStream = fs.createReadStream(filename);
-
-  var putParams = {
-      Bucket: 'bikedeboa',
-      Key: 'logs/teste.log',
-      Body: fileStream,
-      ACL: 'public-read'
-  };
-
-  s3.putObject(putParams, function(putErr, putData){
-      if(putErr){
-          debug(putErr);
-      } else {
-          debug(putData);
-      }
-  });
+  // var fullUrl = request.protocol + '://' + request.get('host') + request.originalUrl;
+  // var info = {
+  //   user: request.decoded.username,
+  //   enpoint: fullUrl,
+  //   role: request.decoded.role
+  // };
+  // var filename = path.join(__dirname + '/../log', 'logfile.log');
+  //
+  // var logger = new (winston.Logger)({
+  //   transports: [
+  //     new (winston.transports.Console)(),
+  //     new (winston.transports.File)({ filename: filename })
+  //   ]
+  // });
+  //
+  // logger.log('info', 'ok', info);
+  //
+  // var fileStream = fs.createReadStream(filename);
+  //
+  // var putParams = {
+  //     Bucket: 'bikedeboa',
+  //     Key: 'logs/teste.log',
+  //     Body: fileStream,
+  //     ACL: 'public-read'
+  // };
+  //
+  // s3.putObject(putParams, function(putErr, putData){
+  //     if(putErr){
+  //         debug(putErr);
+  //     } else {
+  //         debug(putData);
+  //     }
+  // });
 
   next();
 };

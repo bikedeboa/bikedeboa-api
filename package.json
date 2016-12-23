@@ -27,8 +27,7 @@
     "pg": "^6.1.0",
     "pg-hstore": "^2.3.2",
     "sequelize": "^3.24.7",
-    "swig": "^1.4.2",
-    "winston": "^2.3.0"
+    "swig": "^1.4.2"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
