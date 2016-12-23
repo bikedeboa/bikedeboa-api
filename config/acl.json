@@ -26,6 +26,11 @@
         "resource": "tag",
         "methods": ["GET"],
         "action": "allow"
+      },
+      {
+        "resource": "log",
+        "methods": "*",
+        "action": "deny"
       }
     ]
   },
@@ -56,6 +61,11 @@
         "resource": "tag",
         "methods": ["GET"],
         "action": "allow"
+      },
+      {
+        "resource": "log",
+        "methods": "*",
+        "action": "deny"
       }
     ]
   },

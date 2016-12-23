@@ -6,6 +6,8 @@ var AuthController = require('../controllers/AuthController')(models.User);
 
 // authentication
 router.use('/token', require('./auth'));
+// log
+router.use('/log', require('./log'));
 // user
 router.use('/user', require('./user'));
 // tag

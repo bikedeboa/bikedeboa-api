@@ -74,7 +74,6 @@ AuthController.prototype.token = function(request, response, next) {
 
 AuthController.prototype.middlewareLogging = function(request, response, next) {
   var fullUrl = request.protocol + '://' + request.get('host') + request.originalUrl;
-
   var info = {
     user: request.decoded.username,
     role: request.decoded.role,
