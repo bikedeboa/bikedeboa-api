@@ -96,15 +96,15 @@ AuthController.prototype.middlewareLogging = function(request, response, next) {
 
   logger.log('info', 'ok', info);
 
-  // var fileStream = fs.createReadStream(filename);
-  //
-  // var putParams = {
-  //     Bucket: 'bikedeboa',
-  //     Key: 'logs/teste.log',
-  //     Body: fileStream,
-  //     ACL: 'public-read'
-  // };
-  //
+  var fileStream = fs.createReadStream(filename);
+
+  var putParams = {
+      Bucket: 'bikedeboa',
+      Key: 'logs/teste.log',
+      Body: fileStream,
+      ACL: 'public-read'
+  };
+
   // s3.putObject(putParams, function(putErr, putData){
   //     if(putErr){
   //         debug(putErr);
