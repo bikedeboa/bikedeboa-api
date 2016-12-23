@@ -17,6 +17,9 @@ module.exports = function(sequelize, DataTypes) {
         endpoint: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        body: {
+            type: DataTypes.JSON
         }
     }, {
         timestamps: true,
