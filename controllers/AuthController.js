@@ -79,23 +79,23 @@ AuthController.prototype.token = function(request, response, next) {
 };
 
 AuthController.prototype.middlewareLogging = function(request, response, next) {
-  // var fullUrl = request.protocol + '://' + request.get('host') + request.originalUrl;
-  // var info = {
-  //   user: request.decoded.username,
-  //   enpoint: fullUrl,
-  //   role: request.decoded.role
-  // };
-  // var filename = path.join(__dirname + '/../log', 'logfile.log');
-  //
-  // var logger = new (winston.Logger)({
-  //   transports: [
-  //     new (winston.transports.Console)(),
-  //     new (winston.transports.File)({ filename: filename })
-  //   ]
-  // });
-  //
-  // logger.log('info', 'ok', info);
-  //
+  var fullUrl = request.protocol + '://' + request.get('host') + request.originalUrl;
+  var info = {
+    user: request.decoded.username,
+    enpoint: fullUrl,
+    role: request.decoded.role
+  };
+  var filename = path.join(__dirname + '/../log', 'logfile.log');
+
+  var logger = new (winston.Logger)({
+    transports: [
+      new (winston.transports.Console)(),
+      new (winston.transports.File)({ filename: filename })
+    ]
+  });
+
+  logger.log('info', 'ok', info);
+
   // var fileStream = fs.createReadStream(filename);
   //
   // var putParams = {
