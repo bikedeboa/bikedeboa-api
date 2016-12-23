@@ -6,9 +6,13 @@ var jwt     = require('jwt-simple'),
     fs      = require('fs'),
     path    = require('path'),
     winston = require('winston'),
-    AWS     = require('aws-sdk'),
-    uuid    = require('node-uuid'),
-    s3      = new AWS.S3();
+    AWS     = require('aws-sdk');
+
+    // AWS.config = new AWS.Config();
+    // AWS.config.accessKeyId = "AKIAI3Z7OS2PTD3D5VCQ";
+    // AWS.config.secretAccessKey = "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";
+    var uuid    = require('node-uuid');
+    var s3      = new AWS.S3();
 
 function AuthController(UserModel) {
     this.model = UserModel;
@@ -96,22 +100,26 @@ AuthController.prototype.middlewareLogging = function(request, response, next) {
 
   logger.log('info', 'ok', info);
 
-  // var fileStream = fs.createReadStream(filename);
-  //
-  // var putParams = {
-  //     Bucket: 'bikedeboa',
-  //     Key: 'logs/teste.log',
-  //     Body: fileStream,
-  //     ACL: 'public-read'
-  // };
+  try {
+    var fileStream = fs.createReadStream(filename);
 
-  // s3.putObject(putParams, function(putErr, putData){
-  //     if(putErr){
-  //         debug(putErr);
-  //     } else {
-  //         debug(putData);
-  //     }
-  // });
+    var putParams = {
+        Bucket: 'bikedeboa',
+        Key: 'logs/teste.log',
+        Body: fileStream,
+        ACL: 'public-read'
+    };
+
+    s3.putObject(putParams, function(putErr, putData){
+        if(putErr){
+            debug(putErr);
+        } else {
+            debug(putData);
+        }
+    });
+  } catch (e) {
+    debug('ERRO AO TENTAR SALVAR LOG '+ e);
+  }
 
   next();
 };
