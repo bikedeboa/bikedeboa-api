@@ -6,13 +6,9 @@ var jwt     = require('jwt-simple'),
     fs      = require('fs'),
     path    = require('path'),
     winston = require('winston'),
-    AWS     = require('aws-sdk');
-
-    // AWS.config = new AWS.Config();
-    // AWS.config.accessKeyId = "AKIAI3Z7OS2PTD3D5VCQ";
-    // AWS.config.secretAccessKey = "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";
-    var uuid    = require('node-uuid');
-    var s3      = new AWS.S3();
+    AWS     = require('aws-sdk'),
+    uuid    = require('node-uuid'),
+    s3      = new AWS.S3();
 
 function AuthController(UserModel) {
     this.model = UserModel;
@@ -89,11 +85,10 @@ AuthController.prototype.middlewareLogging = function(request, response, next) {
     enpoint: fullUrl,
     role: request.decoded.role
   };
-  var filename = path.join(__dirname + '/../log', 'logfile.log');
+  var filename = path.join(__dirname + '/../log', 'logfile-'+moment().format("DD-MM-YYYY")+'.log');
 
   var logger = new (winston.Logger)({
     transports: [
-      new (winston.transports.Console)(),
       new (winston.transports.File)({ filename: filename })
     ]
   });
