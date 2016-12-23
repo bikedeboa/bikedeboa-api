@@ -85,36 +85,7 @@ AuthController.prototype.middlewareLogging = function(request, response, next) {
     enpoint: fullUrl,
     role: request.decoded.role
   };
-  var filename = path.join(__dirname + '/../log', 'logfile-'+moment().format("DD-MM-YYYY")+'.log');
-
-  var logger = new (winston.Logger)({
-    transports: [
-      new (winston.transports.File)({ filename: filename })
-    ]
-  });
-
-  logger.log('info', 'ok', info);
-
-  try {
-    var fileStream = fs.createReadStream(filename);
-
-    var putParams = {
-        Bucket: 'bikedeboa',
-        Key: 'logs/teste.log',
-        Body: fileStream,
-        ACL: 'public-read'
-    };
-
-    s3.putObject(putParams, function(putErr, putData){
-        if(putErr){
-            debug(putErr);
-        } else {
-            debug(putData);
-        }
-    });
-  } catch (e) {
-    debug('ERRO AO TENTAR SALVAR LOG '+ e);
-  }
+  
 
   next();
 };
