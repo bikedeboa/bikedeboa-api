@@ -1,14 +1,8 @@
-var debug   = require('debug')('api:controller:auth');
-var jwt     = require('jwt-simple'),
-    moment  = require('moment'),
-    config  = require('config'),
-    models  = require('../models'),
-    fs      = require('fs'),
-    path    = require('path'),
-    winston = require('winston'),
-    AWS     = require('aws-sdk'),
-    uuid    = require('node-uuid'),
-    s3      = new AWS.S3();
+var debug           = require('debug')('api:controller:auth');
+var jwt             = require('jwt-simple'),
+    moment          = require('moment'),
+    config          = require('config'),
+    models          = require('../models');
 
 function AuthController(UserModel) {
     this.model = UserModel;
@@ -80,12 +74,14 @@ AuthController.prototype.token = function(request, response, next) {
 
 AuthController.prototype.middlewareLogging = function(request, response, next) {
   var fullUrl = request.protocol + '://' + request.get('host') + request.originalUrl;
+
   var info = {
     user: request.decoded.username,
-    enpoint: fullUrl,
-    role: request.decoded.role
+    role: request.decoded.role,
+    endpoint: fullUrl
   };
-  
+
+  models.Log.create(info);
 
   next();
 };
