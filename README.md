@@ -4,7 +4,7 @@ API Webapp for colaboratively mapping your cities' bike racks
 
 ## Authors
 
-* **Denner Evaldt Machado** - *Initial work* - [PurpleBooth](https://github.com/dennerevaldt)
-* **Cristiano Medeiros Dalbem** - *Initial work* - [PurpleBooth](https://github.com/cmdalbem)
-* **Raian de Andrades** - *Initial work* - [PurpleBooth](https://github.com/RaianAndrades)
+* **Denner Evaldt Machado** - [Github](https://github.com/dennerevaldt)
+* **Cristiano Medeiros Dalbem** - [Github](https://github.com/cmdalbem)
+* **Raian de Andrades** - [Github](https://github.com/RaianAndrades)
 
