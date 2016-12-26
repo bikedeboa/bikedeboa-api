@@ -1,7 +1,6 @@
 var debug    = require('debug')('api:ctrlReview'),
     models   = require('../models'),
-    moment   = require('moment'),
-    bluebird = require('bluebird');;
+    moment   = require('moment');
 
 var handleNotFound = function(data) {
     if(!data) {
@@ -64,7 +63,7 @@ ReviewController.prototype.remove = function(request, response, next) {
 ReviewController.prototype.create = function(request, response, next) {
   	var body = request.body,
         self = this;
-    
+
     var currentDate = moment().format("YYYY-MM-DD");
     var currentHour = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -78,8 +77,8 @@ ReviewController.prototype.create = function(request, response, next) {
 
     var _tags = body.tags || [];
     var tagsReturn = [];
-    
-    function promiseTags() { 
+
+    function promiseTags() {
         return new Promise(function(resolve, reject) {
             var promises = [];
 
@@ -90,7 +89,7 @@ ReviewController.prototype.create = function(request, response, next) {
             Promise.all(promises).then(function(tags) {
                 resolve(tags);
             });
-        });    
+        });
     }
 
     promiseTags()

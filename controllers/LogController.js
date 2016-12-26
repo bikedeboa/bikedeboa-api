@@ -1,15 +1,6 @@
 var debug  = require('debug')('api:ctrlLog'),
     models = require('../models');
 
-var handleNotFound = function(data) {
-    if(!data) {
-        var err = new Error('Not Found');
-        err.status = 404;
-        throw err;
-    }
-    return data;
-};
-
 function LogController(LogModel) {
     this.model = LogModel;
 }
