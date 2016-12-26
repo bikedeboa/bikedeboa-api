@@ -18,7 +18,11 @@ app.use(methodOverride('_method'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended : true, limit: '50mb' }));
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+	origin: ['https://www.bikedeboa.com.br'],
+	methods: ['GET', 'POST', 'PUT', 'DELETE'],
+	allowedHeaders: ['Content-Type', 'x-access-token']
+}));
 app.use(compression());
 
 // static
