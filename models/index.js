@@ -11,31 +11,8 @@ var db        = {};
 if (config.use_env_variable) {
   var sequelize = new Sequelize(process.env[config.use_env_variable]);
 } else {
-  var sequelize = new Sequelize(config.database, config.username, config.password, {
-    // custom host; default: localhost
-    host: config.server,
-
-    // custom port; default: 3306
-    port: config.port,
-
-    // custom protocol
-    // - default: 'tcp'
-    // - added in: v1.5.0
-    // - postgres only, useful for heroku
-    protocol: config.protocol,
-
-    // disable logging; default: console.log
-    logging: false,
-
-    // the sql dialect of the database
-    // - default is 'mysql'
-    // - currently supported: 'mysql', 'sqlite', 'postgres', 'mariadb'
-    dialect: config.dialect,
-
-    dialectOptions: {
-        ssl: config.ssl
-    }
-  });
+  console.log(config);
+  var sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
 fs
