@@ -1,4 +1,5 @@
-# API Bike de boa ![alt tag](https://www.bikedeboa.com.br/apple-touch-icon.png)
+![alt tag](https://www.bikedeboa.com.br/apple-touch-icon.png)
+# API Bike de boa 
 
 API Webapp for colaboratively mapping your cities' bike racks
 
