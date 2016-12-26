@@ -5,7 +5,9 @@ var express 		 = require('express'),
 	app 					 = express(),
 	path 					 = require('path'),
 	swig					 = require('swig'),
-	acl 					 = require('express-acl');
+	acl 					 = require('express-acl'),
+	helmet				 = require('helmet'),
+	compression		 = require('compression');
 
 // server config
 app.use(methodOverride('X-HTTP-Method'));
@@ -15,7 +17,9 @@ app.use(methodOverride('_method'));
 
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended : true, limit: '50mb' }));
+app.use(helmet());
 app.use(cors());
+app.use(compression());
 
 // static
 app.use(express.static(path.join(__dirname, 'public')));
