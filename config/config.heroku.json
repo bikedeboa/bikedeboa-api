@@ -1,0 +1,32 @@
+{
+  "development": {
+    "username": "",
+    "password": "",
+    "server": "",
+    "database": "",
+    "dialect": "",
+    "port": "",
+    "protocol": "",
+    "ssl": true
+  },
+  "test": {
+    "username": "",
+    "password": "",
+    "server": "",
+    "database": "",
+    "dialect": "",
+    "port": "",
+    "protocol": "",
+    "ssl": true
+  },
+  "production": {
+    "username": "",
+    "password": "",
+    "server": "",
+    "database": "",
+    "dialect": "",
+    "port": "",
+    "protocol": "",
+    "ssl": true
+  }
+}
