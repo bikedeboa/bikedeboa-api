@@ -19,5 +19,6 @@
     "database": "bikedeboa",
     "host": "bikedeboa.postgresql.dbaas.com.br",
     "dialect": "postgres"
-  }
+  },
+  "jwtTokenSecret": "01bike"
 }

@@ -20,6 +20,9 @@ module.exports = function(sequelize, DataTypes) {
         },
         body: {
             type: DataTypes.JSON
+        },
+        method: {
+            type: DataTypes.STRING
         }
     }, {
         timestamps: true,
