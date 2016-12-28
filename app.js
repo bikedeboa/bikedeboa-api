@@ -21,7 +21,7 @@ app.use(helmet());
 app.use(cors({
 	origin: ['https://www.bikedeboa.com.br'],
 	methods: ['GET', 'POST', 'PUT', 'DELETE'],
-	allowedHeaders: ['Content-Type', 'x-access-token']
+	allowedHeaders: ['Content-Type', 'x-access-token', 'ip_origin']
 }));
 app.use(compression());
 
@@ -40,7 +40,7 @@ acl.config({
   path:'config'
 });
 
-// skip favicon 
+// skip favicon
 app.use(function (request, response, next) {
   if (request.url === '/favicon.ico') {
     response.writeHead(200, {'Content-Type': 'image/x-icon'});

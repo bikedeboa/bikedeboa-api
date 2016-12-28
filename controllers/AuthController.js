@@ -79,7 +79,8 @@ AuthController.prototype.middlewareLogging = function(request, response, next) {
     role: request.decoded.role,
     endpoint: fullUrl,
     body: request.body,
-    method: request.method
+    method: request.method,
+    ip_origin: request.get('ip_origin') || ''
   };
 
   models.Log.create(info);

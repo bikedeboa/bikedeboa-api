@@ -23,6 +23,9 @@ module.exports = function(sequelize, DataTypes) {
         },
         method: {
             type: DataTypes.STRING
+        },
+        ip_origin: {
+            type: DataTypes.STRING
         }
     }, {
         timestamps: true,
