@@ -2,15 +2,15 @@
   "development": {
     "username": "bikedeboa",
     "password": "bikedeboa2016",
-    "server": "bikedeboa.postgresql.dbaas.com.br",
     "database": "bikedeboa",
+    "host": "bikedeboa.postgresql.dbaas.com.br",
     "dialect": "postgres"
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
+    "username": "bikedeboa",
+    "password": "bikedeboa2016",
+    "database": "bikedeboa",
+    "host": "bikedeboa.postgresql.dbaas.com.br",
     "dialect": "postgres"
   },
   "production": {
