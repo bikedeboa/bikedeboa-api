@@ -1,5 +1,5 @@
 var debug           = require('debug')('api:controller:auth');
-var jwt             = require('jwt-simple'),
+    jwt             = require('jwt-simple'),
     moment          = require('moment'),
     config          = require('config'),
     models          = require('../models');

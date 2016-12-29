@@ -46,7 +46,8 @@ UserController.prototype.create = function(request, response, next) {
     this.model.create({
         fullname: body.fullname,
         username: body.username,
-        password: body.password
+        password: body.password,
+        role: body.role
     })
     .then(function(data){
         response.json(data);
@@ -100,6 +101,21 @@ UserController.prototype.remove = function(request, response, next) {
                     message: 'Deleted successfully'
                 });
             }
+        })
+        .catch(next);
+};
+
+UserController.prototype.removeAll = function(request, response, next) {
+    var query = {
+      where: {}
+    };
+
+    this.model.destroy(query)
+        .then(handleNotFound)
+        .then(function(data){
+          response.json({
+              message: 'Deleted successfully'
+          });
         })
         .catch(next);
 };

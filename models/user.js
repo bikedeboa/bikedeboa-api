@@ -55,7 +55,7 @@ module.exports = function(sequelize, DataTypes) {
             },
             beforeCreate: function(user, options) {
                 if (!user.password) return;
-                user.password = bcrypt.hashSync(user.password, 10);
+                user.password = bcrypt.hashSync(user.password);
             }
         },
         instanceMethods : {

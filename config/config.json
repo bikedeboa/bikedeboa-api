@@ -7,10 +7,10 @@
     "dialect": "postgres"
   },
   "test": {
-    "username": "bikedeboa",
+    "username": "bikedeboa_test",
     "password": "bikedeboa2016",
-    "database": "bikedeboa",
-    "host": "bikedeboa.postgresql.dbaas.com.br",
+    "database": "bikedeboa_test",
+    "host": "bikedeboa_test.postgresql.dbaas.com.br",
     "dialect": "postgres"
   },
   "production": {

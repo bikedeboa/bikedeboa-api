@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "API Webapp for colaboratively mapping your cities bike racks",
   "main": "./bin/www",
-  "private" : false,
+  "private": false,
   "scripts": {
     "start": "node ./bin/www",
     "nodemon": "nodemon ./bin/www",
-    "test": "export DEBUG=api:* && node_modules/mocha/bin/mocha tests/unit/*"
+    "test": "export NODE_ENV=test && node_modules/mocha/bin/mocha tests/unit/*"
   },
   "author": "Denner Evaldt Machado <dnrevaldt@gmail.com>",
   "license": "MIT",
@@ -34,12 +34,14 @@
     "swig": "^1.4.2"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-minify-css": "^1.2.4",
     "gulp-uglify": "^2.0.0",
     "mocha": "^3.2.0",
     "nodemon": "^1.11.0",
-    "sequelize-cli": "^2.4.0"
+    "sequelize-cli": "^2.4.0",
+    "supertest": "^2.0.1"
   }
 }
