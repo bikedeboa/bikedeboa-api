@@ -6,14 +6,18 @@ API Webapp for colaboratively mapping your cities bike racks
 
 ## API
 
-* Documentation - [Here](https://bikedeboa-api.herokuapp.com/v1/doc)
+* [Documentation](https://bikedeboa-api.herokuapp.com/v1/doc)
 
 ## Authors
 
-* **Denner Evaldt Machado** - [Github](https://github.com/dennerevaldt)
+* [Denner Evaldt Machado](https://github.com/dennerevaldt)
 
 ## Contributors
 
-* **Cristiano Medeiros Dalbem** - [Github](https://github.com/cmdalbem)
-* **Raian de Andrades** - [Github](https://github.com/RaianAndrades)
+* [Cristiano Medeiros Dalbem](https://github.com/cmdalbem)
+* [Raian de Andrades](https://github.com/RaianAndrades)
+
+## Contact
+
+[Gmail](bikedeboa@gmail.com)
 
