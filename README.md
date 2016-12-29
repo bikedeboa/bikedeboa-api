@@ -2,7 +2,7 @@
 ![alt tag](https://www.bikedeboa.com.br/apple-touch-icon.png)
 # Bike de boa 
 
-API Webapp for colaboratively mapping your cities bike racks. [Access here](www.bikedeboa.com.br){:target="_blank"}
+API Webapp for colaboratively mapping your cities bike racks. <a href="https://www.bikedeboa.com.br" target="_blank">Access here!</a>
 
 ## API
 
@@ -19,7 +19,7 @@ API Webapp for colaboratively mapping your cities bike racks. [Access here](www.
 
 ## Contact
 
-[Gmail](bikedeboa@gmail.com){:target="_blank"}
+<a href="bikedeboa@gmail.com" target="_blank">Gmail</a>
 
 
 
