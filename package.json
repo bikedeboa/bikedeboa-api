@@ -1,15 +1,16 @@
 {
-  "name": "@denner/bikedeboa",
+  "name": "@denner/bikedeboa-api",
   "version": "1.0.0",
-  "description": "API app bike de boa",
+  "description": "API Webapp for colaboratively mapping your cities bike racks",
   "main": "./bin/www",
+  "private" : false,
   "scripts": {
     "start": "node ./bin/www",
     "nodemon": "nodemon ./bin/www",
     "test": "export DEBUG=api:* && node_modules/mocha/bin/mocha tests/unit/*"
   },
   "author": "Denner Evaldt Machado <dnrevaldt@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.7.7",
     "bcrypt-nodejs": "0.0.3",
