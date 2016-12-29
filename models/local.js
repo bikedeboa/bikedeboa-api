@@ -41,6 +41,7 @@ module.exports = function(sequelize, DataTypes) {
                 Local.belongsToMany(models.Tag, {through: 'Local_Tags', foreignKey: 'local_id', otherKey: 'tag_id', hooks: true});
                 Local.hasMany(models.Review, {foreignKey: 'local_id', onDelete: 'cascade', hooks: true});
                 Local.hasOne(models.Checkin, {foreignKey: 'local_id', onDelete: 'cascade', hooks: true});
+                Local.hasMany(models.Revision, {foreignKey: 'local_id', onDelete: 'cascade', hooks: true});
             }
         },
         instanceMethods: {

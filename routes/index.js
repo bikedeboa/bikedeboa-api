@@ -18,6 +18,8 @@ router.use('/local', require('./local'));
 router.use('/checkin', require('./checkin'));
 // review
 router.use('/review', require('./review'));
+// revision
+router.use('/revision', require('./revision'));
 // docs
 router.use('/v1/doc', require('./doc'));
 
