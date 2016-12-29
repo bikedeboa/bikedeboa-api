@@ -7,6 +7,7 @@ var request = require('supertest'),
     debug   = require('debug')('api:ctrlUserTest');
 
 describe("AuthController", function() {
+  this.timeout(15000);
   var token = null;
 
   before(function(done) {
