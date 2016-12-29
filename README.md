@@ -19,7 +19,7 @@ API Webapp for colaboratively mapping your cities bike racks. <a href="https://w
 
 ## Contact
 
-<a href="bikedeboa@gmail.com" target="_blank">Gmail</a>
+<a href="mailto:bikedeboa@gmail.com" target="_top">Gmail</a>
 
 
 
