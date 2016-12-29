@@ -2,7 +2,7 @@
 ![alt tag](https://www.bikedeboa.com.br/apple-touch-icon.png)
 # Bike de boa 
 
-API Webapp for colaboratively mapping your cities bike racks
+API Webapp for colaboratively mapping your cities bike racks. [Access here](www.bikedeboa.com.br){:target="_blank"}
 
 ## API
 
@@ -19,5 +19,7 @@ API Webapp for colaboratively mapping your cities bike racks
 
 ## Contact
 
-[Gmail](bikedeboa@gmail.com)
+[Gmail](bikedeboa@gmail.com){:target="_blank"}
+
+
 
