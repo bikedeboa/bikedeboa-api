@@ -20,7 +20,7 @@ var request = require('supertest'),
           });
       });
 
-      it('return all tag registers', function(done) {
+      it('GET /tag', function(done) {
         request(app)
           .get('/tag')
           .set('Accept', 'application/json')
