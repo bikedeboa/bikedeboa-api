@@ -14,8 +14,8 @@
       },
       {
         "resource": "local",
-        "methods": ["PUT", "DELETE"],
-        "action": "deny"
+        "methods": "*",
+        "action": "allow"
       },
       {
         "resource": "checkin",

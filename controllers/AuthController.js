@@ -88,6 +88,31 @@ AuthController.prototype.middlewareLogging = function(request, response, next) {
   next();
 };
 
+AuthController.prototype.middlewareValidIP = function(request, response, next) {
+  var ip_origin = request.get('ip_origin') || '',
+      role      = request.decoded.role;
+
+  var query = {
+    attributes: ['id', 'authorIP'],
+    where: {id: request.params._id}
+  };
+
+  return models.Local.find()
+    .then(function(data){
+      if (ip_origin === data.authorIP) {
+        next();
+      } else if (role === 'colaborator' || role === 'admin') {
+        next();
+      } else {
+        var err = new Error('Unauthorized');
+        err.status = 401;
+        next(err);
+      }
+      return data;
+    })
+    .catch(next);
+};
+
 module.exports = function(UserModel) {
     return new AuthController(UserModel);
 };

@@ -14,8 +14,8 @@ router.get('/', LocalController.getAll.bind(LocalController));
 router.get('/light', LocalController.getAllLight.bind(LocalController));
 router.get('/:_id', LocalController.getById.bind(LocalController));
 router.post('/', LocalController.create.bind(LocalController));
-router.put('/:_id', LocalController.update.bind(LocalController));
-router.delete('/:_id', LocalController.remove.bind(LocalController));
+router.put('/:_id', AuthController.middlewareValidIP, LocalController.update.bind(LocalController));
+router.delete('/:_id', AuthController.middlewareValidIP, LocalController.remove.bind(LocalController));
 router.delete('/', LocalController.removeAll.bind(LocalController));
 
 module.exports = router;
