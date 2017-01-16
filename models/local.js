@@ -32,6 +32,9 @@ module.exports = function(sequelize, DataTypes) {
         address: {
             type: DataTypes.TEXT
         },
+        authorIP: {
+            type: DataTypes.STRING
+        }
     }, {
         timestamps: true,
         freezeTableName: true,
