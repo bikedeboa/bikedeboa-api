@@ -97,7 +97,7 @@ AuthController.prototype.middlewareValidIP = function(request, response, next) {
     where: {id: request.params._id}
   };
 
-  return models.Local.find()
+  return models.Local.find(query)
     .then(function(data){
       if (ip_origin === data.authorIP) {
         next();
