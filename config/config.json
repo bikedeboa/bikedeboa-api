@@ -14,11 +14,10 @@
     "dialect": "postgres"
   },
   "production": {
-    "username": "bikedeboa",
-    "password": "bikedeboa2016",
-    "database": "bikedeboa",
-    "host": "bikedeboa.postgresql.dbaas.com.br",
-    "dialect": "postgres"
-  },
-  "jwtTokenSecret": "01bike"
+    "username": "",
+    "password": "",
+    "database": "",
+    "host": "",
+    "dialect": ""
+  }
 }

@@ -11,7 +11,15 @@ var db        = {};
 if (config.use_env_variable) {
   var sequelize = new Sequelize(process.env[config.use_env_variable]);
 } else {
-  var sequelize = new Sequelize(config.database, config.username, config.password, config);
+  if (env === 'production') {
+    var sequelize = new Sequelize(process.env.DATABASE_URL, {
+      dialectOptions: {
+          ssl: true
+      }
+    });
+  } else {
+    var sequelize = new Sequelize(config.database, config.username, config.password, config);
+  }
 }
 
 fs

@@ -8,10 +8,9 @@ var AuthController = require('../controllers/AuthController')(models.User);
 
 router.use(AuthController.middlewareAuth);
 router.use(acl.authorize);
-router.use(AuthController.middlewareLogging);
 
 router.get('/', CheckinController.getAll.bind(CheckinController));
 router.get('/:_id', CheckinController.getById.bind(CheckinController));
-router.post('/', CheckinController.create.bind(CheckinController));
+router.post('/', AuthController.middlewareLogging, CheckinController.create.bind(CheckinController));
 
 module.exports = router;

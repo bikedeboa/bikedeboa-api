@@ -8,13 +8,12 @@ var AuthController = require('../controllers/AuthController')(models.User);
 
 router.use(AuthController.middlewareAuth);
 router.use(acl.authorize);
-router.use(AuthController.middlewareLogging);
 
 router.get('/', UserController.getAll.bind(UserController));
 router.get('/:_id', UserController.getById.bind(UserController));
-router.post('/', UserController.create.bind(UserController));
-router.put('/:_id', UserController.update.bind(UserController));
-router.delete('/:_id', UserController.remove.bind(UserController));
-router.delete('/', UserController.removeAll.bind(UserController));
+router.post('/', AuthController.middlewareLogging, UserController.create.bind(UserController));
+router.put('/:_id', AuthController.middlewareLogging, UserController.update.bind(UserController));
+router.delete('/:_id', AuthController.middlewareLogging, UserController.remove.bind(UserController));
+router.delete('/', AuthController.middlewareLogging, UserController.removeAll.bind(UserController));
 
 module.exports = router;
