@@ -31,6 +31,7 @@
     "pg": "^6.1.0",
     "pg-hstore": "^2.3.2",
     "sequelize": "^3.24.7",
+    "sharp": "^0.17.1",
     "swig": "^1.4.2"
   },
   "devDependencies": {

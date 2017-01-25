@@ -67,4 +67,4 @@ app.use(function(err, request, response, next) {
 // server listener
 module.exports = app;
 
-//export DEBUG=api:* && export NODE_ENV=development && && npm run nodemon
+//start api command: export DEBUG=api:* && export NODE_ENV=development && npm run nodemon
