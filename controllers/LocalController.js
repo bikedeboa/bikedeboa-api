@@ -326,54 +326,54 @@ LocalController.prototype.update = function(request, response, next) {
     if (body.address) _local.address = body.address;
 
   	var query = {
-        where: {id : _id}
+      where: {id : _id}
     };
 
     this.model.find(query)
-        .then(handleNotFound)
-        .then(handleUpdateLocal)
-        .catch(next);
+      .then(handleNotFound)
+      .then(handleUpdateLocal)
+      .catch(next);
 
     // update data local
     function handleUpdateLocal(local) {
-        return local.update(_local).then(handleDeleteImage.bind(null, local)).catch(next);
+      return local.update(_local).then(handleDeleteImage.bind(null, local)).catch(next);
     }
 
     // delete image local exists
     function handleDeleteImage(local) {
-        if(body.photo){
-            return deleteImage(_id).then(handleSaveImage.bind(null, local)).catch(next);
-        } else {
-            handleSaveImage(local);
-        }
-    }
-
-    // save image local
-    function handleSaveImage(local) {
-        if (body.photo) {
-            return saveFullImage(body.photo, _id).then(handleSaveThumbImage.bind(null, local)).catch(next);
-        } else {
-            handleUpdateUrlLocal(local);
-        }
+      if(body.photo){
+        return deleteImage(_id).then(handleSaveThumbImage.bind(null, local)).catch(next);
+      } else {
+        handleSaveThumbImage(local);
+      }
     }
 
     // save thumb image local
     function handleSaveThumbImage(local) {
-        return saveThumbImage(body.photo, local.id).then(handleUpdateUrlLocal.bind(null, local)).catch(next);
+      if (body.photo) {
+        return saveThumbImage(body.photo, local.id).then(handleSaveImage.bind(null, local)).catch(next);
+      } else {
+        handleUpdateUrlLocal(local);
+      }
+    }
+
+    // save image local
+    function handleSaveImage(local) {
+      return saveFullImage(body.photo, _id).then(handleUpdateUrlLocal.bind(null, local)).catch(next);
     }
 
     // update local new image url
     function handleUpdateUrlLocal(local, url) {
-        if (url) {
-            return local.update({photo: url}).then(handleResponse.bind(null, local)).catch(next);
-        } else {
-            handleResponse(local);
-        }
+      if (url) {
+        return local.update({photo: url}).then(handleResponse.bind(null, local)).catch(next);
+      } else {
+        handleResponse(local);
+      }
     }
 
     // return response
     function handleResponse(local) {
-        response.json(local);
+      response.json(local);
     }
 };
 
