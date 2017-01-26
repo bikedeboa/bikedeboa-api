@@ -121,7 +121,7 @@ function saveThumbImage(photo, id) {
 
     sharp(binaryData)
       .resize(100, 100)
-      .crop(sharp.strategy.entropy)
+      .max()
       .on('error', function(err) {
         reject(err);
       })
