@@ -193,7 +193,7 @@ function deleteImage(id) {
 
 LocalController.prototype.getAll = function(request, response, next) {
     var query = {
-        attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'description', 'address', 'photo', 'updatedAt'].concat([
+        attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'description', 'address', 'photo', 'updatedAt', 'createdAt'].concat([
             [
                 models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
                 'reviews'
@@ -229,13 +229,13 @@ LocalController.prototype.getAllLight = function(request, response, next) {
     this.model.findAll(query)
         .then(function(data) {
             response.json(data);
-        })
+        }) 
         .catch(next);
 };
 
 LocalController.prototype.getById = function(request, response, next) {
-    var query = {
-      attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'photo', 'description', 'address', 'updatedAt'].concat([
+    var query = { 
+      attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'photo', 'description', 'address', 'createdAt'].concat([
           [
               models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
               'reviews'
