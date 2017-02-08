@@ -16,7 +16,7 @@ AuthController.prototype.middlewareAuth = function(request, response, next) {
   	return next(err);
 	}
 	try {
-  	var decoded = jwt.decode(token, config.get('jwtTokenSecret'));
+  	var decoded = jwt.decode(token, process.env.JWT_TKN_SECRET);
   	var isExpired = moment(decoded.exp).isBefore(new Date());
     if(isExpired) {
         var err = new Error('Unauthorized');
@@ -52,7 +52,7 @@ AuthController.prototype.token = function(request, response, next) {
                 username: data.username,
                 exp: expires,
                 role: data.role
-              }, config.get('jwtTokenSecret'));
+              }, process.env.JWT_TKN_SECRET);
 
               response.json({
                 token: token
