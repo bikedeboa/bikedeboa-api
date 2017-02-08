@@ -275,6 +275,8 @@ LocalController.prototype.create = function(request, response, next) {
       authorIP: body.authorIP
     };
 
+    if (body.idLocal) { params.id = body.idLocal; }
+
     // create local
     this.model.create(params).then(handleGetTags).catch(next);
 
