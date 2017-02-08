@@ -2,16 +2,15 @@ language: node_js
 node_js:
 - '6.1'
 env:
-  - CXX=g++-4.8
+- CXX=g++-4.8
 addons:
   apt:
     sources:
-      - ubuntu-toolchain-r-test
+    - ubuntu-toolchain-r-test
     packages:
-      - g++-4.8
-
+    - g++-4.8
 deploy:
   app: bikedeboa-api
   provider: heroku
   api_key:
-    secure: lCGkhlmoHqJ9SxCJIKtaUUrC/GuiQu7sjx9s4gvbb4IBRRhWPhthSGjsGytUhlx8RiFK8zN3kli2/z/JAl6654hvgWUH+KjPQWsMpDJlZFTUv8xQJGw22X3vTxsEBhttI4xxfrZFtFtPA91FdWioss6cBxufpJPgwIFqUJrPNPXJ1e/bdsxq7RQNVFyQ+GdoZ8Wl/bgasGYFi0iozT2Ob3gUc7kzQHQi9dKanxVczydC7KCVmcKIkvwuzJ38OcdPaH+gDJRjjgfGf/IVOT+p/rXmmRFaiJUCcmkREPADdykI9DVrTowsC2d63GgS4Bv3LQwWZ/01UHMA/exc7GzL1hk8cjVra/7cx91b4KfDcezuY2G3nZsfA7EIt309dXtfmjIX3XBaeJIpMwTH89nEEAZrRBg+l+5Smcgnrv1jAD2SYGSisiq9SjcS4dL4OFwI6kpuF2QGlfGpUkUnzB7ekcitay2hnB7FyZgsK0RSePGhy+/8gWquXIWVx05G7rT4eEcpcSl1wc8zq9ruIrmvKCg7hJCNsFVHEZUKpGZeMueUD2mw/FwHeyngmL/XCryefuu0H3Z/ei6o6bCwZoD4GrL7nyFE/2kspUhMQO/nNVAHwWp7VGbycqUkOVKBgVUqV2x43bbJQs8IUglfLQMVi4A5gsN3gFiJPKB3lfiDndA=
+    secure: ElWErDkYjfjesTY1EzRnbZEs8BdEKFhNHBTY5ZMc9r+w9Z0KKOxR4+oCmSYq5B+pF7/XoCKlB82OgX8ocW7I8GoRtVtl+HWFjwjw5a+WEbguKp0cYV9lKDxXJ/67eCfZoQ+gg0+D0xrOXq68GYwE1uXmmuvSTK46C5ecykZfaEq1QzCD57nmSSz9MnZmpCjtVolNPvP4iT++BR5tXsZVftKT3CTW5Q/OCCbR/xK2LnS3fsjCvc7pw1ZPUXQJKb36a/jN5nwZ+aZk7V4GIS3Pk9tVHHpE+nCPg2LF34sMVokJusVeNijoqWHIRvyC/S6cE5oe653qkPdQFvoEAM0h+DFiGapRVLD+Jn4/IxnR/l8QtdX8KqeycpPjAbfrFMYhLP43EeGxNNiuFqGd+GA1G4W6OKsidf7DD7AjLS2AjmLZ4BPSgBZASbGwnRRD908byp8JL9ohUN4dXO8s9sg2loYVtzRhTrQVVtbjDtRgmj6TIfswc9USOjU5wSZ5ptMirpZ+gE3QfUje0VFDSuAhDjeLMX6l2RSWNTAuA36zfM/1DEj9PmdQdID2Orjo4lsdCYpLtIdumbTOUYG/0EdETdWxQYF+ObfQfmKzHrmxpaxcBktbB2z6yCH2/Ys3MGLeH5MlBPJT5+IbGHLLcyqRhkVot30bwUkvo4i4OCYhYYQ=
