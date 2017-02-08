@@ -12,6 +12,5 @@ router.get('/:_id', AuthController.middlewareAuth, acl.authorize, LocalControlle
 router.post('/', AuthController.middlewareAuth, acl.authorize, AuthController.middlewareLogging, LocalController.create.bind(LocalController));
 router.put('/:_id', AuthController.middlewareAuth, acl.authorize, AuthController.middlewareLogging, AuthController.middlewareValidIP, LocalController.update.bind(LocalController));
 router.delete('/:_id', AuthController.middlewareAuth, acl.authorize, AuthController.middlewareValidIP, AuthController.middlewareLogging, LocalController.remove.bind(LocalController));
-router.delete('/', AuthController.middlewareAuth, acl.authorize, AuthController.middlewareLogging, LocalController.removeAll.bind(LocalController));
 
 module.exports = router;
