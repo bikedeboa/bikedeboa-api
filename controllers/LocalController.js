@@ -326,7 +326,7 @@ LocalController.prototype.update = function(request, response, next) {
     if (body.isPublic) _local.isPublic = body.isPublic && (body.isPublic === 'true' ? 1 : 0);
     if (body.text) _local.text = body.text;
     if (body.address) _local.address = body.address;
-    if (body.url) _local.photo = body.url;
+    if (body.photoUrl) _local.photo = body.photoUrl;
 
   	var query = {
       where: {id : _id}
