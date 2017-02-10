@@ -405,22 +405,6 @@ LocalController.prototype.remove = function(request, response, next) {
     }
 };
 
-// Temporarily disabled until we fix ACL for this guy
-// LocalController.prototype.removeAll = function(request, response, next) {
-//     var _id  = request.params._id;
-
-//     var query = {where: {}};
-
-//     this.model.destroy(query)
-//         .then(handleNotFound)
-//         .then(function(rowDeleted){
-//             response.json({
-//                 message: 'Deleted successfully'
-//             });
-//         })
-//         .catch(next);
-// };
-
 module.exports = function(LocalModel) {
   	return new LocalController(LocalModel);
 };
