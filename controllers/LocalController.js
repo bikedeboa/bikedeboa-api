@@ -1,11 +1,16 @@
-var debug   = require('debug')('api:ctrlLocal'),
-    models  = require('../models'),
-    AWS     = require('aws-sdk'),
-    uuid    = require('node-uuid'),
-    s3      = new AWS.S3(),
-    sharp   = require('sharp');
+var debug           = require('debug')('api:ctrlLocal'),
+    models          = require('../models'),
+    AWS             = require('aws-sdk'),
+    uuid            = require('node-uuid'),
+    s3              = new AWS.S3(),
+    sharp           = require('sharp'),
+    AWS_PATH_PREFIX = 'https://s3.amazonaws.com/bikedeboa/';
 
-var AWS_PATH_PREFIX = 'https://s3.amazonaws.com/bikedeboa/';
+function LocalController(LocalModel) {
+  this.model = LocalModel;
+}
+
+// PRIVATE FN //
 
 var handleNotFound = function(data) {
   if(!data) {
@@ -16,52 +21,23 @@ var handleNotFound = function(data) {
   return data;
 };
 
-function LocalController(LocalModel) {
-  this.model = LocalModel;
-}
-
-// ---------------- private functions ---------------- //
-
-function promiseContTags(local) {
+var contTagsLocal = function(local) {
   return new Promise(function(resolve, reject) {
     models.sequelize.query('SELECT t.name, COUNT(*) FROM "Tag" t inner join "Review_Tags" rt on T.id = rt.tag_id inner join "Review" r on r.id = rt.review_id inner join "Local" l on r.local_id = l.id WHERE l.id = '+local.id+' GROUP BY t.id')
       .then(function(result, metatag) {
         local.dataValues.tags = result[0];
+        console.log(result);
         resolve(local);
       });
   });
 }
 
-function getLocalsAndTags(locals) {
+var saveFullImage = function(params) {
   return new Promise(function(resolve, reject) {
-    var promises = [];
+    // params
+    var photo = params.body.photo;
+    var id    = params.local.id;
 
-    locals.map(function(local){
-      promises.push(promiseContTags(local));
-    });
-
-    Promise.all(promises).then(function(resp){
-      resolve(resp);
-    })
-  });
-}
-
-function getTags(arrTagsId) {
-  return new Promise(function(resolve, reject) {
-    var promises = [];
-
-    arrTagsId.map(function(tag) {
-      promises.push(models.Tag.find({where: {id: tag.id}}));
-    });
-
-    Promise.all(promises).then(function(tags) {
-      resolve(tags);
-    });
-  });
-}
-
-function saveFullImage(photo, id) {
-  return new Promise(function(resolve, reject) {
     // valid photo exists
     if (!photo) resolve('');
 
@@ -99,8 +75,12 @@ function saveFullImage(photo, id) {
   });
 }
 
-function saveThumbImage(photo, id) {
+var saveThumbImage = function(params) {
   return new Promise(function(resolve, reject) {
+    // params
+    var photo = params.body.photo;
+    var id    = params.local.id;
+
     // valid photo exists
     if (!photo) resolve('');
 
@@ -147,7 +127,7 @@ function saveThumbImage(photo, id) {
   });
 }
 
-function deleteImage(id) {
+var deleteImage = function(id) {
   return new Promise(function(resolve, reject) {
     // path image
     var path = "images/";
@@ -189,144 +169,124 @@ function deleteImage(id) {
   });
 }
 
-// ---------------- private functions ---------------- //
+// PRIVATE FN //
 
 LocalController.prototype.getAll = function(request, response, next) {
-    var query = {
-        attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'description', 'address', 'photo', 'updatedAt', 'createdAt'].concat([
-            [
-                models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
-                'reviews'
-            ],
-            [
-                models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
-                'average'
-            ],
-            [
-                models.sequelize.literal('(SELECT COUNT(*) FROM "Checkin" WHERE "Checkin"."local_id" = "Local"."id")'),
-                'checkins'
-            ]
-        ])
-    };
+  var query = {
+    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'description', 'address', 'photo', 'updatedAt', 'createdAt'].concat([
+      [
+        models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
+        'reviews'
+      ],
+      [
+        models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
+        'average'
+      ],
+      [
+        models.sequelize.literal('(SELECT COUNT(*) FROM "Checkin" WHERE "Checkin"."local_id" = "Local"."id")'),
+        'checkins'
+      ]
+    ])
+  };
 
-    this.model.findAll(query)
-        .then(function(locals) {
-            response.json(locals);
-        })
-        .catch(next);
+  this.model.findAll(query)
+    .then(function(locals) {
+      response.json(locals);
+    })
+  .catch(next);
 };
 
 LocalController.prototype.getAllLight = function(request, response, next) {
-    var query = {
-        attributes: ['id', 'lat', 'lng'].concat([
-            [
-                models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
-                'average'
-            ],
-        ])
-    };
+  var query = {
+    attributes: ['id', 'lat', 'lng'].concat([
+      [
+        models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
+        'average'
+      ]
+    ])
+  };
 
-    this.model.findAll(query)
-        .then(function(data) {
-            response.json(data);
-        })
-        .catch(next);
+  this.model.findAll(query)
+    .then(function(locals) {
+      response.json(locals);
+    })
+  .catch(next);
 };
 
 LocalController.prototype.getById = function(request, response, next) {
-    var query = {
-      attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'photo', 'description', 'address', 'createdAt'].concat([
-          [
-              models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
-              'reviews'
-          ],
-          [
-              models.sequelize.literal('(SELECT COUNT(*) FROM "Checkin" WHERE "Checkin"."local_id" = "Local"."id")'),
-              'checkins'
-          ]
-      ]),
-      where: {id : request.params._id}
-    }
+  var query = {
+    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'photo', 'description', 'address', 'createdAt'].concat([
+      [
+        models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
+        'reviews'
+      ],
+      [
+        models.sequelize.literal('(SELECT COUNT(*) FROM "Checkin" WHERE "Checkin"."local_id" = "Local"."id")'),
+        'checkins'
+      ]
+    ]),
+    where: {id : request.params._id}
+  };
 
-  	this.model.find(query)
-        .then(handleNotFound)
-        .then(function(local){
-            return promiseContTags(local)
-              .then(function(resp){
-                response.json(resp);
-              });
-        })
-    .catch(next);
+	this.model.find(query)
+    .then(handleNotFound)
+    .then(contTagsLocal)
+    .then(function(local){
+      response.json(local);
+    })
+  .catch(next);
 };
 
 LocalController.prototype.create = function(request, response, next) {
-  	var body = request.body;
+	var _body = request.body;
+  var _params = {
+    lat: _body.lat,
+    lng: _body.lng,
+    structureType: _body.structureType,
+    isPublic: _body.isPublic && (_body.isPublic === 'true' ? 1 : 0),
+    text: _body.text,
+    photo: '',
+    description: _body.description,
+    address: _body.address,
+    authorIP: _body.authorIP
+  };
+  var _local = {};
 
-    var _tags  = body.tags || [];
-    var params = {
-      lat: body.lat,
-      lng: body.lng,
-      structureType: body.structureType,
-      isPublic: body.isPublic && (body.isPublic === 'true' ? 1 : 0),
-      text: body.text,
-      photo: '',
-      description: body.description,
-      address: body.address,
-      authorIP: body.authorIP
-    };
-
-    if (body.idLocal) { params.id = body.idLocal; }
-
-    // create local
-    this.model.create(params).then(handleGetTags).catch(next);
-
-    // get tags informed
-    function handleGetTags(local) {
-        return getTags(_tags).then(handleSetTags.bind(null, local)).catch(next);
-    }
-
-    // set tags local
-    function handleSetTags(local, tags) {
-        return local.setTags(tags).then(handleSaveThumbImage.bind(null, local)).catch(next);
-    }
-
-    // save thumb image local
-    function handleSaveThumbImage(local) {
-        return saveThumbImage(body.photo, local.id).then(handleSaveImage.bind(null, local)).catch(next);
-    }
-
-    // save image local
-    function handleSaveImage(local) {
-        return saveFullImage(body.photo, local.id).then(handleUpdateUrlLocal.bind(null, local)).catch(next);
-    }
-
-    // update local new image url
-    function handleUpdateUrlLocal(local, url) {
-        return local.update({photo: url}).then(handleResponse).catch(next);
-    }
-
-    // return response
-    function handleResponse(local) {
-      response.json(local);
-    }
+  this.model.create(_params)
+    .then(function(local) {
+      _local = local;
+      return {body: _body, local: _local};
+    })
+    .then(saveThumbImage)
+    .then(function(url) {
+      return {body: _body, local: _local};
+    })
+    .then(saveFullImage)
+    .then(function(url) {
+      return {photo: url};
+    })
+    .then(_local.update)
+    .then(function(local) {
+      _local.photo = local.photo;
+      response.json(_local);
+    })
+  .catch(next);
 };
 
 LocalController.prototype.update = function(request, response, next) {
-    var _id  = request.params._id,
-        body = request.body,
-        self = this;
+  var _id    = request.params._id,
+      _body  = request.body,
+      _local = {};
 
-    var _local = {};
+    if (_body.lat) _local.lat = _body.lat;
+    if (_body.lng) _local.lng = _body.lng;
+    if (_body.description) _local.description = _body.description;
 
-    if (body.lat) _local.lat = body.lat;
-    if (body.lng) _local.lng = body.lng;
-    if (body.description) _local.description = body.description;
-
-    if (body.structureType) _local.structureType = body.structureType;
-    if (body.isPublic) _local.isPublic = body.isPublic && (body.isPublic === 'true' ? 1 : 0);
-    if (body.text) _local.text = body.text;
-    if (body.address) _local.address = body.address;
-    if (body.photoUrl) _local.photo = body.photoUrl;
+    if (_body.structureType) _local.structureType = _body.structureType;
+    if (_body.isPublic) _local.isPublic = _body.isPublic && (_body.isPublic === 'true' ? 1 : 0);
+    if (_body.text) _local.text = _body.text;
+    if (_body.address) _local.address = _body.address;
+    if (_body.photoUrl) _local.photo = _body.photoUrl;
 
   	var query = {
       where: {id : _id}
@@ -344,7 +304,7 @@ LocalController.prototype.update = function(request, response, next) {
 
     // delete image local exists
     function handleDeleteImage(local) {
-      if(body.photo){
+      if(_body.photo){
         return deleteImage(_id).then(handleSaveThumbImage.bind(null, local)).catch(next);
       } else {
         handleSaveThumbImage(local);
@@ -353,8 +313,8 @@ LocalController.prototype.update = function(request, response, next) {
 
     // save thumb image local
     function handleSaveThumbImage(local) {
-      if (body.photo) {
-        return saveThumbImage(body.photo, local.id).then(handleSaveImage.bind(null, local)).catch(next);
+      if (_body.photo) {
+        return saveThumbImage({body: _body, local: local}).then(handleSaveImage.bind(null, local)).catch(next);
       } else {
         handleUpdateUrlLocal(local);
       }
@@ -362,7 +322,7 @@ LocalController.prototype.update = function(request, response, next) {
 
     // save image local
     function handleSaveImage(local) {
-      return saveFullImage(body.photo, _id).then(handleUpdateUrlLocal.bind(null, local)).catch(next);
+      return saveFullImage({body: _body, local: local}).then(handleUpdateUrlLocal.bind(null, local)).catch(next);
     }
 
     // update local new image url
@@ -406,5 +366,5 @@ LocalController.prototype.remove = function(request, response, next) {
 };
 
 module.exports = function(LocalModel) {
-  	return new LocalController(LocalModel);
+  return new LocalController(LocalModel);
 };
