@@ -265,10 +265,12 @@ LocalController.prototype.create = function(request, response, next) {
     .then(function(url) {
       return {photo: url};
     })
-    .then(_local.update)
-    .then(function(local) {
-      _local.photo = local.photo;
-      response.json(_local);
+    .then(function(url) {
+      return _local.update(url)
+        .then(function(local){
+          _local.photo = local.photo;
+          response.json(_local);
+        });
     })
   .catch(next);
 };
