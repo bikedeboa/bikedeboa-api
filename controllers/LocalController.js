@@ -255,7 +255,6 @@ LocalController.prototype.create = function(request, response, next) {
   this.model.create(_params)
     .then(function(local) {
       _local = local;
-      if(body.photo) _body.photo = body.photo;
       return {body: _body, local: _local};
     })
     .then(saveThumbImage)
