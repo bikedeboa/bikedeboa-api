@@ -295,50 +295,88 @@ LocalController.prototype.update = function(request, response, next) {
 
     this.model.find(query)
       .then(handleNotFound)
-      .then(handleUpdateLocal)
-      .catch(next);
+      .then(function(local) {
+        return local.update(_local);
+      })
+      .then(function(local) {
+        _local = local;
+        if(_body.photo) {
+          return deleteImage(_id);
+        }
+        return _local;
+      })
+      .then(function(local) {
+        if(_body.photo) {
+          return saveThumbImage({body: _body, local: _local});
+        }
+        return local;
+      })
+      .then(function(local) {
+        if(_body.photo) {
+          return saveFullImage({body: _body, local: _local});
+        }
+        return undefined;
+      })
+      .then(function(url) {
+        if (url) {
+          return _local.update({photo: url});
+        }
+        return url;
+      })
+      .then(function(resp) {
+        if (typeof resp === 'string') {
+          _local.photo = resp;
+        }
+        response.json(_local);
+      })
+    .catch(next);
+
+    // this.model.find(query)
+    //   .then(handleNotFound)
+    //   .then(handleUpdateLocal)
+    //   .catch(next);
 
     // update data local
-    function handleUpdateLocal(local) {
-      return local.update(_local).then(handleDeleteImage.bind(null, local)).catch(next);
-    }
+    // function handleUpdateLocal(local) {
+    //   return local.update(_local).then(handleDeleteImage.bind(null, local)).catch(next);
+    // }
 
     // delete image local exists
-    function handleDeleteImage(local) {
-      if(_body.photo){
-        return deleteImage(_id).then(handleSaveThumbImage.bind(null, local)).catch(next);
-      } else {
-        handleSaveThumbImage(local);
-      }
-    }
+    // function handleDeleteImage(local) {
+    //   if(_body.photo){
+    //     return deleteImage(_id).then(handleSaveThumbImage.bind(null, local)).catch(next);
+    //   } else {
+    //     handleSaveThumbImage(local);
+    //   }
+    // }
 
     // save thumb image local
-    function handleSaveThumbImage(local) {
-      if (_body.photo) {
-        return saveThumbImage({body: _body, local: local}).then(handleSaveImage.bind(null, local)).catch(next);
-      } else {
-        handleUpdateUrlLocal(local);
-      }
-    }
+    // function handleSaveThumbImage(local) {
+    //   if (_body.photo) {
+    //     return saveThumbImage({body: _body, local: local}).then(handleSaveImage.bind(null, local)).catch(next);
+    //   } else {
+    //     handleUpdateUrlLocal(local);
+    //   }
+    // }
 
     // save image local
-    function handleSaveImage(local) {
-      return saveFullImage({body: _body, local: local}).then(handleUpdateUrlLocal.bind(null, local)).catch(next);
-    }
+    // function handleSaveImage(local) {
+    //   return saveFullImage({body: _body, local: local}).then(handleUpdateUrlLocal.bind(null, local)).catch(next);
+    // }
 
     // update local new image url
-    function handleUpdateUrlLocal(local, url) {
-      if (url) {
-        return local.update({photo: url}).then(handleResponse.bind(null, local)).catch(next);
-      } else {
-        handleResponse(local);
-      }
-    }
+    // function handleUpdateUrlLocal(local, url) {
+    //   if (url) {
+    //     return local.update({photo: url}).then(handleResponse.bind(null, local)).catch(next);
+    //   } else {
+    //     handleResponse(local);
+    //   }
+    // }
 
     // return response
-    function handleResponse(local) {
-      response.json(local);
-    }
+    // function handleResponse(local) {
+    //   response.json(local);
+    // }
 };
 
 LocalController.prototype.remove = function(request, response, next) {
