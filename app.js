@@ -67,4 +67,4 @@ app.use(function(err, request, response, next) {
 // server listener
 module.exports = app;
 
-//start api: export DEBUG=api:* && JWT_TKN_SECRET=testBdb && export NODE_ENV=development && npm run nodemon
+//start api MAC OS/Linux: export DEBUG=api:* && export JWT_TKN_SECRET=testBdb && export NODE_ENV=development && export SUPPRESS_NO_CONFIG_WARNING=false && npm run nodemon

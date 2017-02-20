@@ -26,7 +26,6 @@ var contTagsLocal = function(local) {
     models.sequelize.query('SELECT t.name, COUNT(*) FROM "Tag" t inner join "Review_Tags" rt on T.id = rt.tag_id inner join "Review" r on r.id = rt.review_id inner join "Local" l on r.local_id = l.id WHERE l.id = '+local.id+' GROUP BY t.id')
       .then(function(result, metatag) {
         local.dataValues.tags = result[0];
-        console.log(result);
         resolve(local);
       });
   });
@@ -266,11 +265,11 @@ LocalController.prototype.create = function(request, response, next) {
       return {photo: url};
     })
     .then(function(url) {
-      return _local.update(url)
-        .then(function(local){
-          _local.photo = local.photo;
-          response.json(_local);
-        });
+      return _local.update(url);
+    })
+    .then(function(local){
+      _local.photo = local.photo;
+      response.json(_local);
     })
   .catch(next);
 };
