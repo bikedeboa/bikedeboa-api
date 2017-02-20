@@ -6,10 +6,6 @@ var debug           = require('debug')('api:ctrlLocal'),
     sharp           = require('sharp'),
     AWS_PATH_PREFIX = 'https://s3.amazonaws.com/bikedeboa/';
 
-function LocalController(LocalModel) {
-  this.model = LocalModel;
-}
-
 // PRIVATE FN //
 
 var handleNotFound = function(data) {
@@ -170,8 +166,12 @@ var deleteImage = function(id) {
 
 // PRIVATE FN //
 
+function LocalController(LocalModel) {
+  this.model = LocalModel;
+}
+
 LocalController.prototype.getAll = function(request, response, next) {
-  var query = {
+  var _query = {
     attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'description', 'address', 'photo', 'updatedAt', 'createdAt'].concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
@@ -188,7 +188,7 @@ LocalController.prototype.getAll = function(request, response, next) {
     ])
   };
 
-  this.model.findAll(query)
+  this.model.findAll(_query)
     .then(function(locals) {
       response.json(locals);
     })
@@ -196,7 +196,7 @@ LocalController.prototype.getAll = function(request, response, next) {
 };
 
 LocalController.prototype.getAllLight = function(request, response, next) {
-  var query = {
+  var _query = {
     attributes: ['id', 'lat', 'lng'].concat([
       [
         models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
@@ -205,7 +205,7 @@ LocalController.prototype.getAllLight = function(request, response, next) {
     ])
   };
 
-  this.model.findAll(query)
+  this.model.findAll(_query)
     .then(function(locals) {
       response.json(locals);
     })
@@ -213,7 +213,7 @@ LocalController.prototype.getAllLight = function(request, response, next) {
 };
 
 LocalController.prototype.getById = function(request, response, next) {
-  var query = {
+  var _query = {
     attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'photo', 'description', 'address', 'createdAt'].concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
@@ -227,7 +227,7 @@ LocalController.prototype.getById = function(request, response, next) {
     where: {id : request.params._id}
   };
 
-	this.model.find(query)
+	this.model.find(_query)
     .then(handleNotFound)
     .then(contTagsLocal)
     .then(function(local){
@@ -279,129 +279,76 @@ LocalController.prototype.update = function(request, response, next) {
       _body  = request.body,
       _local = {};
 
-    if (_body.lat) _local.lat = _body.lat;
-    if (_body.lng) _local.lng = _body.lng;
-    if (_body.description) _local.description = _body.description;
+  if (_body.lat) _local.lat = _body.lat;
+  if (_body.lng) _local.lng = _body.lng;
+  if (_body.description) _local.description = _body.description;
 
-    if (_body.structureType) _local.structureType = _body.structureType;
-    if (_body.isPublic) _local.isPublic = _body.isPublic && (_body.isPublic === 'true' ? 1 : 0);
-    if (_body.text) _local.text = _body.text;
-    if (_body.address) _local.address = _body.address;
-    if (_body.photoUrl) _local.photo = _body.photoUrl;
+  if (_body.structureType) _local.structureType = _body.structureType;
+  if (_body.isPublic) _local.isPublic = _body.isPublic && (_body.isPublic === 'true' ? 1 : 0);
+  if (_body.text) _local.text = _body.text;
+  if (_body.address) _local.address = _body.address;
+  if (_body.photoUrl) _local.photo = _body.photoUrl;
 
-  	var query = {
-      where: {id : _id}
-    };
+	var query = {
+    where: {id : _id}
+  };
 
-    this.model.find(query)
-      .then(handleNotFound)
-      .then(function(local) {
-        return local.update(_local);
-      })
-      .then(function(local) {
-        _local = local;
-        if(_body.photo) {
-          return deleteImage(_id);
-        }
-        return _local;
-      })
-      .then(function(local) {
-        if(_body.photo) {
-          return saveThumbImage({body: _body, local: _local});
-        }
-        return local;
-      })
-      .then(function(local) {
-        if(_body.photo) {
-          return saveFullImage({body: _body, local: _local});
-        }
-        return undefined;
-      })
-      .then(function(url) {
-        if (url) {
-          return _local.update({photo: url});
-        }
-        return url;
-      })
-      .then(function(resp) {
-        if (typeof resp === 'string') {
-          _local.photo = resp;
-        }
-        response.json(_local);
-      })
-    .catch(next);
-
-    // this.model.find(query)
-    //   .then(handleNotFound)
-    //   .then(handleUpdateLocal)
-    //   .catch(next);
-
-    // update data local
-    // function handleUpdateLocal(local) {
-    //   return local.update(_local).then(handleDeleteImage.bind(null, local)).catch(next);
-    // }
-
-    // delete image local exists
-    // function handleDeleteImage(local) {
-    //   if(_body.photo){
-    //     return deleteImage(_id).then(handleSaveThumbImage.bind(null, local)).catch(next);
-    //   } else {
-    //     handleSaveThumbImage(local);
-    //   }
-    // }
-
-    // save thumb image local
-    // function handleSaveThumbImage(local) {
-    //   if (_body.photo) {
-    //     return saveThumbImage({body: _body, local: local}).then(handleSaveImage.bind(null, local)).catch(next);
-    //   } else {
-    //     handleUpdateUrlLocal(local);
-    //   }
-    // }
-
-    // save image local
-    // function handleSaveImage(local) {
-    //   return saveFullImage({body: _body, local: local}).then(handleUpdateUrlLocal.bind(null, local)).catch(next);
-    // }
-
-    // update local new image url
-    // function handleUpdateUrlLocal(local, url) {
-    //   if (url) {
-    //     return local.update({photo: url}).then(handleResponse.bind(null, local)).catch(next);
-    //   } else {
-    //     handleResponse(local);
-    //   }
-    // }
-
-    // return response
-    // function handleResponse(local) {
-    //   response.json(local);
-    // }
+  this.model.find(query)
+    .then(handleNotFound)
+    .then(function(local) {
+      return local.update(_local);
+    })
+    .then(function(local) {
+      _local = local;
+      if(_body.photo) {
+        return deleteImage(_id);
+      }
+      return _local;
+    })
+    .then(function(local) {
+      if(_body.photo) {
+        return saveThumbImage({body: _body, local: _local});
+      }
+      return local;
+    })
+    .then(function(local) {
+      if(_body.photo) {
+        return saveFullImage({body: _body, local: _local});
+      }
+      return undefined;
+    })
+    .then(function(url) {
+      if (url) {
+        return _local.update({photo: url});
+      }
+      return url;
+    })
+    .then(function(resp) {
+      if (typeof resp === 'string') {
+        _local.photo = resp;
+      }
+      response.json(_local);
+    })
+  .catch(next);
 };
 
 LocalController.prototype.remove = function(request, response, next) {
-    var _id  = request.params._id;
+  var _id  = request.params._id;
+  var _query = {
+    where: {id : _id}
+  };
 
-    var query = {
-        where: {id : _id}
-    };
-
-    this.model.destroy(query)
-      .then(handleNotFound)
-      .then(handleDeleteImage.bind(null, _id))
-      .catch(next);
-
-    function handleDeleteImage(id, data) {
-        return deleteImage(id).then(handleResponse.bind(null, data)).catch(next);
-    }
-
-    function handleResponse(rowDeleted) {
-      if(rowDeleted){
-          response.json({
-              message: 'Deleted successfully'
-          });
-      }
-    }
+  this.model.destroy(_query)
+    .then(handleNotFound)
+    .then(function(data) {
+      return deleteImage(_id);
+    })
+    .then(function(data) {
+      response.json({
+        message: 'Deleted successfully'
+      });
+    })
+  .catch(next);
 };
 
 module.exports = function(LocalModel) {
