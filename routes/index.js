@@ -1,26 +1,23 @@
-var express = require('express'),
-  	router  = express.Router();
-
-var models = require('../models');
-var AuthController = require('../controllers/AuthController')(models.User);
+let express = require('express')
+let router = express.Router()
 
 // authentication
-router.use('/token', require('./auth'));
+router.use('/token', require('./auth'))
 // log
-router.use('/log', require('./log'));
+router.use('/log', require('./log'))
 // user
-router.use('/user', require('./user'));
+router.use('/user', require('./user'))
 // tag
-router.use('/tag', require('./tag'));
+router.use('/tag', require('./tag'))
 // local
-router.use('/local', require('./local'));
+router.use('/local', require('./local'))
 // checkin
-router.use('/checkin', require('./checkin'));
+router.use('/checkin', require('./checkin'))
 // review
-router.use('/review', require('./review'));
+router.use('/review', require('./review'))
 // revision
-router.use('/revision', require('./revision'));
+router.use('/revision', require('./revision'))
 // docs
-router.use('/v1/doc', require('./doc'));
+router.use('/v1/doc', require('./doc'))
 
-module.exports = router;
+module.exports = router

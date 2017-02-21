@@ -1,8 +1,8 @@
-var express = require('express'),
-    router  = express.Router();
+let express = require('express')
+let router = express.Router()
 
-router.get('/', function(request, response) {
-    response.render('index', {title: 'bike de boa API'});
-});
+router.get('/', function (request, response) {
+  response.render('index', {title: 'bike de boa API'})
+})
 
-module.exports = router;
+module.exports = router

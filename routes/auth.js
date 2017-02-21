@@ -1,10 +1,8 @@
-var express = require('express'),
-    router  = express.Router(),
-    acl 	  = require('express-acl');
+let express = require('express')
+let router = express.Router()
+let models = require('../models')
+let AuthController = require('../controllers/AuthController')(models.User)
 
-var models = require('../models');
-var AuthController = require('../controllers/AuthController')(models.User);
+router.post('/', AuthController.token.bind(AuthController))
 
-router.post('/', AuthController.token.bind(AuthController));
-
-module.exports = router;
+module.exports = router

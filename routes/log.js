@@ -1,14 +1,13 @@
-var express = require('express'),
-    router  = express.Router(),
-    acl 	  = require('express-acl');
+let express = require('express')
+let router = express.Router()
+let acl = require('express-acl')
+let models = require('../models')
+let LogController = require('../controllers/LogController')(models.Log)
+let AuthController = require('../controllers/AuthController')(models.User)
 
-var models = require('../models');
-var LogController = require('../controllers/LogController')(models.Log);
-var AuthController = require('../controllers/AuthController')(models.User);
+router.use(AuthController.middlewareAuth)
+router.use(acl.authorize)
 
-router.use(AuthController.middlewareAuth);
-router.use(acl.authorize);
+router.get('/', LogController.getAll.bind(LogController))
 
-router.get('/', LogController.getAll.bind(LogController));
-
-module.exports = router;
+module.exports = router

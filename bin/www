@@ -1,18 +1,17 @@
 #!/usr/bin/env node
 
-var app 		= require('../app'),
-  	debug 	= require('debug')('api:server'),
-		models 	= require('../models');
-
-var PORT = process.env.PORT || 3000;
-debug('NODE_ENV = ' + process.env.NODE_ENV);
+let app = require('../app')
+let debug = require('debug')('api:server')
+let models = require('../models')
+let PORT = process.env.PORT || 3000
 
 models.sequelize.sync({logging: false}).then(function () {
-  debug('Models Sequelize -> (Sincronizado)');
+  debug('Sequelize -> Synchronized')
 });
 
-var server = app.listen(PORT, function () {
-  var host = server.address().address;
-  var port = server.address().port;
-  debug('APP rodando em http://%s:%s', host, port);
+let server = app.listen(PORT, function () {
+  let host = server.address().address
+  let port = server.address().port
+  debug('NODE_ENV = ' + process.env.NODE_ENV)
+  debug('APP rodando em http://%s:%s', host, port)
 });
