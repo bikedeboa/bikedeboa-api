@@ -6,7 +6,7 @@ API Webapp for colaboratively mapping your cities bike racks. <a href="https://w
 
 ## API
 
-* [Documentation](https://dbd-api.herokuapp.com/v1/doc)
+* [Documentation](https://bdb-api.herokuapp.com/v1/doc)
 
 ## Authors
 
