@@ -1,12 +1,12 @@
 
 ![alt tag](https://www.bikedeboa.com.br/apple-touch-icon.png)
-# Bike de boa 
+# Bike de boa
 
 API Webapp for colaboratively mapping your cities bike racks. <a href="https://www.bikedeboa.com.br" target="_blank">Access here!</a>
 
 ## API
 
-* [Documentation](https://bikedeboa-api.herokuapp.com/v1/doc)
+* [Documentation](https://dbd-api.herokuapp.com/v1/doc)
 
 ## Authors
 
@@ -20,6 +20,3 @@ API Webapp for colaboratively mapping your cities bike racks. <a href="https://w
 ## Contact
 
 <a href="mailto:bikedeboa@gmail.com" target="_top">Gmail</a>
-
-
-
