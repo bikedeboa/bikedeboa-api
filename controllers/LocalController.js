@@ -196,7 +196,7 @@ LocalController.prototype.getAll = function (request, response, next) {
 
 LocalController.prototype.getAllLight = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng'].concat([
+    attributes: ['id', 'lat', 'lng', 'isPublic', 'structureType'].concat([
       [
         models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'average'
