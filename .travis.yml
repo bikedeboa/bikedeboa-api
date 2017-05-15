@@ -10,7 +10,7 @@ addons:
     packages:
     - g++-4.8
 deploy:
-  app: bikedeboa-api
+  app: bdb-api
   provider: heroku
   api_key:
     secure: Mwz/qY40ppUmdIxsOBaxLbBfnGB+eCBF0g+4BLUk5zywgPL/CHHeIPIDVYj8BpF+4IBGzS06ianjxFNC97XpbURqNwuLnfOnhDJttqgTgpRMpd0GLFPOlfUoYuwnOc0g6nFhfx6F46TURCJu3+GNB1e6OSH0FWq3N+DkRx5VGaKBm2MjW4wue3e99KPyN92NLdy87QQ63acE3l1vinkpRykSBvBrELkqo/1ZjQI8kVaLPevb4zvm0mWYg3fqBtwwKuajfE79FE+X4ugJPBfcpzT2oMUTidzVPnYZV08raxBJFzjvowRTaoEhlemSZ9eaoaa21xZaKWV7QIGWW6x+Bu1zDcHKvI5MyqJ+DliTIHTy5RtKw1FOKzIKXUI+F0eXlhUPjNtB0YIX05282foF5wzatFar9OB5lFJaoHWUJXo8ePulfapd3mENwq/MEH6QdW7uQg3Nsd4fXtpDwTRrLi3eqyBAhEvRNuN7L5L/TxOMnJCTWYEBcl85PRFLUry4xYHWMfMVIXA8rw84tjSvfTXMFXIfIwlgd5vWqx5Sthi0pAU2o3y3bG3xnF5yH5lZ/FptzkglkRKlPGeVV/fOOcJEzFLV5YixhVAZLClK4EavFWH1n/mopb6CrXacFlZdcidP9qrbTo8K8qO4DFGTGfUjpJbTqiNiSfAngG5PVBQ=
