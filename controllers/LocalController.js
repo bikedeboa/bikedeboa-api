@@ -179,10 +179,6 @@ LocalController.prototype.getAll = function (request, response, next) {
       [
         models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'average'
-      ],
-      [
-        models.sequelize.literal('(SELECT COUNT(*) FROM "Checkin" WHERE "Checkin"."local_id" = "Local"."id")'),
-        'checkins'
       ]
     ])
   }
@@ -197,6 +193,10 @@ LocalController.prototype.getAll = function (request, response, next) {
 LocalController.prototype.getAllLight = function (request, response, next) {
   var _query = {
     attributes: ['id', 'lat', 'lng', 'isPublic', 'structureType', 'text', 'photo'].concat([
+      [
+        models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
+        'reviews'
+      ],
       [
         models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'average'
@@ -219,8 +219,8 @@ LocalController.prototype.getById = function (request, response, next) {
         'reviews'
       ],
       [
-        models.sequelize.literal('(SELECT COUNT(*) FROM "Checkin" WHERE "Checkin"."local_id" = "Local"."id")'),
-        'checkins'
+        models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
+        'average'
       ]
     ]),
     where: {id: request.params._id}
