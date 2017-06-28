@@ -278,9 +278,10 @@ LocalController.prototype.update = function (request, response, next) {
   let _body = request.body
   let _local = {}
 
+  _local.description = _body.description
+  
   if (_body.lat) _local.lat = _body.lat
   if (_body.lng) _local.lng = _body.lng
-  if (_body.description) _local.description = _body.description
 
   if (_body.structureType) _local.structureType = _body.structureType
   if (_body.isPublic) _local.isPublic = _body.isPublic && (_body.isPublic === 'true' ? 1 : 0)
