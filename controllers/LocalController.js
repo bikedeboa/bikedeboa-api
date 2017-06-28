@@ -3,7 +3,14 @@ let models = require('../models')
 let AWS = require('aws-sdk')
 let s3 = new AWS.S3()
 let sharp = require('sharp')
-const AWS_PATH_PREFIX = 'https://s3.amazonaws.com/bikedeboa/'
+const env = process.env.NODE_ENV || 'development'
+const AWS_PATH_PREFIX = (env === 'development') ? 'https://s3.amazonaws.com/bikedeboa-dev/' : 'https://s3.amazonaws.com/bikedeboa/'
+const BUCKET_NAME = (env === 'development') ? 'bikedeboa-dev' : 'bikedeboa';
+
+
+console.log('AWS_PATH_PREFIX', AWS_PATH_PREFIX);
+console.log('BUCKET_NAME', BUCKET_NAME);
+
 
 // PRIVATE FN //
 
@@ -55,7 +62,7 @@ var saveFullImage = function (params) {
       {
         Key: imageName,
         Body: binaryData,
-        Bucket: 'bikedeboa',
+        Bucket: BUCKET_NAME,
         ACL: 'public-read'
       }, function (err, data) {
       if (err) {
@@ -76,7 +83,7 @@ var saveThumbImage = function (params) {
     let _id = params.local.id
 
     // valid photo exists
-    if (!_photo) resolve('')
+    if (!_photo) resolve('') 
 
     // get base64 and type image for save
     let type = _photo.split(',')[0] === 'data:image/png;base64' ? '.png' : _photo.split(',')[0] === 'data:image/jpeg;base64' ? '.jpeg' : ''
@@ -106,7 +113,7 @@ var saveThumbImage = function (params) {
           {
             Key: imageName,
             Body: data,
-            Bucket: 'bikedeboa',
+            Bucket: BUCKET_NAME,
             ACL: 'public-read'
           }, function (err, data) {
           if (err) {
@@ -132,7 +139,7 @@ var deleteImage = function (id) {
 
     // params delete images
     let params = {
-      Bucket: 'bikedeboa',
+      Bucket: BUCKET_NAME,
       Delete: {
         Objects: [
           {
@@ -279,7 +286,7 @@ LocalController.prototype.update = function (request, response, next) {
   let _local = {}
 
   _local.description = _body.description
-  
+
   if (_body.lat) _local.lat = _body.lat
   if (_body.lng) _local.lng = _body.lng
 
