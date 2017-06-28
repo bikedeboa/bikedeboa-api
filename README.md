@@ -2,7 +2,10 @@
 ![alt tag](https://www.bikedeboa.com.br/apple-touch-icon.png)
 # Bike de boa
 
-API Webapp for colaboratively mapping your cities bike racks. <a href="https://www.bikedeboa.com.br" target="_blank">Access here!</a>
+API Webapp for colaboratively mapping your cities bike racks.
+
+[![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+[![Build Status](https://travis-ci.org/dennerevaldt/bikedeboa-api.svg?branch=master)](https://travis-ci.org/dennerevaldt/bikedeboa-api)
 
 ## API
 
