@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "nodemon": "nodemon ./bin/www",
-    "test": "export NODE_ENV=test && export JWT_TKN_SECRET=testBdb && node_modules/mocha/bin/mocha tests/unit/* && standard 'app.js' 'routes/*.js' 'controllers/*.js'"
+    "test": "export NODE_ENV=test && export JWT_TKN_SECRET=testBdb && node_modules/mocha/bin/mocha tests/unit/*"
   },
   "author": "Denner Evaldt Machado <dnrevaldt@gmail.com>",
   "license": "MIT",
