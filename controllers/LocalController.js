@@ -199,10 +199,10 @@ LocalController.prototype.getAll = function (request, response, next) {
 
 LocalController.prototype.getAllLight = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'isPublic', 'structureType', 'text', 'photo'].concat([
+    attributes: ['id', 'lat', 'lng', 'isPublic', 'structureType', 'text', 'photo', 'address'].concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
-        'reviews'
+        'reviews' 
       ],
       [
         models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
