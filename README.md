@@ -1,5 +1,5 @@
 
-![alt tag](https://www.bikedeboa.com.br/apple-touch-icon.png)
+![alt tag](https://www.bikedeboa.com.br/favicons/icon-192x192.png)
 # Bike de boa
 
 API Webapp for colaboratively mapping your cities bike racks.
