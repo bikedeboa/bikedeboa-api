@@ -29,42 +29,69 @@ AuthController.prototype.middlewareAuth = function (request, response, next) {
   }
 }
 
+// app.post('/api/auth', function (req, res) {
+//     // Grab the social network and token
+//     var network = req.body.network;
+//     var socialToken = req.body.socialToken;
+
+//     // Validate the social token with Facebook
+//     validateWithProvider(network, socialToken).then(function (profile) {
+//         // Return the user data we got from Facebook
+//         res.send('Authenticated as: ' + profile.id);
+//     }).catch(function (err) {
+//         res.send('Failed!' + err.message);
+//     });
+// });
+
 AuthController.prototype.token = function (request, response, next) {
+  // Grab the social network and token
+  let network = req.body.network;
+  let socialToken = req.body.socialToken;
   let username = request.body.username
   let password = request.body.password
 
-  if (!username || !password) {
+  // if (!username || !password) {
+  if (! (username && (password || (network && socialToken)))) {
     let err = new Error('Bad request')
     err.status = 400
     return next(err)
   }
 
-  this.model.findOne({ where: {username: username} })
-    .then(function (data) {
-      if (data) {
-        if (data.validPassword(password, data.password)) {
-          let expires = moment().add(1, 'days').valueOf()
-          let token = jwt.encode({
-            id: data.id,
-            username: data.username,
-            exp: expires,
-            role: data.role
-          }, process.env.JWT_TKN_SECRET)
-          response.json({
-            token: token
-          })
-        } else {
-          let err = new Error('Unauthorized')
-          err.status = 401
-          next(err)
-        }
-      } else {
-        let err = new Error('Login inexistent')
-        err.status = 404
-        next(err)
-      }
-    })
-    .catch(next)
+  // Validate the social token
+  validateWithProvider(network, socialToken).then(function (profile) {
+      // Return the user data we got from Facebook
+      res.send('Authenticated as: ' + profile.id);
+      
+      // this.model.findOne({ where: {username: username} })
+      //   .then(function (data) {
+      //     if (data) {
+      //       if (data.validPassword(password, data.password)) {
+      //         let expires = moment().add(1, 'days').valueOf()
+      //         let token = jwt.encode({
+      //           id: data.id,
+      //           username: data.username,
+      //           exp: expires,
+      //           role: data.role
+      //         }, process.env.JWT_TKN_SECRET)
+      //         response.json({
+      //           token: token
+      //         })
+      //       } else {
+      //         let err = new Error('Unauthorized')
+      //         err.status = 401
+      //         next(err)
+      //       }
+      //     } else {
+      //       let err = new Error('Login inexistent')
+      //       err.status = 404
+      //       next(err)
+      //     }
+      //   })
+      //   .catch(next)
+  }).catch(function (err) {
+      res.send('Failed!' + err.message);
+  });
+
 }
 
 AuthController.prototype.middlewareLogging = function (request, response, next) {
