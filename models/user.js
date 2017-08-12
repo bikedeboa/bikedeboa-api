@@ -10,7 +10,6 @@ module.exports = function(sequelize, DataTypes) {
         },
         fullname: {
             type: DataTypes.STRING,
-            // allowNull: false,
             validate: {
                 len: {
                     args: [5, 50],
@@ -38,7 +37,6 @@ module.exports = function(sequelize, DataTypes) {
         },
         email: {
             type: DataTypes.STRING,
-            // allowNull: false
         }, 
         facebook_id: {
             type: DataTypes.STRING,

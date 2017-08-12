@@ -61,8 +61,7 @@ AuthController.prototype._generateJWT = function (foundUser, response) {
   let expires = moment().add(1, 'days').valueOf()
   let token = jwt.encode({
     id: foundUser.id,
-    // username: foundUser.username,
-    // fullname: foundUser.fullname,
+    username: foundUser.username,
     role: foundUser.role,
     exp: expires
   }, process.env.JWT_TKN_SECRET)
@@ -83,7 +82,6 @@ AuthController.prototype.token = function (request, response, next) {
   let fullname = request.body.fullname
   let email = request.body.email
 
-  // if (!username || !password) {
   if (! ((username && password) || 
          (network && socialToken))) {
     let err = new Error('Bad request')
@@ -103,18 +101,14 @@ AuthController.prototype.token = function (request, response, next) {
           if (foundUser) {
             self._generateJWT(foundUser, response)
           } else {
-            // response.send('non existing user: ' + profile.id)
             console.log('------CREATING NEW USER--------');
 
-            // Although social login was authenticated this user doesn't existe yet, 
-            //   se we create it in our DB.
+            // Create new user with the social data
             const newUserData = {
-                  // username: _body.username,
-                  // password: _body.password,
-                  role: 'user',
-                  facebook_id: profile.id,
-                  fullname: fullname,
-                  email: email
+              role: 'user',
+              facebook_id: profile.id,
+              fullname: fullname,
+              email: email
             };
 
             UserController.model.create(newUserData)
