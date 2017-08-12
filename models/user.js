@@ -10,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         fullname: {
             type: DataTypes.STRING,
-            allowNull: false,
+            // allowNull: false,
             validate: {
                 len: {
                     args: [5, 50],
@@ -20,14 +20,12 @@ module.exports = function(sequelize, DataTypes) {
         },
         username: {
             type: DataTypes.STRING,
-            allowNull: false,
             unique: {
                 msg: 'Usuário já existe.'
             }
         },
         password: {
-            type: DataTypes.STRING,
-            allowNull: false,
+            type: DataTypes.STRING, 
             validate: {
                 len: {
                     args: [6, 100],
@@ -37,6 +35,16 @@ module.exports = function(sequelize, DataTypes) {
         },
         role: {
             type: DataTypes.STRING
+        },
+        email: {
+            type: DataTypes.STRING,
+            // allowNull: false
+        }, 
+        facebook_id: {
+            type: DataTypes.STRING,
+            unique: {
+                msg: 'Perfil de Facebook já cadastrado.'
+            }
         }
     },
     {
@@ -54,8 +62,9 @@ module.exports = function(sequelize, DataTypes) {
                 }
             },
             beforeCreate: function(user, options) {
-                if (!user.password) return;
-                user.password = bcrypt.hashSync(user.password);
+                if (user.password) {
+                    user.password = bcrypt.hashSync(user.password);
+                }
             }
         },
         instanceMethods : {

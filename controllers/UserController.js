@@ -50,6 +50,9 @@ UserController.prototype.create = function (request, response, next) {
     role: _body.role
   }
 
+  if (_body.facebook_id) _user.facebook_id = _body.facebook_id
+  if (_body.email) _user.email = _body.email
+
   this.model.create(_user)
     .then(function (data) {
       response.json(data)
@@ -69,6 +72,8 @@ UserController.prototype.update = function (request, response, next) {
   if (_body.username) _user.username = _body.username
   if (_body.password) _user.password = _body.password
   if (_body.role) _user.role = _body.role
+  if (_body.facebook_id) _user.facebook_id = _body.facebook_id
+  if (_body.email) _user.email = _body.email
 
   this.model.find(_query)
     .then(handleNotFound)
