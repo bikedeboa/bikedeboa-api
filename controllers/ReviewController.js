@@ -90,6 +90,15 @@ ReviewController.prototype.create = function (request, response, next) {
   }
   let _tags = _body.tags || []
 
+  // Save author user if there's one authenticated
+  const loggedUser = request.decoded;
+  if (loggedUser) {
+    // The 'client' role is a user that is authenticated but not logged in
+    if (loggedUser.role !== 'client') {
+      _review.user_id = loggedUser.id;
+    }
+  }
+
   promiseTags(_tags)
     .then(function (tagsResponse) {
       _self.model.create(_review)

@@ -1,3 +1,5 @@
+let models = require('../models')
+
 // PRIVATE FN
 
 let handleNotFound = function (data) {
@@ -17,7 +19,8 @@ function UserController (UserModel) {
 
 UserController.prototype.getAll = function (request, response, next) {
   let _query = {
-    attributes: {exclude: ['password']}
+    attributes: {exclude: ['password']},
+    include: [models.Review]
   }
 
   this.model.findAll(_query)
@@ -30,7 +33,31 @@ UserController.prototype.getAll = function (request, response, next) {
 UserController.prototype.getById = function (request, response, next) {
   let _query = {
     where: {id: request.params._id},
-    attributes: {exclude: ['password']}
+    attributes: {exclude: ['password']},
+    include: [models.Review]
+  }
+
+  this.model.find(_query)
+    .then(handleNotFound)
+    .then(function (data) {
+      response.json(data)
+    })
+    .catch(next)
+}
+
+UserController.prototype.getCurrentUserReviews = function (request, response, next) {
+  const currentUser = request.decoded;
+
+  if (currentUser.role === 'client') {
+    let err = new Error('No logged user.')
+    err.status = 404
+    throw err
+  }
+
+  let _query = {
+    where: {id: currentUser.id},
+    attributes: {exclude: ['password']},
+    include: [models.Review]
   }
 
   this.model.find(_query)
