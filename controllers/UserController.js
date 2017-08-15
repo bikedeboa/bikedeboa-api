@@ -20,7 +20,7 @@ function UserController (UserModel) {
 UserController.prototype.getAll = function (request, response, next) {
   let _query = {
     attributes: {exclude: ['password']},
-    include: [models.Review]
+    // include: [models.Review]
   }
 
   this.model.findAll(_query)
@@ -34,7 +34,7 @@ UserController.prototype.getById = function (request, response, next) {
   let _query = {
     where: {id: request.params._id},
     attributes: {exclude: ['password']},
-    include: [models.Review]
+    // include: [models.Review]
   }
 
   this.model.find(_query)
