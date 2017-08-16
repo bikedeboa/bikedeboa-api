@@ -68,6 +68,54 @@ UserController.prototype.getCurrentUserReviews = function (request, response, ne
     .catch(next)
 }
 
+UserController.prototype.getCurrentUserLocals = function (request, response, next) {
+  const currentUser = request.decoded;
+
+  if (currentUser.role === 'client') {
+    let err = new Error('No logged user.')
+    err.status = 404
+    throw err
+  }
+
+  let _query = {
+    where: {id: currentUser.id},
+    attributes: {exclude: ['password']},
+    include: [models.Local]
+  }
+
+  this.model.find(_query)
+    .then(handleNotFound)
+    .then(function (data) {
+      response.json(data)
+    })
+    .catch(next)
+}
+
+
+
+UserController.prototype.getCurrentUser = function (request, response, next) {
+  const currentUser = request.decoded;
+
+  if (currentUser.role === 'client') {
+    let err = new Error('No logged user.')
+    err.status = 404
+    throw err
+  }
+
+  let _query = {
+    where: {id: currentUser.id},
+    attributes: {exclude: ['password']},
+    include: [models.Local, models.Review],
+  }
+
+  this.model.find(_query)
+    .then(handleNotFound)
+    .then(function (data) {
+      response.json(data)
+    })
+    .catch(next)
+}
+
 UserController.prototype.create = function (request, response, next) {
   let _body = request.body
   let _user = {

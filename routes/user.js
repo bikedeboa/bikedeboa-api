@@ -10,6 +10,8 @@ router.use(acl.authorize)
 
 router.get('/', UserController.getAll.bind(UserController)) 
 router.get('/reviews', UserController.getCurrentUserReviews.bind(UserController))
+router.get('/locals', UserController.getCurrentUserLocals.bind(UserController))
+router.get('/current', UserController.getCurrentUser.bind(UserController))
 router.get('/:_id', UserController.getById.bind(UserController))
 router.post('/', AuthController.middlewareLogging, UserController.create.bind(UserController))
 router.put('/:_id', AuthController.middlewareLogging, UserController.update.bind(UserController))

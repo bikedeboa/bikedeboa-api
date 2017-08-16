@@ -51,6 +51,7 @@ module.exports = function(sequelize, DataTypes) {
         classMethods: {
             associate: function(models) {
                 User.hasMany(models.Review, {foreignKey: 'user_id', hooks: true});
+                User.hasMany(models.Local, {foreignKey: 'user_id', hooks: true});
             }
         },
         hooks: {

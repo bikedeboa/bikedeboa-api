@@ -255,6 +255,15 @@ LocalController.prototype.create = function (request, response, next) {
     address: _body.address,
     authorIP: _body.authorIP
   }
+  // Save author user if there's one authenticated
+  const loggedUser = request.decoded;
+  if (loggedUser) {
+    // The 'client' role is a user that is authenticated but not logged in
+    if (loggedUser.role !== 'client') {
+      _params.user_id = loggedUser.id;
+    }
+  }
+  
   var _local = {}
 
   this.model.create(_params)
