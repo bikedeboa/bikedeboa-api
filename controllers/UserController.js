@@ -1,4 +1,5 @@
 let models = require('../models')
+let ReviewController = require('./ReviewController')(models.User)
 
 // PRIVATE FN
 
@@ -68,6 +69,41 @@ UserController.prototype.getCurrentUserReviews = function (request, response, ne
     .catch(next)
 }
 
+UserController.prototype.importReviewsToCurrentUser = function (request, response, next) {
+  let _body = request.body
+  let reviews = _body.reviews;
+
+  // Check if we do have a logged user
+  const currentUser = request.decoded;
+  if (currentUser.role === 'client') { 
+    let err = new Error('No logged user.')
+    err.status = 404
+    throw err
+  }
+
+  // Collect promises for all reviews' updates
+  let updatesPromises = [];
+  reviews.forEach(r => {
+    updatesPromises.push(
+      ReviewController._update.bind(ReviewController)(
+        r.databaseId,
+        {user_id: currentUser.id}
+      ).catch(() => {
+        let err = new Error('Something went wrong when updating review' + r.databaseId)
+        err.status = 404
+        throw err
+      })
+    );
+  });
+
+  // Wait until all updates are done
+  Promise.all(updatesPromises).then(() => {
+    response.json({
+      message: `${reviews.length} reviews imported successfully.`
+    });
+  }).catch(next)
+}
+
 UserController.prototype.getCurrentUserLocals = function (request, response, next) {
   const currentUser = request.decoded;
 
@@ -127,6 +163,11 @@ UserController.prototype.create = function (request, response, next) {
 
   if (_body.facebook_id) _user.facebook_id = _body.facebook_id
   if (_body.email) _user.email = _body.email
+
+  if (_user.importedReviews) {
+    console.log(_user.importedReviews);
+    return;
+  }
 
   this.model.create(_user)
     .then(function (data) {

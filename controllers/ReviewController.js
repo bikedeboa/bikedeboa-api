@@ -76,6 +76,42 @@ ReviewController.prototype.remove = function (request, response, next) {
     .catch(next)
 }
 
+ReviewController.prototype._update = function (id, data, next) {
+  const _query = {
+    where: {id: id}
+  }
+  
+  return new Promise(function (resolve, reject) {
+    models.Review.find(_query)
+      .then(handleNotFound)
+      .then(function (r) {
+        r.update(data)
+          .then(function (review) {
+            resolve(review)
+          })
+          .catch(next)
+        resolve(r)
+      })
+      .catch(next)
+  })
+}
+
+ReviewController.prototype.update = function (request, response, next) {
+  let _id = request.params._id
+  let _body = request.body
+  let _review = {}
+
+  if (_body.description) _review.description = _body.description
+  if (_body.rating) _review.rating = _body.rating
+  if (_body.user_id) _review.user_id = _body.user_id
+
+  this._update(_id, _review, next)
+    .then( review => {
+      response.json(review)
+      return review
+    })
+}
+
 ReviewController.prototype.create = function (request, response, next) {
   let _body = request.body
   let _self = this
