@@ -1,5 +1,6 @@
 let models = require('../models')
 let ReviewController = require('./ReviewController')(models.User)
+let LocalController = require('./LocalController')(models.User)
 
 // PRIVATE FN
 
@@ -70,8 +71,13 @@ UserController.prototype.getCurrentUserReviews = function (request, response, ne
 }
 
 UserController.prototype.importReviewsToCurrentUser = function (request, response, next) {
-  let _body = request.body
-  let reviews = _body.reviews;
+  const _body = request.body
+  const reviews = _body.reviews;
+  if (!reviews) {
+    let err = new Error('No reviews found in request body.')
+    err.status = 404
+    throw err
+  }
 
   // Check if we do have a logged user
   const currentUser = request.decoded;
@@ -100,6 +106,46 @@ UserController.prototype.importReviewsToCurrentUser = function (request, respons
   Promise.all(updatesPromises).then(() => {
     response.json({
       message: `${reviews.length} reviews imported successfully.`
+    });
+  }).catch(next)
+}
+
+UserController.prototype.importLocalsToCurrentUser = function (request, response, next) {
+  const _body = request.body
+  const locals = _body.locals;
+  if (!locals) {
+    let err = new Error('No locals found in request body.')
+    err.status = 404
+    throw err
+  }
+
+  // Check if we do have a logged user
+  const currentUser = request.decoded;
+  if (currentUser.role === 'client') { 
+    let err = new Error('No logged user.')
+    err.status = 404
+    throw err
+  }
+
+  // Collect promises for all locals' updates
+  let updatesPromises = [];
+  locals.forEach(local => {
+    updatesPromises.push(
+      LocalController._update.bind(LocalController)(
+        local.id,
+        {user_id: currentUser.id}
+      ).catch(error => {
+        let err = new Error('Something went wrong when updating local ' + local.id + error)
+        err.status = 404
+        throw err
+      })
+    );
+  });
+
+  // Wait until all updates are done
+  Promise.all(updatesPromises).then(() => {
+    response.json({
+      message: `${locals.length} locals imported successfully.`
     });
   }).catch(next)
 }

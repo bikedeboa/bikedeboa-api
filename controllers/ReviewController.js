@@ -110,6 +110,7 @@ ReviewController.prototype.update = function (request, response, next) {
       response.json(review)
       return review
     })
+    .catch(next) 
 }
 
 ReviewController.prototype.create = function (request, response, next) {

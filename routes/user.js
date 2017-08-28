@@ -16,6 +16,7 @@ router.get('/:_id', UserController.getById.bind(UserController))
 router.post('/', AuthController.middlewareLogging, UserController.create.bind(UserController))
 router.put('/:_id', AuthController.middlewareLogging, UserController.update.bind(UserController))
 router.post('/import-reviews', UserController.importReviewsToCurrentUser.bind(UserController))
+router.post('/import-locals', UserController.importLocalsToCurrentUser.bind(UserController))
 router.delete('/:_id', AuthController.middlewareLogging, UserController.remove.bind(UserController))
 router.delete('/', AuthController.middlewareLogging, UserController.removeAll.bind(UserController))
 
