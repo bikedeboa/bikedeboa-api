@@ -67,7 +67,8 @@ AuthController.prototype._generateJWT = function (foundUser, response) {
   }, process.env.JWT_TKN_SECRET)
   
   response.json({
-    token: token
+    token: token,
+    role: foundUser.role,
   })
 }
 
