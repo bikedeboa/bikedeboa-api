@@ -36,8 +36,8 @@ var contTagsLocal = function (local) {
 var saveFullImage = function (params) {
   return new Promise(function (resolve, reject) {
     // params
-    let _photo = params.body.photo
-    let _id = params.local.id
+    let _photo = params.photo
+    let _id = params.id
 
     // valid photo exists
     if (!_photo) resolve('')
@@ -79,8 +79,8 @@ var saveFullImage = function (params) {
 var saveThumbImage = function (params) {
   return new Promise(function (resolve, reject) {
     // params
-    let _photo = params.body.photo
-    let _id = params.local.id
+    let _photo = params.photo
+    let _id = params.id
 
     // valid photo exists
     if (!_photo) resolve('') 
@@ -255,16 +255,25 @@ LocalController.prototype.create = function (request, response, next) {
     address: _body.address,
     authorIP: _body.authorIP
   }
+  // Save author user if there's one authenticated
+  const loggedUser = request.decoded;
+  if (loggedUser) {
+    // The 'client' role is a user that is authenticated but not logged in
+    if (loggedUser.role !== 'client') {
+      _params.user_id = loggedUser.id;
+    }
+  }
+  
   var _local = {}
 
   this.model.create(_params)
     .then(function (local) {
       _local = local
-      return {body: _body, local: _local}
+      return {photo: _body.photo, id: _local.id}
     })
     .then(saveThumbImage)
     .then(function (url) {
-      return {body: _body, local: _local}
+      return {photo: _body.photo, id: _local.id}
     })
     .then(saveFullImage)
     .then(function (url) {
@@ -280,9 +289,61 @@ LocalController.prototype.create = function (request, response, next) {
     .catch(next)
 }
 
+LocalController.prototype._update = function (id, data, photo, next) {
+  let query = {
+    where: {id: id}
+  }
+
+  return new Promise(function (resolve, reject) {
+    models.Local.find(query)
+      .then(handleNotFound)
+      .then(function (local) {
+        return local.update(data)
+      })
+      .then(function (local) {
+        data = local
+        if (photo) {
+          return deleteImage(id)
+        } else {
+          return data
+        }
+      })
+      .then(function (local) {
+        if (photo) {
+          return saveThumbImage({photo: photo, id: id})
+        } else {
+          return local
+        }
+      })
+      .then(function (local) {
+        if (photo) {
+          return saveFullImage({photo: photo, id: id})
+        } else {
+          return undefined
+        }
+      })
+      .then(function (url) {
+        if (url) {
+          return data.update({photo: url})
+        } else {
+          return url
+        }
+      })
+      .then(function (resp) { 
+        if (typeof resp === 'string') {
+          data.photo = resp
+        } else {
+          return data
+        }
+      })
+      .then(resolve)
+      .catch(next)
+  });
+}
+
 LocalController.prototype.update = function (request, response, next) {
-  let _id = request.params._id
-  let _body = request.body
+  const _id = request.params._id
+  const _body = request.body
   let _local = {}
 
   _local.description = _body.description
@@ -294,49 +355,14 @@ LocalController.prototype.update = function (request, response, next) {
   if (_body.isPublic) _local.isPublic = _body.isPublic && (_body.isPublic === 'true' ? 1 : 0)
   if (_body.text) _local.text = _body.text
   if (_body.address) _local.address = _body.address
-  if (_body.photoUrl) _local.photo = _body.photoUrl
+  if (_body.photoUrl) _local.photo = _body.photoUrl 
+  if (_body.user_id) _local.user_id = _body.user_id
 
-  let query = {
-    where: {id: _id}
-  }
-
-  this.model.find(query)
-    .then(handleNotFound)
-    .then(function (local) {
-      return local.update(_local)
-    })
-    .then(function (local) {
-      _local = local
-      if (_body.photo) {
-        return deleteImage(_id)
-      }
-      return _local
-    })
-    .then(function (local) {
-      if (_body.photo) {
-        return saveThumbImage({body: _body, local: _local})
-      }
+  this._update(_id, _local, _body.photo, next) 
+    .then( local => {
+      response.json(local)
       return local
     })
-    .then(function (local) {
-      if (_body.photo) {
-        return saveFullImage({body: _body, local: _local})
-      }
-      return undefined
-    })
-    .then(function (url) {
-      if (url) {
-        return _local.update({photo: url})
-      }
-      return url
-    })
-    .then(function (resp) {
-      if (typeof resp === 'string') {
-        _local.photo = resp
-      }
-      response.json(_local)
-    })
-    .catch(next)
 }
 
 LocalController.prototype.remove = function (request, response, next) {

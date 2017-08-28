@@ -76,6 +76,43 @@ ReviewController.prototype.remove = function (request, response, next) {
     .catch(next)
 }
 
+ReviewController.prototype._update = function (id, data, next) {
+  const _query = {
+    where: {id: id}
+  }
+  
+  return new Promise(function (resolve, reject) {
+    models.Review.find(_query)
+      .then(handleNotFound)
+      .then(function (r) {
+        r.update(data)
+          .then(function (review) {
+            resolve(review)
+          })
+          .catch(next)
+        resolve(r)
+      })
+      .catch(next)
+  })
+}
+
+ReviewController.prototype.update = function (request, response, next) {
+  let _id = request.params._id
+  let _body = request.body
+  let _review = {}
+
+  if (_body.description) _review.description = _body.description
+  if (_body.rating) _review.rating = _body.rating
+  if (_body.user_id) _review.user_id = _body.user_id
+
+  this._update(_id, _review, next)
+    .then( review => {
+      response.json(review)
+      return review
+    })
+    .catch(next) 
+}
+
 ReviewController.prototype.create = function (request, response, next) {
   let _body = request.body
   let _self = this
@@ -89,6 +126,15 @@ ReviewController.prototype.create = function (request, response, next) {
     local_id: _body.idLocal
   }
   let _tags = _body.tags || []
+
+  // Save author user if there's one authenticated
+  const loggedUser = request.decoded;
+  if (loggedUser) {
+    // The 'client' role is a user that is authenticated but not logged in
+    if (loggedUser.role !== 'client') {
+      _review.user_id = loggedUser.id;
+    }
+  }
 
   promiseTags(_tags)
     .then(function (tagsResponse) {

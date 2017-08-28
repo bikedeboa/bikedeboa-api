@@ -2,91 +2,40 @@
   {
     "group": "client",
     "permissions": [
-      {
-        "resource": "user",
-        "methods": "*",
-        "action": "deny"
-      },
-      {
-        "resource": "review",
-        "methods": "*",
-        "action": "allow"
-      },
-      {
-        "resource": "local",
-        "methods": "*",
-        "action": "allow"
-      },
-      {
-        "resource": "checkin",
-        "methods": "*",
-        "action": "deny"
-      },
-      {
-        "resource": "tag",
-        "methods": ["GET"],
-        "action": "allow"
-      },
-      {
-        "resource": "log",
-        "methods": "*",
-        "action": "deny"
-      },
-      {
-        "resource": "revision",
-        "methods": ["POST"],
-        "action": "allow"
-      }
+      {"resource": "user", "methods": ["GET"], "action": "allow"},
+      {"resource": "review", "methods": "*", "action": "allow"},
+      {"resource": "local", "methods": "*", "action": "allow"},
+      {"resource": "tag", "methods": ["GET"], "action": "allow"},
+      {"resource": "log", "methods": "*", "action": "deny"},
+      {"resource": "revision", "methods": ["POST"], "action": "allow"}
+    ]
+  },
+  {
+    "group": "user",
+    "permissions": [
+      {"resource": "user", "methods": ["GET"], "action": "allow"},
+      {"resource": "review", "methods": "*", "action": "allow"},
+      {"resource": "local", "methods": "*", "action": "allow"},
+      {"resource": "tag", "methods": ["GET"], "action": "allow"},
+      {"resource": "log", "methods": "*", "action": "deny"},
+      {"resource": "revision", "methods": "*", "action": "allow"}
     ]
   },
   {
     "group": "colaborator",
     "permissions": [
-      {
-        "resource": "user",
-        "methods": "*",
-        "action": "deny"
-      },
-      {
-        "resource": "review",
-        "methods": "*",
-        "action": "allow"
-      },
-      {
-        "resource": "local",
-        "methods": "*",
-        "action": "allow"
-      },
-      {
-        "resource": "checkin",
-        "methods": "*",
-        "action": "deny"
-      },
-      {
-        "resource": "tag",
-        "methods": ["GET"],
-        "action": "allow"
-      },
-      {
-        "resource": "log",
-        "methods": "*",
-        "action": "deny"
-      },
-      {
-        "resource": "revision",
-        "methods": "*",
-        "action": "allow"
-      }
+      {"resource": "user", "methods": ["GET"], "action": "allow"},
+      {"resource": "review", "methods": "*", "action": "allow"},
+      {"resource": "local", "methods": "*", "action": "allow"},
+      {"resource": "tag", "methods": ["GET"], "action": "allow"},
+      {"resource": "log", "methods": "*", "action": "deny"},
+      {"resource": "revision", "methods": "*", "action": "allow"}
     ]
   },
   {
     "group": "admin",
     "permissions": [
-      {
-        "resource": "*",
-        "methods": "*",
-        "action": "allow"
-      }
+      {"resource": "*", "methods": "*", "action": "allow"}
     ]
   }
 ]

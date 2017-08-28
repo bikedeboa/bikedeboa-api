@@ -10,7 +10,6 @@ module.exports = function(sequelize, DataTypes) {
         },
         fullname: {
             type: DataTypes.STRING,
-            allowNull: false,
             validate: {
                 len: {
                     args: [5, 50],
@@ -20,14 +19,12 @@ module.exports = function(sequelize, DataTypes) {
         },
         username: {
             type: DataTypes.STRING,
-            allowNull: false,
             unique: {
                 msg: 'Usuário já existe.'
             }
         },
         password: {
-            type: DataTypes.STRING,
-            allowNull: false,
+            type: DataTypes.STRING, 
             validate: {
                 len: {
                     args: [6, 100],
@@ -37,6 +34,15 @@ module.exports = function(sequelize, DataTypes) {
         },
         role: {
             type: DataTypes.STRING
+        },
+        email: {
+            type: DataTypes.STRING,
+        }, 
+        facebook_id: {
+            type: DataTypes.STRING,
+            unique: {
+                msg: 'Perfil de Facebook já cadastrado.'
+            }
         }
     },
     {
@@ -44,7 +50,8 @@ module.exports = function(sequelize, DataTypes) {
         freezeTableName: true,
         classMethods: {
             associate: function(models) {
-            // associations can be defined here
+                User.hasMany(models.Review, {foreignKey: 'user_id', hooks: true});
+                User.hasMany(models.Local, {foreignKey: 'user_id', hooks: true});
             }
         },
         hooks: {
@@ -54,8 +61,9 @@ module.exports = function(sequelize, DataTypes) {
                 }
             },
             beforeCreate: function(user, options) {
-                if (!user.password) return;
-                user.password = bcrypt.hashSync(user.password);
+                if (user.password) {
+                    user.password = bcrypt.hashSync(user.password);
+                }
             }
         },
         instanceMethods : {

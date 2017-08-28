@@ -10,6 +10,7 @@ router.use(acl.authorize)
 
 router.get('/', ReviewController.getAll.bind(ReviewController))
 router.get('/:_id', ReviewController.getById.bind(ReviewController))
+router.put('/:_id', ReviewController.update.bind(ReviewController))
 router.delete('/:_id', AuthController.middlewareLogging, ReviewController.remove.bind(ReviewController))
 router.post('/', AuthController.middlewareLogging, ReviewController.create.bind(ReviewController))
 

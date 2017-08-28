@@ -1,3 +1,7 @@
+let models = require('../models')
+let ReviewController = require('./ReviewController')(models.User)
+let LocalController = require('./LocalController')(models.User)
+
 // PRIVATE FN
 
 let handleNotFound = function (data) {
@@ -17,7 +21,8 @@ function UserController (UserModel) {
 
 UserController.prototype.getAll = function (request, response, next) {
   let _query = {
-    attributes: {exclude: ['password']}
+    attributes: {exclude: ['password']},
+    // include: [models.Review]
   }
 
   this.model.findAll(_query)
@@ -30,7 +35,159 @@ UserController.prototype.getAll = function (request, response, next) {
 UserController.prototype.getById = function (request, response, next) {
   let _query = {
     where: {id: request.params._id},
-    attributes: {exclude: ['password']}
+    attributes: {exclude: ['password']},
+    // include: [models.Review]
+  }
+
+  this.model.find(_query)
+    .then(handleNotFound)
+    .then(function (data) {
+      response.json(data)
+    })
+    .catch(next)
+}
+
+UserController.prototype.getCurrentUserReviews = function (request, response, next) {
+  const currentUser = request.decoded;
+
+  if (currentUser.role === 'client') {
+    let err = new Error('No logged user.')
+    err.status = 404
+    throw err
+  }
+
+  let _query = {
+    where: {id: currentUser.id},
+    attributes: {exclude: ['password']},
+    include: [models.Review]
+  }
+
+  this.model.find(_query)
+    .then(handleNotFound)
+    .then(function (data) {
+      response.json(data)
+    })
+    .catch(next)
+}
+
+UserController.prototype.importReviewsToCurrentUser = function (request, response, next) {
+  const _body = request.body
+  const reviews = _body.reviews;
+  if (!reviews) {
+    let err = new Error('No reviews found in request body.')
+    err.status = 404
+    throw err
+  }
+
+  // Check if we do have a logged user
+  const currentUser = request.decoded;
+  if (currentUser.role === 'client') { 
+    let err = new Error('No logged user.')
+    err.status = 404
+    throw err
+  }
+
+  // Collect promises for all reviews' updates
+  let updatesPromises = [];
+  reviews.forEach(r => {
+    updatesPromises.push(
+      ReviewController._update.bind(ReviewController)(
+        r.databaseId,
+        {user_id: currentUser.id}
+      ).catch(() => {
+        let err = new Error('Something went wrong when updating review' + r.databaseId)
+        err.status = 404
+        throw err
+      })
+    );
+  });
+
+  // Wait until all updates are done
+  Promise.all(updatesPromises).then(() => {
+    response.json({
+      message: `${reviews.length} reviews imported successfully.`
+    });
+  }).catch(next)
+}
+
+UserController.prototype.importLocalsToCurrentUser = function (request, response, next) {
+  const _body = request.body
+  const locals = _body.locals;
+  if (!locals) {
+    let err = new Error('No locals found in request body.')
+    err.status = 404
+    throw err
+  }
+
+  // Check if we do have a logged user
+  const currentUser = request.decoded;
+  if (currentUser.role === 'client') { 
+    let err = new Error('No logged user.')
+    err.status = 404
+    throw err
+  }
+
+  // Collect promises for all locals' updates
+  let updatesPromises = [];
+  locals.forEach(local => {
+    updatesPromises.push(
+      LocalController._update.bind(LocalController)(
+        local.id,
+        {user_id: currentUser.id}
+      ).catch(error => {
+        let err = new Error('Something went wrong when updating local ' + local.id + error)
+        err.status = 404
+        throw err
+      })
+    );
+  });
+
+  // Wait until all updates are done
+  Promise.all(updatesPromises).then(() => {
+    response.json({
+      message: `${locals.length} locals imported successfully.`
+    });
+  }).catch(next)
+}
+
+UserController.prototype.getCurrentUserLocals = function (request, response, next) {
+  const currentUser = request.decoded;
+
+  if (currentUser.role === 'client') {
+    let err = new Error('No logged user.')
+    err.status = 404
+    throw err
+  }
+
+  let _query = {
+    where: {id: currentUser.id},
+    attributes: {exclude: ['password']},
+    include: [models.Local]
+  }
+
+  this.model.find(_query)
+    .then(handleNotFound)
+    .then(function (data) {
+      response.json(data)
+    })
+    .catch(next)
+}
+
+
+
+UserController.prototype.getCurrentUser = function (request, response, next) {
+  const currentUser = request.decoded;
+
+  if (currentUser.role === 'client') {
+    let err = new Error('No logged user.')
+    err.status = 404
+    throw err
+  }
+
+  let _query = {
+    where: {id: currentUser.id},
+    attributes: {exclude: ['password']},
+    include: [models.Local, models.Review],
   }
 
   this.model.find(_query)
@@ -48,6 +205,14 @@ UserController.prototype.create = function (request, response, next) {
     username: _body.username,
     password: _body.password,
     role: _body.role
+  }
+
+  if (_body.facebook_id) _user.facebook_id = _body.facebook_id
+  if (_body.email) _user.email = _body.email
+
+  if (_user.importedReviews) {
+    console.log(_user.importedReviews);
+    return;
   }
 
   this.model.create(_user)
@@ -69,6 +234,8 @@ UserController.prototype.update = function (request, response, next) {
   if (_body.username) _user.username = _body.username
   if (_body.password) _user.password = _body.password
   if (_body.role) _user.role = _body.role
+  if (_body.facebook_id) _user.facebook_id = _body.facebook_id
+  if (_body.email) _user.email = _body.email
 
   this.model.find(_query)
     .then(handleNotFound)
