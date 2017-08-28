@@ -7,7 +7,6 @@
   "scripts": {
     "start": "sequelize db:migrate && node ./bin/www",
     "nodemon": "nodemon --inspect ./bin/www",
-    // "test": "export NODE_ENV=test && export JWT_TKN_SECRET=testBdb && node_modules/mocha/bin/mocha tests/unit/*"
     "test": "" 
   },
   "author": "Denner Evaldt Machado <dnrevaldt@gmail.com>",
