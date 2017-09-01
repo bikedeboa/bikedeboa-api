@@ -2,7 +2,7 @@
   {
     "group": "client",
     "permissions": [
-      {"resource": "user", "methods": ["GET"], "action": "allow"},
+      {"resource": "user", "methods": ["GET","POST"], "action": "allow"},
       {"resource": "review", "methods": "*", "action": "allow"},
       {"resource": "local", "methods": "*", "action": "allow"},
       {"resource": "tag", "methods": ["GET"], "action": "allow"},
@@ -13,18 +13,18 @@
   {
     "group": "user",
     "permissions": [
-      {"resource": "user", "methods": ["GET"], "action": "allow"},
+      {"resource": "user", "methods": ["GET","POST"], "action": "allow"},
       {"resource": "review", "methods": "*", "action": "allow"},
       {"resource": "local", "methods": "*", "action": "allow"},
       {"resource": "tag", "methods": ["GET"], "action": "allow"},
       {"resource": "log", "methods": "*", "action": "deny"},
       {"resource": "revision", "methods": "*", "action": "allow"}
     ]
-  },
+  }, 
   {
     "group": "colaborator",
     "permissions": [
-      {"resource": "user", "methods": ["GET"], "action": "allow"},
+      {"resource": "user", "methods": ["GET","POST"], "action": "allow"},
       {"resource": "review", "methods": "*", "action": "allow"},
       {"resource": "local", "methods": "*", "action": "allow"},
       {"resource": "tag", "methods": ["GET"], "action": "allow"},
