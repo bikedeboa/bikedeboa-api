@@ -208,12 +208,8 @@ UserController.prototype.create = function (request, response, next) {
   }
 
   if (_body.facebook_id) _user.facebook_id = _body.facebook_id
+  if (_body.google_id) _user.google_id = _body.google_id
   if (_body.email) _user.email = _body.email
-
-  if (_user.importedReviews) {
-    console.log(_user.importedReviews);
-    return;
-  }
 
   this.model.create(_user)
     .then(function (data) {
@@ -235,6 +231,7 @@ UserController.prototype.update = function (request, response, next) {
   if (_body.password) _user.password = _body.password
   if (_body.role) _user.role = _body.role
   if (_body.facebook_id) _user.facebook_id = _body.facebook_id
+  if (_body.google_id) _user.google_id = _body.google_id
   if (_body.email) _user.email = _body.email
 
   this.model.find(_query)

@@ -37,11 +37,13 @@ AuthController.prototype._validateWithProvider = function (network, socialToken)
   var providers = {
       facebook: {
           url: 'https://graph.facebook.com/me'
+      },
+      google: {
+          url: 'https://www.googleapis.com/oauth2/v3/tokeninfo'
       }
   }
     
   return new Promise(function (resolve, reject) {
-    // Send a GET request to Facebook with the token as query string
     request({
         url: providers[network].url,
         qs: {access_token: socialToken}
@@ -57,7 +59,7 @@ AuthController.prototype._validateWithProvider = function (network, socialToken)
   })
 }
 
-AuthController.prototype._generateJWT = function (foundUser, response) {
+AuthController.prototype._generateJWT = function (foundUser, response, isNewUser=false) {
   let expires = moment().add(1, 'days').valueOf()
   let token = jwt.encode({
     id: foundUser.id,
@@ -69,9 +71,11 @@ AuthController.prototype._generateJWT = function (foundUser, response) {
   response.json({
     token: token,
     role: foundUser.role,
+    isNewUser: isNewUser
   })
 }
 
+// Social auth inspired by https://ole.michelsen.dk/blog/social-signin-spa-jwt-server.html
 AuthController.prototype.token = function (request, response, next) {
   const self = this;
 
@@ -90,14 +94,27 @@ AuthController.prototype.token = function (request, response, next) {
     return next(err)
   }
 
-  // Login by social network
   if (network && socialToken) {
-    // Validate the social token
+    // Login by social network
+    // Fist, validate the social token.
     this._validateWithProvider(network, socialToken).then(function (profile) {
         console.log(profile);
 
+        let query;
+        switch (network) {
+          case 'facebook':
+            query = {facebook_id: profile.id}
+            break;
+          case 'google':
+            // https://developers.google.com/identity/sign-in/web/backend-auth 
+            profile.id = profile.sub
+            query = {google_id: profile.id}
+            break;
+        }
+
+
         // Search in DB for user with that Facebook ID
-        self.model.findOne({ where: {facebook_id: profile.id} })
+        self.model.findOne({ where: query })
         .then(function (foundUser) {
           if (foundUser) {
             self._generateJWT(foundUser, response)
@@ -107,14 +124,22 @@ AuthController.prototype.token = function (request, response, next) {
             // Create new user with the social data
             const newUserData = {
               role: 'user',
-              facebook_id: profile.id,
               fullname: fullname,
               email: email
             };
 
+            switch (network) {
+              case 'facebook':
+                newUserData.facebook_id = profile.id;
+                break;
+              case 'google':
+                newUserData.google_id = profile.id;
+                break;
+            }
+
             UserController.model.create(newUserData)
               .then(function (newUser) {
-                self._generateJWT(newUser, response)
+                self._generateJWT(newUser, response, true)
               })
               .catch(next)
           }
