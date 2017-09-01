@@ -41,7 +41,13 @@ module.exports = function(sequelize, DataTypes) {
         facebook_id: {
             type: DataTypes.STRING,
             unique: {
-                msg: 'Perfil de Facebook já cadastrado.'
+                msg: 'Facebook profile exists already.'
+            }
+        },
+        google_id: {
+            type: DataTypes.STRING,
+            unique: {
+                msg: 'Google profile exists already.'
             }
         }
     },
