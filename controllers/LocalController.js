@@ -178,7 +178,7 @@ function LocalController (LocalModel) {
 
 LocalController.prototype.getAll = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'description', 'address', 'photo', 'updatedAt', 'createdAt'].concat([
+    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'description', 'address', 'photo', 'updatedAt', 'createdAt'].concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'reviews'
@@ -199,7 +199,7 @@ LocalController.prototype.getAll = function (request, response, next) {
 
 LocalController.prototype.getAllLight = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'isPublic', 'structureType', 'text', 'photo', 'address'].concat([
+    attributes: ['id', 'lat', 'lng', 'isPublic', 'isCovered', 'structureType', 'text', 'photo', 'address'].concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'reviews' 
@@ -220,7 +220,7 @@ LocalController.prototype.getAllLight = function (request, response, next) {
 
 LocalController.prototype.getById = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'text', 'photo', 'description', 'address', 'createdAt'].concat([
+    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'photo', 'description', 'address', 'createdAt'].concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'reviews'
@@ -247,14 +247,17 @@ LocalController.prototype.create = function (request, response, next) {
   var _params = {
     lat: _body.lat,
     lng: _body.lng,
-    structureType: _body.structureType,
-    isPublic: _body.isPublic && (_body.isPublic === 'true' ? 1 : 0),
     text: _body.text,
     photo: '',
     description: _body.description,
     address: _body.address,
     authorIP: _body.authorIP
   }
+
+  if (_body.structureType) _params.structureType = _body.structureType
+  if (_body.isPublic) _params.isPublic = _body.isPublic && (_body.isPublic === 'true' ? 1 : 0)
+  if (_body.isCovered) _params.isCovered = _body.isCovered && (_body.isCovered === 'true' ? 1 : 0)
+
   var _local = {}
 
   this.model.create(_params)
@@ -292,6 +295,7 @@ LocalController.prototype.update = function (request, response, next) {
 
   if (_body.structureType) _local.structureType = _body.structureType
   if (_body.isPublic) _local.isPublic = _body.isPublic && (_body.isPublic === 'true' ? 1 : 0)
+  if (_body.isCovered) _local.isCovered = _body.isCovered && (_body.isCovered === 'true' ? 1 : 0)
   if (_body.text) _local.text = _body.text
   if (_body.address) _local.address = _body.address
   if (_body.photoUrl) _local.photo = _body.photoUrl

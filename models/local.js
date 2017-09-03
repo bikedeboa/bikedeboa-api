@@ -20,6 +20,9 @@ module.exports = function(sequelize, DataTypes) {
         isPublic: {
             type: DataTypes.BOOLEAN
         },
+        isCovered: {
+            type: DataTypes.BOOLEAN
+        },
         text: {
             type: DataTypes.TEXT
         },
