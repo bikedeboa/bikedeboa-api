@@ -52,7 +52,7 @@ UserController.prototype.getCurrentUserReviews = function (request, response, ne
 
   if (currentUser.role === 'client') {
     let err = new Error('No logged user.')
-    err.status = 404
+    err.status = 400
     throw err
   }
 
@@ -80,7 +80,7 @@ UserController.prototype.importReviewsToCurrentUser = function (request, respons
   const reviews = _body.reviews;
   if (!reviews) {
     let err = new Error('No reviews found in request body.')
-    err.status = 404
+    err.status = 400
     throw err
   }
 
@@ -88,23 +88,30 @@ UserController.prototype.importReviewsToCurrentUser = function (request, respons
   const currentUser = request.decoded;
   if (currentUser.role === 'client') { 
     let err = new Error('No logged user.')
-    err.status = 404
+    err.status = 400
     throw err
   }
 
   // Collect promises for all reviews' updates
   let updatesPromises = [];
   reviews.forEach(r => {
-    updatesPromises.push(
-      ReviewController._update.bind(ReviewController)(
-        r.databaseId,
-        {user_id: currentUser.id}
-      ).catch(() => {
-        let err = new Error('Something went wrong when updating review' + r.databaseId)
-        err.status = 404
-        throw err
-      })
-    );
+    if (!r.databaseId) {
+      let err = new Error('Review without ID')
+      err.status = 400
+      throw err
+    } else {
+      updatesPromises.push(
+        ReviewController._update.bind(ReviewController)(
+          r.databaseId,
+          {user_id: currentUser.id}
+        ).catch(err => {
+          console.log(err);
+          let throwErr = new Error(`Error updating review ${r.databaseId}`)
+          throwErr.status = 500
+          throw throwErr
+        })
+      );
+    }
   });
 
   // Wait until all updates are done

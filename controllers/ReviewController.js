@@ -76,7 +76,7 @@ ReviewController.prototype.remove = function (request, response, next) {
     .catch(next)
 }
 
-ReviewController.prototype._update = function (id, data, next) {
+ReviewController.prototype._update = function (id, data) {
   const _query = {
     where: {id: id}
   }
@@ -89,10 +89,10 @@ ReviewController.prototype._update = function (id, data, next) {
           .then(function (review) {
             resolve(review)
           })
-          .catch(next)
+          .catch( err => reject(err) )
         resolve(r)
       })
-      .catch(next)
+      .catch( err => reject(err) ) 
   })
 }
 
@@ -105,7 +105,7 @@ ReviewController.prototype.update = function (request, response, next) {
   if (_body.rating) _review.rating = _body.rating
   if (_body.user_id) _review.user_id = _body.user_id
 
-  this._update(_id, _review, next)
+  this._update(_id, _review)
     .then( review => {
       response.json(review)
       return review

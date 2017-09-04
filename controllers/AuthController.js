@@ -63,7 +63,7 @@ AuthController.prototype._generateJWT = function (foundUser, response, isNewUser
   let expires = moment().add(1, 'days').valueOf()
   let token = jwt.encode({
     id: foundUser.id,
-    username: foundUser.username,
+    username: foundUser.username || foundUser.name || '',
     role: foundUser.role,
     exp: expires
   }, process.env.JWT_TKN_SECRET)

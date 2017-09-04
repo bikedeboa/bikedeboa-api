@@ -292,7 +292,7 @@ LocalController.prototype.create = function (request, response, next) {
     .catch(next)
 }
 
-LocalController.prototype._update = function (id, data, photo, next) {
+LocalController.prototype._update = function (id, data, photo) {
   let query = {
     where: {id: id}
   }
@@ -340,7 +340,7 @@ LocalController.prototype._update = function (id, data, photo, next) {
         }
       })
       .then(resolve)
-      .catch(next)
+      .catch( err => reject(err) ) 
   });
 }
 
@@ -362,11 +362,12 @@ LocalController.prototype.update = function (request, response, next) {
   if (_body.photoUrl) _local.photo = _body.photoUrl 
   if (_body.user_id) _local.user_id = _body.user_id
 
-  this._update(_id, _local, _body.photo, next) 
+  this._update(_id, _local, _body.photo) 
     .then( local => {
       response.json(local)
       return local
     })
+    .catch(next)
 }
 
 LocalController.prototype.remove = function (request, response, next) {
