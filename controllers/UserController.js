@@ -59,7 +59,12 @@ UserController.prototype.getCurrentUserReviews = function (request, response, ne
   let _query = {
     where: {id: currentUser.id},
     attributes: {exclude: ['password']},
-    include: [models.Review]
+    include: [
+      {
+        model: models.Review,
+        include: [models.Tag]
+      }
+    ]
   }
 
   this.model.find(_query)
