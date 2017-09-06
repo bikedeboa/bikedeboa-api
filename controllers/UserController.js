@@ -223,25 +223,11 @@ UserController.prototype.create = function (request, response, next) {
   if (_body.google_id) _user.google_id = _body.google_id
   if (_body.email) _user.email = _body.email
 
-  this.model.findOrCreate({
-    where: {
-      $or: {
-        facebook_id: _user.facebook_id ? _user.facebook_id : 0,
-        google_id: _user.google_id ? _user.google_id : 0
-      }
-    },
-    defaults: _user
-  })
-  .spread(data => {
-    response.json(data)
-  })
-  .fail(next)
-
-  // this.model.create(_user)
-  //   .then(function (data) {
-  //     response.json(data)
-  //   })
-  //   .catch(next)
+  this.model.create(_user)
+    .then(function (data) {
+      response.json(data)
+    })
+    .catch(next)
 }
 
 UserController.prototype.update = function (request, response, next) {
