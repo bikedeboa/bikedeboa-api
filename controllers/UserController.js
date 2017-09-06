@@ -94,6 +94,7 @@ UserController.prototype.importReviewsToCurrentUser = function (request, respons
 
   // Collect promises for all reviews' updates
   let updatesPromises = [];
+  let numImports = 0;
   reviews.forEach(r => {
     if (!r.databaseId) {
       let err = new Error('Review without ID')
@@ -104,11 +105,15 @@ UserController.prototype.importReviewsToCurrentUser = function (request, respons
         ReviewController._update.bind(ReviewController)(
           r.databaseId,
           {user_id: currentUser.id}
-        ).catch(err => {
+        ).then(() => {
+          numImports++;
+        }).catch(err => {
           console.log(err);
-          let throwErr = new Error(`Error updating review ${r.databaseId}`)
-          throwErr.status = 500
-          throw throwErr
+
+          // Don't throw error, just let it be.
+          // let throwErr = new Error(`Error updating review ${r.databaseId}`)
+          // throwErr.status = 500
+          // throw throwErr
         })
       );
     }
@@ -117,7 +122,8 @@ UserController.prototype.importReviewsToCurrentUser = function (request, respons
   // Wait until all updates are done
   Promise.all(updatesPromises).then(() => {
     response.json({
-      message: `${reviews.length} reviews imported successfully.`
+      numImports: numImports,
+      message: `${numImports} reviews imported successfully.`
     });
   }).catch(next)
 }
