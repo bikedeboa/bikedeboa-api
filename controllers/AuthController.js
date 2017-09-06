@@ -89,7 +89,7 @@ AuthController.prototype.token = function (request, response, next) {
 
   if (! ((username && password) || 
          (network && socialToken))) {
-    let err = new Error('Bad request')
+    let err = new Error('Bad request - missing network and/or socialToken.')
     err.status = 400
     return next(err)
   }
@@ -110,10 +110,13 @@ AuthController.prototype.token = function (request, response, next) {
             profile.id = profile.sub
             query = {google_id: profile.id}
             break;
+          default:
+            let err = new Error('Bad request')
+            err.status = 400
+            return next(err)
         }
 
-
-        // Search in DB for user with that Facebook ID
+        // Search in DB for user with that social profile ID
         self.model.findOne({ where: query })
         .then(function (foundUser) {
           if (foundUser) {
