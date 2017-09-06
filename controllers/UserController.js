@@ -226,8 +226,8 @@ UserController.prototype.create = function (request, response, next) {
   this.model.findOrCreate({
     where: {
       $or: {
-        facebook_id: _user.facebook_id,
-        google_id: _user.google_id
+        facebook_id: _user.facebook_id ? _user.facebook_id : 0,
+        google_id: _user.google_id ? _user.google_id : 0
       }
     },
     defaults: _user
