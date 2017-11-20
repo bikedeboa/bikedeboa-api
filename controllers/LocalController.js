@@ -178,7 +178,7 @@ function LocalController (LocalModel) {
 
 LocalController.prototype.getAll = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'description', 'address', 'photo', 'updatedAt', 'createdAt'].concat([
+    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'description', 'address', 'photo', 'updatedAt', 'createdAt', 'views'].concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'reviews'
@@ -219,8 +219,10 @@ LocalController.prototype.getAllLight = function (request, response, next) {
 }
 
 LocalController.prototype.getById = function (request, response, next) {
+  var self = this;
+
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'photo', 'description', 'address', 'createdAt'].concat([
+    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'photo', 'description', 'address', 'createdAt', 'views'].concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'reviews'
@@ -241,6 +243,8 @@ LocalController.prototype.getById = function (request, response, next) {
     .then(handleNotFound)
     .then(contTagsLocal)
     .then(function (local) {
+      self._update(request.params._id, {views: local.dataValues.views+1})
+      
       response.json(local)
     })
     .catch(next)
@@ -365,6 +369,7 @@ LocalController.prototype.update = function (request, response, next) {
   if (_body.address) _local.address = _body.address
   if (_body.photoUrl) _local.photo = _body.photoUrl 
   if (_body.user_id) _local.user_id = _body.user_id
+  if (_body.views) _local.views = _body.views
 
   this._update(_id, _local, _body.photo) 
     .then( local => {
