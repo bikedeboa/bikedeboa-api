@@ -37,6 +37,9 @@ module.exports = function(sequelize, DataTypes) {
         },
         authorIP: {
             type: DataTypes.STRING
+        },
+        views: {
+            type: DataTypes.INTEGER,
         }
     }, {
         timestamps: true,
