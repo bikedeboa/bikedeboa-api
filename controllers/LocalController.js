@@ -230,7 +230,11 @@ LocalController.prototype.getById = function (request, response, next) {
         'average'
       ]
     ]),
-    where: {id: request.params._id}
+    where: {id: request.params._id},
+    include: [{
+      model: models.User,
+      attributes: ['fullname'] 
+    }],
   }
 
   this.model.find(_query)
