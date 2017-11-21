@@ -34,7 +34,7 @@ function ReviewController (ReviewModel) {
 
 ReviewController.prototype.getAll = function (request, response, next) {
   let _query = {
-    include: [models.Tag]
+    include: [models.Tag, models.Local, models.User]
   }
 
   this.model.findAll(_query)
