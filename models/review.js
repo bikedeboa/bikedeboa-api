@@ -28,6 +28,7 @@ module.exports = function(sequelize, DataTypes) {
                 // associations can be defined here
                 Review.belongsToMany(models.Tag, {through: 'Review_Tags', foreignKey: 'review_id', otherKey: 'tag_id', hooks: true});
                 Review.belongsTo(models.User, {foreignKey: 'user_id', hooks: true});
+                Review.belongsTo(models.Local, {foreignKey: 'local_id', hooks: true});
             }
         }
     });

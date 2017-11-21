@@ -18,6 +18,12 @@
     "password": "",
     "database": "",
     "host": "",
-    "dialect": ""
+    "dialect": "",
+    "ssl": true,
+    "dialectOptions": {
+      "ssl": {
+        "require": true
+      }
+    }
   }
 }
