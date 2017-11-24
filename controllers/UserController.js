@@ -22,7 +22,13 @@ function UserController (UserModel) {
 UserController.prototype.getAll = function (request, response, next) {
   let _query = {
     attributes: {exclude: ['password']},
-    // include: [models.Review]
+    include: [
+      models.Local,
+      {
+        model: models.Review,
+        include: [models.Tag]
+      }
+    ]
   }
 
   this.model.findAll(_query)
@@ -37,34 +43,6 @@ UserController.prototype.getById = function (request, response, next) {
     where: {id: request.params._id},
     attributes: {exclude: ['password']},
     // include: [models.Review]
-  }
-
-  this.model.find(_query)
-    .then(handleNotFound)
-    .then(function (data) {
-      response.json(data)
-    })
-    .catch(next)
-}
-
-UserController.prototype.getCurrentUserReviews = function (request, response, next) {
-  const currentUser = request.decoded;
-
-  if (currentUser.role === 'client') {
-    let err = new Error('No logged user.')
-    err.status = 400
-    throw err
-  }
-
-  let _query = {
-    where: {id: currentUser.id},
-    attributes: {exclude: ['password']},
-    include: [
-      {
-        model: models.Review,
-        include: [models.Tag]
-      }
-    ]
   }
 
   this.model.find(_query)
@@ -177,8 +155,14 @@ UserController.prototype.getCurrentUserLocals = function (request, response, nex
     throw err
   }
 
+  this.getUserLocals({params: {_id: currentUser.id}}, response, next); 
+}
+
+UserController.prototype.getUserLocals = function (request, response, next) {
+  let _id = request.params._id
+
   let _query = {
-    where: {id: currentUser.id},
+    where: {id: _id},
     attributes: {exclude: ['password']},
     include: [models.Local]
   }
@@ -191,7 +175,39 @@ UserController.prototype.getCurrentUserLocals = function (request, response, nex
     .catch(next)
 }
 
+UserController.prototype.getCurrentUserReviews = function (request, response, next) {
+  const currentUser = request.decoded;
 
+  if (currentUser.role === 'client') {
+    let err = new Error('No logged user.')
+    err.status = 400
+    throw err
+  }
+
+  this.getUserReviews({params: {_id: currentUser.id}}, response, next);
+}
+
+UserController.prototype.getUserReviews = function (request, response, next) {
+  let _id = request.params._id
+
+  let _query = {
+    where: {id: _id},
+    attributes: {exclude: ['password']},
+    include: [
+      {
+        model: models.Review,
+        include: [models.Tag, models.Local] 
+      },
+    ]
+  }
+
+  this.model.find(_query)
+    .then(handleNotFound)
+    .then(function (data) {
+      response.json(data)
+    })
+    .catch(next)
+}
 
 UserController.prototype.getCurrentUser = function (request, response, next) {
   const currentUser = request.decoded;
