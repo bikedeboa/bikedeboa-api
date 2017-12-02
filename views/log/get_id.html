@@ -1,0 +1,40 @@
+<li class="endpoint-item noun-get">
+  <div class="endpoint-heading">
+    <span class="noun fleft">GET</span>
+    <span class="endpoint-name fleft">/log/:_page</a>
+  </div>
+  <div class="endpoint-content">
+    <h3>Parameters</h3>
+    <p>_page | String | Log's _page</p>
+
+    <h3>Response Body</h3>
+<pre>
+{
+  "result": [
+    {
+      "id": 1,
+      "user": "pedro",
+      "role": "admin",
+      "endpoint": "http://url.com/local",
+      "body": {},
+      "method": "GET",
+      "createdAt": "2016-12-23T18:30:44.618Z",
+      "updatedAt": "2016-12-23T18:30:44.618Z"
+    },
+    {
+      "id": 2,
+      "user": "pedro",
+      "role": "colaborator",
+      "endpoint": "http://url.com/local",
+      "body": {},
+      "method": "GET",
+      "createdAt": "2016-12-23T18:33:15.053Z",
+      "updatedAt": "2016-12-23T18:33:15.053Z"
+    }
+  ],
+  "count": 2,
+  "pages": 1
+}
+</pre>
+  </div><!-- .endpoint-content -->
+</li>
