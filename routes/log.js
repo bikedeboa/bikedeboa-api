@@ -8,6 +8,6 @@ let AuthController = require('../controllers/AuthController')(models.User)
 router.use(AuthController.middlewareAuth)
 router.use(acl.authorize)
 
-router.get('/:page', LogController.getAll.bind(LogController))
+router.get('/:_page?', LogController.getAll.bind(LogController))
 
 module.exports = router
