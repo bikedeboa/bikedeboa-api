@@ -50,10 +50,10 @@ app.use(function (request, response, next) {
 })
 
 // cache control
-app.use(function (req, res, next) {
-  res.setHeader('Cache-Control', 'public, max-age=432000');
-  return next();
-})
+// app.use(function (req, res, next) {
+//   res.setHeader('Cache-Control', 'public, max-age=432000');
+//   return next();
+// })
 
 // router
 app.use('/', require('./routes'))
