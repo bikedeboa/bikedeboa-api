@@ -307,7 +307,7 @@ LocalController.prototype.create = function (request, response, next) {
     .catch(next)
 }
 
-LocalController.prototype._update = function (id, data, photo) {
+LocalController.prototype._update = function (id, data, photo, silentOption) {
   let query = {
     where: {id: id}
   }
@@ -316,7 +316,7 @@ LocalController.prototype._update = function (id, data, photo) {
     models.Local.find(query)
       .then(handleNotFound)
       .then(function (local) {
-        return local.update(data)
+        return local.update(data, { silent: silentOption })
       })
       .then(function (local) {
         data = local
@@ -378,7 +378,14 @@ LocalController.prototype.update = function (request, response, next) {
   if (_body.user_id) _local.user_id = _body.user_id
   if (_body.views) _local.views = _body.views
 
-  this._update(_id, _local, _body.photo) 
+  // ISSUE #8
+  // Caso exista somente as duas keys de description e views no objeto _local para atualizar,
+  // podendo ser somente o contador, então não atualiza o campo updatedAt
+  const arrayCompare = ['description', 'views']
+  const arrayExistingKeys = Object.keys(_local).map((key) => key)
+  const silentOption = arrayCompare.toString() === arrayExistingKeys.toString()
+
+  this._update(_id, _local, _body.photo, silentOption) 
     .then( local => {
       response.json(local)
       return local
