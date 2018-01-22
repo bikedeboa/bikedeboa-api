@@ -38,6 +38,15 @@ module.exports = function(sequelize, DataTypes) {
         authorIP: {
             type: DataTypes.STRING
         },
+        city: {
+            type: DataTypes.STRING
+        },
+        state: {
+            type: DataTypes.STRING
+        },
+        country: {
+            type: DataTypes.STRING
+        },
         views: {
             type: DataTypes.INTEGER,
         }
