@@ -26,7 +26,7 @@ app.use(cors({
 app.use(compression())
 
 // static
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: '5d' }));
 
 // setup swig
 app.set('view engine', 'html')
@@ -48,6 +48,12 @@ app.use(function (request, response, next) {
   } else {
     next()
   }
+})
+
+// cache control
+app.use(function (req, res, next) {
+  res.setHeader('Cache-Control', 'public, max-age=432000');
+  return next();
 })
 
 // router
