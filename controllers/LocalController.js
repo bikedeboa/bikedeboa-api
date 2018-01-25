@@ -146,16 +146,10 @@ var deleteImage = function (name) {
       Delete: {
         Objects: [
           {
-            Key: imageName + '.jpeg'
+            Key: imageName
           },
           {
-            Key: imageName + '.png'
-          },
-          {
-            Key: imageNameTumb + '.jpeg'
-          },
-          {
-            Key: imageNameTumb + '.png'
+            Key: imageNameTumb
           }
         ]
       }
