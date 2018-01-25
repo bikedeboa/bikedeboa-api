@@ -50,7 +50,8 @@ var saveFullImage = function (params) {
 
     // path image
     let path = 'images/'
-    let imageName = path + _id + type
+    let timestamp = new Date().getTime()
+    let imageName = path + _id + '-' + timestamp + type
 
     // type invalid return
     if (!type) {
@@ -93,7 +94,8 @@ var saveThumbImage = function (params) {
 
     // path image
     let path = 'images/thumbs/'
-    let imageName = path + _id + type
+    let timestamp = new Date().getTime()
+    let imageName = path + _id + '-' + timestamp + type
 
     // type invalid return
     if (!type) {
@@ -117,10 +119,8 @@ var saveThumbImage = function (params) {
             ACL: 'public-read'
           }, function (err, data) {
           if (err) {
-            debug('Error uploading image ', imageName)
             reject(err)
           } else {
-            debug('Succesfully uploaded the image', imageName)
             resolve(AWS_PATH_PREFIX + imageName)
           }
         })
@@ -128,14 +128,17 @@ var saveThumbImage = function (params) {
   })
 }
 
-var deleteImage = function (id) {
+var deleteImage = function (name) {
   return new Promise(function (resolve, reject) {
+    // valid photo 
+    if (!name || name === '') resolve('')
+
     // path image
     let path = 'images/'
     let pathThumb = 'images/thumbs/'
 
-    let imageName = path + id
-    let imageNameTumb = pathThumb + id
+    let imageName = path + name
+    let imageNameTumb = pathThumb + name
 
     // params delete images
     let params = {
@@ -160,10 +163,8 @@ var deleteImage = function (id) {
     // delete imagens in s3
     s3.deleteObjects(params, function (err, data) {
       if (err) {
-        debug(err, err.stack)
         reject(err)
       } else {
-        debug(data)
         resolve(data)
       }
     })
@@ -321,7 +322,7 @@ LocalController.prototype._update = function (id, data, photo, silentOption) {
       .then(function (local) {
         data = local
         if (photo) {
-          return deleteImage(id)
+          return deleteImage(local.photo)
         } else {
           return data
         }
@@ -398,11 +399,18 @@ LocalController.prototype.remove = function (request, response, next) {
   let _query = {
     where: {id: _id}
   }
+  let localForRemove;
 
-  this.model.destroy(_query)
+  this.model.findOne(_query)
     .then(handleNotFound)
     .then(function (data) {
-      return deleteImage(_id)
+      localForRemove = data;
+      let splitUrl = data.photo ? data.photo.split('/') : ''
+      let imageName = typeof splitUrl !== 'string' ? splitUrl[splitUrl.length - 1] : ''
+      return deleteImage(imageName)
+    })
+    .then(function(data) {
+      return localForRemove.destroy()
     })
     .then(function (data) {
       response.json({
