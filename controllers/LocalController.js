@@ -33,7 +33,7 @@ var contTagsLocal = function (local) {
   })
 }
 
-var saveFullImage = function (params) {
+var saveFullImage = function (params, timestamp) {
   return new Promise(function (resolve, reject) {
     // params
     let _photo = params.photo
@@ -50,7 +50,6 @@ var saveFullImage = function (params) {
 
     // path image
     let path = 'images/'
-    let timestamp = new Date().getTime()
     let imageName = path + _id + '-' + timestamp + type
 
     // type invalid return
@@ -77,7 +76,7 @@ var saveFullImage = function (params) {
   })
 }
 
-var saveThumbImage = function (params) {
+var saveThumbImage = function (params, timestamp) {
   return new Promise(function (resolve, reject) {
     // params
     let _photo = params.photo
@@ -94,7 +93,6 @@ var saveThumbImage = function (params) {
 
     // path image
     let path = 'images/thumbs/'
-    let timestamp = new Date().getTime()
     let imageName = path + _id + '-' + timestamp + type
 
     // type invalid return
@@ -110,7 +108,6 @@ var saveThumbImage = function (params) {
       })
       .toBuffer()
       .then(function (data) {
-        console.log("Buffer >", data, imageName)
         // Send image blob to Amazon S3
         s3.putObject(
           {
@@ -266,6 +263,7 @@ LocalController.prototype.create = function (request, response, next) {
     address: _body.address,
     authorIP: _body.authorIP
   }
+  let timestamp = new Date().getTime()
 
   // Save author user if there's one authenticated
   const loggedUser = request.decoded;
@@ -287,11 +285,15 @@ LocalController.prototype.create = function (request, response, next) {
       _local = local
       return {photo: _body.photo, id: _local.id}
     })
-    .then(saveThumbImage)
+    .then(function (data) {
+      return saveThumbImage(data, timestamp)
+    })
     .then(function (url) {
       return {photo: _body.photo, id: _local.id}
     })
-    .then(saveFullImage)
+    .then(function(data) {
+      return saveFullImage(data, timestamp)
+    })
     .then(function (url) {
       return {photo: url}
     })
@@ -309,6 +311,7 @@ LocalController.prototype._update = function (id, data, photo, silentOption) {
   let query = {
     where: {id: id}
   }
+  let timestamp = new Date().getTime()
 
   return new Promise(function (resolve, reject) {
     models.Local.find(query)
@@ -326,14 +329,14 @@ LocalController.prototype._update = function (id, data, photo, silentOption) {
       })
       .then(function (local) {
         if (photo) {
-          return saveThumbImage({photo: photo, id: id})
+          return saveThumbImage({photo: photo, id: id}, timestamp)
         } else {
           return local
         }
       })
       .then(function (local) {
         if (photo) {
-          return saveFullImage({photo: photo, id: id})
+          return saveFullImage({photo: photo, id: id}, timestamp)
         } else {
           return undefined
         }
