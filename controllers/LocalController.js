@@ -110,6 +110,7 @@ var saveThumbImage = function (params) {
       })
       .toBuffer()
       .then(function (data) {
+        console.log("Buffer >", data, imageName)
         // Send image blob to Amazon S3
         s3.putObject(
           {
@@ -118,12 +119,14 @@ var saveThumbImage = function (params) {
             Bucket: BUCKET_NAME,
             ACL: 'public-read'
           }, function (err, data) {
-          if (err) {
-            reject(err)
-          } else {
-            resolve(AWS_PATH_PREFIX + imageName)
-          }
-        })
+            if (err) {
+              reject(err)
+              console.log("Erro ao salvar imagem no S3", err)
+            } else {
+              console.log("Imagem salva com sucesso", imageName)
+              resolve(AWS_PATH_PREFIX + imageName)
+            }
+          })
       })
   })
 }
