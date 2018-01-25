@@ -33,7 +33,7 @@ var contTagsLocal = function (local) {
   })
 }
 
-var saveFullImage = function (params, timestamp) {
+var saveFullImage = function (params) {
   return new Promise(function (resolve, reject) {
     // params
     let _photo = params.photo
@@ -50,7 +50,7 @@ var saveFullImage = function (params, timestamp) {
 
     // path image
     let path = 'images/'
-    let imageName = path + _id + '-' + timestamp + type
+    let imageName = path + _id + '-' + params.timestamp + type
 
     // type invalid return
     if (!type) {
@@ -76,7 +76,7 @@ var saveFullImage = function (params, timestamp) {
   })
 }
 
-var saveThumbImage = function (params, timestamp) {
+var saveThumbImage = function (params) {
   return new Promise(function (resolve, reject) {
     // params
     let _photo = params.photo
@@ -93,7 +93,7 @@ var saveThumbImage = function (params, timestamp) {
 
     // path image
     let path = 'images/thumbs/'
-    let imageName = path + _id + '-' + timestamp + type
+    let imageName = path + _id + '-' + params.timestamp + type
 
     // type invalid return
     if (!type) {
@@ -283,17 +283,13 @@ LocalController.prototype.create = function (request, response, next) {
   this.model.create(_params)
     .then(function (local) {
       _local = local
-      return {photo: _body.photo, id: _local.id}
+      return {photo: _body.photo, id: _local.id, timestamp: timestamp}
     })
-    .then(function (data) {
-      return saveThumbImage(data, timestamp)
-    })
+    .then(saveThumbImage)
     .then(function (url) {
-      return {photo: _body.photo, id: _local.id}
+      return {photo: _body.photo, id: _local.id, timestamp: timestamp}
     })
-    .then(function(data) {
-      return saveFullImage(data, timestamp)
-    })
+    .then(saveFullImage)
     .then(function (url) {
       return {photo: url}
     })
@@ -329,14 +325,14 @@ LocalController.prototype._update = function (id, data, photo, silentOption) {
       })
       .then(function (local) {
         if (photo) {
-          return saveThumbImage({photo: photo, id: id}, timestamp)
+          return saveThumbImage({photo: photo, id: id, timestamp: timestamp})
         } else {
           return local
         }
       })
       .then(function (local) {
         if (photo) {
-          return saveFullImage({photo: photo, id: id}, timestamp)
+          return saveFullImage({photo: photo, id: id, timestamp: timestamp})
         } else {
           return undefined
         }
