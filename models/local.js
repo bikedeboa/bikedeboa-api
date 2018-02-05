@@ -23,6 +23,9 @@ module.exports = function(sequelize, DataTypes) {
         isCovered: {
             type: DataTypes.BOOLEAN
         },
+        isPaid: {
+            type: DataTypes.BOOLEAN
+        },
         text: {
             type: DataTypes.TEXT
         },
@@ -48,6 +51,9 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING
         },
         views: {
+            type: DataTypes.INTEGER,
+        },
+        slots: {
             type: DataTypes.INTEGER,
         }
     }, {

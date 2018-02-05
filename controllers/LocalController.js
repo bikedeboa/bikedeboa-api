@@ -173,7 +173,7 @@ function LocalController (LocalModel) {
 
 LocalController.prototype.getAll = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'description', 'address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country'].concat([
+    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'description', 'address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country', 'isPaid', 'slots'].concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'reviews'
@@ -223,8 +223,24 @@ LocalController.prototype.getAllLight = function (request, response, next) {
 LocalController.prototype.getById = function (request, response, next) {
   var self = this;
 
+  // @todo refactoring...
+  // https://github.com/sequelize/sequelize/issues/222
+  // var _query = {
+  // attributes:
+  // 'Local.*',// 'Review.*'
+  // // [models.sequelize.fn('COUNT', '*'), 'reviews'],
+  // // [models.sequelize.fn('AVERAGE', 'rating'), 'average']
+  // [
+  //   models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
+  //   'reviews'
+  // ],
+  // [
+  //   models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
+  //   'average'
+  // ]
+  
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'photo', 'description', 'address', 'createdAt', 'views', 'city', 'state', 'country'].concat([
+    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'photo', 'description', 'address', 'createdAt', 'views', 'city', 'state', 'country', 'isPaid', 'slots'].concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'reviews'
@@ -373,7 +389,9 @@ LocalController.prototype.update = function (request, response, next) {
   if (_body.address) _local.address = _body.address
   if (_body.city) _local.city = _body.city
   if (_body.state) _local.state = _body.state
-  if (_body.country) _local.country = _body.country
+  if (_body.country) _local.country = _body.country 
+  if (_body.slots) _local.slots = _body.slots
+  if (_body.isPaid) _local.isPaid = _body.isPaid
   if (_body.photoUrl) _local.photo = _body.photoUrl 
   if (_body.user_id) _local.user_id = _body.user_id
   if (_body.views) _local.views = _body.views
