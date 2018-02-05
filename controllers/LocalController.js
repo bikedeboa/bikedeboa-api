@@ -293,7 +293,12 @@ LocalController.prototype.create = function (request, response, next) {
   if (_body.structureType) _params.structureType = _body.structureType
   if (_body.isPublic) _params.isPublic = _body.isPublic && (_body.isPublic === 'true' ? 1 : 0)
   if (_body.isCovered) _params.isCovered = _body.isCovered && (_body.isCovered === 'true' ? 1 : 0)
-
+  if (_body.city) _params.city = _body.city
+  if (_body.state) _params.state = _body.state
+  if (_body.country) _params.country = _body.country
+  if (_body.slots) _params.slots = _body.slots
+  if (_body.isPaid) _params.isPaid = _body.isPaid
+ 
   var _local = {}
 
   this.model.create(_params)
@@ -387,14 +392,14 @@ LocalController.prototype.update = function (request, response, next) {
   if (_body.isCovered) _local.isCovered = _body.isCovered && (_body.isCovered === 'true' ? 1 : 0)
   if (_body.text) _local.text = _body.text
   if (_body.address) _local.address = _body.address
+  if (_body.photoUrl) _local.photo = _body.photoUrl 
+  if (_body.user_id) _local.user_id = _body.user_id
+  if (_body.views) _local.views = _body.views
   if (_body.city) _local.city = _body.city
   if (_body.state) _local.state = _body.state
   if (_body.country) _local.country = _body.country 
   if (_body.slots) _local.slots = _body.slots
   if (_body.isPaid) _local.isPaid = _body.isPaid
-  if (_body.photoUrl) _local.photo = _body.photoUrl 
-  if (_body.user_id) _local.user_id = _body.user_id
-  if (_body.views) _local.views = _body.views
 
   // ISSUE #8
   // Caso exista somente as duas keys de description e views no objeto _local para atualizar,
