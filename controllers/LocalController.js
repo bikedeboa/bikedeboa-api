@@ -173,7 +173,7 @@ function LocalController (LocalModel) {
 
 LocalController.prototype.getAll = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'description', 'address', 'photo', 'updatedAt', 'createdAt', 'views'].concat([
+    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'description', 'address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country'].concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'reviews'
@@ -185,7 +185,7 @@ LocalController.prototype.getAll = function (request, response, next) {
     ]),
     include: [{
       model: models.User,
-      attributes: ['fullname'] 
+      attributes: ['fullname']  
     }, {
       model: models.Review,
       include: [models.Tag]
@@ -201,7 +201,7 @@ LocalController.prototype.getAll = function (request, response, next) {
 
 LocalController.prototype.getAllLight = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'isPublic', 'isCovered', 'structureType', 'text', 'photo', 'address'].concat([
+    attributes: ['id', 'lat', 'lng', 'isPublic', 'isCovered', 'structureType', 'text', 'photo', 'address', 'city', 'state', 'country'].concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'reviews' 
@@ -224,7 +224,7 @@ LocalController.prototype.getById = function (request, response, next) {
   var self = this;
 
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'photo', 'description', 'address', 'createdAt', 'views'].concat([
+    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'photo', 'description', 'address', 'createdAt', 'views', 'city', 'state', 'country'].concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'reviews'
@@ -371,6 +371,9 @@ LocalController.prototype.update = function (request, response, next) {
   if (_body.isCovered) _local.isCovered = _body.isCovered && (_body.isCovered === 'true' ? 1 : 0)
   if (_body.text) _local.text = _body.text
   if (_body.address) _local.address = _body.address
+  if (_body.city) _local.city = _body.city
+  if (_body.state) _local.state = _body.state
+  if (_body.country) _local.country = _body.country
   if (_body.photoUrl) _local.photo = _body.photoUrl 
   if (_body.user_id) _local.user_id = _body.user_id
   if (_body.views) _local.views = _body.views
