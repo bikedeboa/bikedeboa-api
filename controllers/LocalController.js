@@ -173,7 +173,7 @@ function LocalController (LocalModel) {
 
 LocalController.prototype.getAll = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'description', 'address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country', 'isPaid', 'slots', 'source'].concat([
+    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'description', 'address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country', 'isPaid', 'slots'].concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'reviews'
@@ -189,7 +189,9 @@ LocalController.prototype.getAll = function (request, response, next) {
     }, {
       model: models.Review,
       include: [models.Tag]
-    }]
+    }, { 
+      model: models.DataSource
+    }] 
   }
 
   this.model.findAll(_query)
@@ -238,9 +240,9 @@ LocalController.prototype.getById = function (request, response, next) {
   //   models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
   //   'average'
   // ]
-  
+   
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'photo', 'description', 'address', 'createdAt', 'views', 'city', 'state', 'country', 'isPaid', 'slots', 'source'].concat([
+    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'photo', 'description', 'address', 'createdAt', 'views', 'city', 'state', 'country', 'isPaid', 'slots'].concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'reviews'
@@ -254,6 +256,8 @@ LocalController.prototype.getById = function (request, response, next) {
     include: [{
       model: models.User,
       attributes: ['fullname'] 
+    }, {
+      model: models.DataSource
     }],
   }
 
@@ -298,7 +302,7 @@ LocalController.prototype.create = function (request, response, next) {
   if (_body.country) _params.country = _body.country
   if (_body.slots) _params.slots = _body.slots
   if (_body.isPaid) _params.isPaid = _body.isPaid
-  if (_body.source) _params.source = _body.source 
+  if (_body.datasource_id) _params.datasource_id = _body.datasource_id
  
   var _local = {}
 
@@ -401,7 +405,7 @@ LocalController.prototype.update = function (request, response, next) {
   if (_body.country) _local.country = _body.country 
   if (_body.slots) _local.slots = _body.slots
   if (_body.isPaid) _local.isPaid = _body.isPaid
-  if (_body.source) _local.source = _body.source
+  if (_body.datasource_id) _params.datasource_id = _body.datasource_id
 
   // ISSUE #8
   // Caso exista somente as duas keys de description e views no objeto _local para atualizar,

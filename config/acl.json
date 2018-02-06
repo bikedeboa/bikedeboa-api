@@ -7,9 +7,10 @@
       {"resource": "local", "methods": "*", "action": "allow"},
       {"resource": "tag", "methods": ["GET"], "action": "allow"},
       {"resource": "log", "methods": "*", "action": "deny"},
-      {"resource": "revision", "methods": ["POST"], "action": "allow"}
+      {"resource": "revision", "methods": ["POST"], "action": "allow"},
+      {"resource": "datasource", "methods": ["GET"], "action": "allow"}
     ]
-  },
+  }, 
   {
     "group": "user",
     "permissions": [
@@ -18,7 +19,8 @@
       {"resource": "local", "methods": "*", "action": "allow"},
       {"resource": "tag", "methods": ["GET"], "action": "allow"},
       {"resource": "log", "methods": "*", "action": "deny"},
-      {"resource": "revision", "methods": "*", "action": "allow"}
+      {"resource": "revision", "methods": "*", "action": "allow"},
+      {"resource": "datasource", "methods": ["GET"], "action": "allow"}
     ]
   }, 
   {
@@ -29,7 +31,8 @@
       {"resource": "local", "methods": "*", "action": "allow"},
       {"resource": "tag", "methods": ["GET"], "action": "allow"},
       {"resource": "log", "methods": "*", "action": "deny"},
-      {"resource": "revision", "methods": "*", "action": "allow"}
+      {"resource": "revision", "methods": "*", "action": "allow"},
+      {"resource": "datasource", "methods": ["GET"], "action": "allow"}
     ]
   },
   {

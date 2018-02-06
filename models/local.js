@@ -55,9 +55,6 @@ module.exports = function(sequelize, DataTypes) {
         },
         slots: {
             type: DataTypes.INTEGER,
-        },
-        source: {
-            type: DataTypes.STRING,
         }
     }, {
         timestamps: true,
@@ -70,6 +67,7 @@ module.exports = function(sequelize, DataTypes) {
                 Local.hasOne(models.Checkin, {foreignKey: 'local_id', onDelete: 'cascade', hooks: true});
                 Local.hasMany(models.Revision, {foreignKey: 'local_id', onDelete: 'cascade', hooks: true});
                 Local.belongsTo(models.User, {foreignKey: 'user_id', hooks: true});
+                Local.belongsTo(models.DataSource, { foreignKey: 'datasource_id', hooks: false });
             }
         },
         instanceMethods: {

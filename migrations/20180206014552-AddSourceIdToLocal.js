@@ -11,12 +11,12 @@ module.exports = {
     */
     queryInterface.addColumn(
       'Local',
-      'source',
+      'datasource_id',
       {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       }
     );
-  }, 
+  },
 
   down: function (queryInterface, Sequelize) {
     /*
@@ -28,7 +28,7 @@ module.exports = {
     */
     queryInterface.removeColumn(
       'Local',
-      'source'
+      'datasource_id'
     );
   }
 };

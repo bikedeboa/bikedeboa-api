@@ -17,6 +17,8 @@ router.use('/checkin', require('./checkin'))
 router.use('/review', require('./review'))
 // revision
 router.use('/revision', require('./revision'))
+// datasource
+router.use('/datasource', require('./datasource'))
 // docs
 router.use('/v1/doc', require('./doc'))
 
