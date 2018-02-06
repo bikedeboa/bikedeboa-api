@@ -55,6 +55,9 @@ module.exports = function(sequelize, DataTypes) {
         },
         slots: {
             type: DataTypes.INTEGER,
+        },
+        source: {
+            type: DataTypes.STRING,
         }
     }, {
         timestamps: true,
