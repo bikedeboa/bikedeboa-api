@@ -417,7 +417,7 @@ LocalController.prototype.update = function (request, response, next) {
   if (_body.country) _local.country = _body.country 
   if (_body.slots) _local.slots = _body.slots
   if (_body.isPaid) _local.isPaid = _body.isPaid
-  if (_body.datasource_id) _params.datasource_id = _body.datasource_id
+  if (_body.datasource_id) _local.datasource_id = _body.datasource_id
 
   // ISSUE #8
   // Caso exista somente as duas keys de description e views no objeto _local para atualizar,
