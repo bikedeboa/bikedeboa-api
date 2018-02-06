@@ -8,7 +8,8 @@
       {"resource": "tag", "methods": ["GET"], "action": "allow"},
       {"resource": "log", "methods": "*", "action": "deny"},
       {"resource": "revision", "methods": ["POST"], "action": "allow"},
-      {"resource": "datasource", "methods": ["GET"], "action": "allow"}
+      {"resource": "datasource", "methods": ["GET"], "action": "allow"},
+      {"resource": "stats", "methods": "*", "action": "allow"}
     ]
   }, 
   {
@@ -20,7 +21,8 @@
       {"resource": "tag", "methods": ["GET"], "action": "allow"},
       {"resource": "log", "methods": "*", "action": "deny"},
       {"resource": "revision", "methods": "*", "action": "allow"},
-      {"resource": "datasource", "methods": ["GET"], "action": "allow"}
+      {"resource": "datasource", "methods": ["GET"], "action": "allow"},
+      {"resource": "stats", "methods": "*", "action": "allow"}
     ]
   }, 
   {
@@ -32,7 +34,8 @@
       {"resource": "tag", "methods": ["GET"], "action": "allow"},
       {"resource": "log", "methods": "*", "action": "deny"},
       {"resource": "revision", "methods": "*", "action": "allow"},
-      {"resource": "datasource", "methods": ["GET"], "action": "allow"}
+      {"resource": "datasource", "methods": ["GET"], "action": "allow"},
+      {"resource": "stats", "methods": "*", "action": "allow"}
     ]
   },
   {

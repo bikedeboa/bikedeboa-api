@@ -19,6 +19,8 @@ router.use('/review', require('./review'))
 router.use('/revision', require('./revision'))
 // datasource
 router.use('/datasource', require('./datasource'))
+// datasource
+router.use('/stats', require('./stats'))
 // docs
 router.use('/v1/doc', require('./doc'))
 
