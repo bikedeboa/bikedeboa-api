@@ -281,17 +281,22 @@ LocalController.prototype.create = function (request, response, next) {
     photo: '',
     description: _body.description,
     address: _body.address,
-    authorIP: _body.authorIP
+    authorIP: _body.authorIP 
   }
+  var isAnonymous = _body.isAnonymous;
   let timestamp = new Date().getTime()
 
   // Save author user if there's one authenticated
+  // Obs: the 'client' role is the a regular, authenticated web client, but not a logged in user
   const loggedUser = request.decoded;
-  if (loggedUser) {
-    // The 'client' role is a user that is authenticated but not logged in
-    if (loggedUser.role !== 'client') {
-      _params.user_id = loggedUser.id;
+  if (loggedUser && loggedUser.role !== 'client') {
+    if (!isAnonymous) {
+      _params.user_id = loggedUser.id; 
     }
+  } else {
+    let err = new Error('Unauthorized')
+    err.status = 401 
+    return next(err)
   }
   
   if (_body.structureType) _params.structureType = _body.structureType
@@ -387,6 +392,14 @@ LocalController.prototype.update = function (request, response, next) {
   const _body = request.body
   let _local = {}
 
+  // Check if user is logged in and has correct role
+  const loggedUser = request.decoded;
+  if (!loggedUser || loggedUser.role === 'client') {
+    let err = new Error('Unauthorized')
+    err.status = 401
+    return next(err)
+  } 
+
   _local.description = _body.description
 
   if (_body.lat) _local.lat = _body.lat
@@ -398,7 +411,6 @@ LocalController.prototype.update = function (request, response, next) {
   if (_body.text) _local.text = _body.text
   if (_body.address) _local.address = _body.address
   if (_body.photoUrl) _local.photo = _body.photoUrl 
-  if (_body.user_id) _local.user_id = _body.user_id
   if (_body.views) _local.views = _body.views
   if (_body.city) _local.city = _body.city
   if (_body.state) _local.state = _body.state
@@ -428,6 +440,14 @@ LocalController.prototype.remove = function (request, response, next) {
     where: {id: _id}
   }
   let localForRemove;
+
+  // Check if user is logged in and has correct role
+  const loggedUser = request.decoded;
+  if (!loggedUser || loggedUser.role === 'client') {
+    let err = new Error('Unauthorized')
+    err.status = 401
+    return next(err)
+  }
 
   this.model.findOne(_query)
     .then(handleNotFound)
