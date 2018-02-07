@@ -5,9 +5,6 @@ let models = require('../models')
 let AuthController = require('../controllers/AuthController')(models.User)
 let StatsController = require('../controllers/StatsController')()
 
-// router.use(AuthController.middlewareAuth)
-// router.use(acl.authorize)
-
-router.get('/', AuthController.middlewareAuth, acl.authorize, StatsController.getAll.bind(StatsController))
+router.get('/', StatsController.getAll.bind(StatsController))
 
 module.exports = router
