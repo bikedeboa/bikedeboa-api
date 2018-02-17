@@ -334,17 +334,23 @@ LocalController.prototype.create = function (request, response, next) {
     .catch(next)
 }
 
-LocalController.prototype._update = function (id, data, photo, silentOption) {
+LocalController.prototype._update = function (id, data, photo) {
   let query = {
     where: {id: id}
   }
   let timestamp = new Date().getTime()
 
+  // If we're just updating the views count we don't touch the updatedAt field
+  let isSilent = false;
+  if (Object.keys(data).length === 1 && data.views) {
+    isSilent = true;
+  }
+
   return new Promise(function (resolve, reject) {
     models.Local.find(query)
       .then(handleNotFound)
       .then(function (local) {
-        return local.update(data, { silent: silentOption })
+        return local.update(data, { silent: isSilent })
       })
       .then(function (local) {
         data = local
@@ -419,14 +425,7 @@ LocalController.prototype.update = function (request, response, next) {
   if (_body.isPaid) _local.isPaid = _body.isPaid
   if (_body.datasource_id) _local.datasource_id = _body.datasource_id
 
-  // ISSUE #8
-  // Caso exista somente as duas keys de description e views no objeto _local para atualizar,
-  // podendo ser somente o contador, então não atualiza o campo updatedAt
-  const arrayCompare = ['description', 'views']
-  const arrayExistingKeys = Object.keys(_local).map((key) => key)
-  const silentOption = arrayCompare.toString() === arrayExistingKeys.toString()
-
-  this._update(_id, _local, _body.photo, silentOption) 
+  this._update(_id, _local, _body.photo) 
     .then( local => {
       response.json(local)
       return local
