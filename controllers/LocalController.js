@@ -334,23 +334,22 @@ LocalController.prototype.create = function (request, response, next) {
     .catch(next)
 }
 
-LocalController.prototype._update = function (id, data, photo) {
+LocalController.prototype._update = function (id, data, photo, silentEdit = false) {
   let query = {
     where: {id: id}
   }
   let timestamp = new Date().getTime()
 
   // If we're just updating the views count we don't touch the updatedAt field
-  let isSilent = false;
   if (Object.keys(data).length === 1 && data.views) {
-    isSilent = true;
+    silentEdit = true; 
   }
 
   return new Promise(function (resolve, reject) {
     models.Local.find(query)
       .then(handleNotFound)
       .then(function (local) {
-        return local.update(data, { silent: isSilent })
+        return local.update(data, { silent: silentEdit })
       })
       .then(function (local) {
         data = local
@@ -399,6 +398,7 @@ LocalController.prototype.update = function (request, response, next) {
   let _local = {}
 
   // Check if user is logged in and has correct role
+  // @check if it's either admin or the original author (or something else...)
   const loggedUser = request.decoded;
   if (!loggedUser || loggedUser.role === 'client') {
     let err = new Error('Unauthorized')
@@ -407,6 +407,11 @@ LocalController.prototype.update = function (request, response, next) {
   } 
 
   _local.description = _body.description
+
+  let silentEdit = false;
+  if (_body.silentEdit && loggedUser.role === 'admin') {
+    silentEdit = true;
+  }
 
   if (_body.lat) _local.lat = _body.lat
   if (_body.lng) _local.lng = _body.lng
@@ -425,7 +430,7 @@ LocalController.prototype.update = function (request, response, next) {
   if (_body.isPaid) _local.isPaid = _body.isPaid
   if (_body.datasource_id) _local.datasource_id = _body.datasource_id
 
-  this._update(_id, _local, _body.photo) 
+  this._update(_id, _local, _body.photo, silentEdit) 
     .then( local => {
       response.json(local)
       return local
