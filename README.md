@@ -17,6 +17,4 @@ This API data is licensed under [Creative Commons Attribution 4.0 International]
 
 ## Contact
 
-Facebook: https://www.facebook.com/bikedeboaapp
-
-Email: bikedeboa@gmail.com
+[Email](bikedeboa@gmail.com)・[Facebook](https://www.facebook.com/bikedeboaapp)・[Instagram](https://www.instagram.com/bikedeboa/)・[Medium](https://medium.com/bike-de-boa)
