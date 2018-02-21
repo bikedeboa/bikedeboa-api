@@ -15,16 +15,6 @@ This API data is licensed under [Creative Commons Attribution 4.0 International]
 
 [![License: CC BY 4.0](https://licensebuttons.net/l/by/4.0/80x15.png)](http://creativecommons.org/licenses/by/4.0/)
 
-
-## Authors
-
-* [Denner Evaldt Machado](https://github.com/dennerevaldt)
-
-## Contributors
-
-* [Cristiano Medeiros Dalbem](https://github.com/cmdalbem)
-* [Raian de Andrades](https://github.com/RaianAndrades)
-
 ## Contact
 
 Facebook: https://www.facebook.com/bikedeboaapp
