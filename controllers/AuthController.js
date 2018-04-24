@@ -52,7 +52,7 @@ AuthController.prototype._validateWithProvider = function (network, socialToken)
         if (!error && response.statusCode == 200) {
           resolve(JSON.parse(body))
         } else {
-          reject(err)
+          reject(error)
         }
       }
     )
