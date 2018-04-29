@@ -23,7 +23,7 @@ let handleNotFound = function (data) {
   return data
 }
 
-var contTagsLocal = function (local) {
+let contTagsLocal = function (local) {
   return new Promise(function (resolve, reject) {
     models.sequelize.query('SELECT t.name, COUNT(*) FROM "Tag" t inner join "Review_Tags" rt on T.id = rt.tag_id inner join "Review" r on r.id = rt.review_id inner join "Local" l on r.local_id = l.id WHERE l.id = ' + local.id + ' GROUP BY t.id')
       .then(function (result, metatag) {
@@ -31,6 +31,12 @@ var contTagsLocal = function (local) {
         resolve(local)
       })
   })
+}
+
+let throwUnauthorizedError = function (next) {
+  let err = new Error('Unauthorized')
+  err.status = 401
+  return next(err)
 }
 
 var saveFullImage = function (params) {
@@ -267,6 +273,10 @@ LocalController.prototype.getById = function (request, response, next) {
     .then(function (local) {
       self._update(request.params._id, {views: local.dataValues.views+1})
       
+      const loggedUser = request.decoded;
+      local.dataValues.wasCreatedByLoggedUser = !!(loggedUser && (local.user_id === loggedUser.id));
+      local.dataValues.canLoggedUserDelete = !!(local.dataValues.wasCreatedByLoggedUser);
+
       response.json(local)
     })
     .catch(next)
@@ -294,9 +304,7 @@ LocalController.prototype.create = function (request, response, next) {
       _params.user_id = loggedUser.id; 
     }
   } else {
-    let err = new Error('Unauthorized')
-    err.status = 401 
-    return next(err)
+    throwUnauthorizedError(next);
   }
   
   if (_body.structureType) _params.structureType = _body.structureType
@@ -398,12 +406,9 @@ LocalController.prototype.update = function (request, response, next) {
   let _local = {}
 
   // Check if user is logged in and has correct role
-  // @check if it's either admin or the original author (or something else...)
   const loggedUser = request.decoded;
   if (!loggedUser || loggedUser.role === 'client') {
-    let err = new Error('Unauthorized')
-    err.status = 401
-    return next(err)
+    throwUnauthorizedError(next);
   } 
 
   _local.description = _body.description
@@ -443,26 +448,32 @@ LocalController.prototype.remove = function (request, response, next) {
   let _query = {
     where: {id: _id}
   }
-  let localForRemove;
+  let placeToDelete;
 
   // Check if user is logged in and has correct role
   const loggedUser = request.decoded;
   if (!loggedUser || loggedUser.role === 'client') {
-    let err = new Error('Unauthorized')
-    err.status = 401
-    return next(err)
+    throwUnauthorizedError(next);
   }
 
   this.model.findOne(_query)
     .then(handleNotFound)
     .then(function (data) {
-      localForRemove = data;
+      placeToDelete = data;
+
+      // If it's a normal user, check if he's the place creator
+      if (loggedUser.role === 'user') {
+        if (placeToDelete.user_id !== loggedUser.id) {
+          throwUnauthorizedError(next);
+        }
+      }
+
       let splitUrl = data.photo ? data.photo.split('/') : ''
       let imageName = typeof splitUrl !== 'string' ? splitUrl[splitUrl.length - 1] : ''
       return deleteImage(imageName)
     })
     .then(function(data) {
-      return localForRemove.destroy()
+      return placeToDelete.destroy()
     })
     .then(function (data) {
       response.json({

@@ -12,6 +12,12 @@ let handleNotFound = function (data) {
   return data
 }
 
+let throwUnauthorizedError = function (next) {
+  let err = new Error('Unauthorized')
+  err.status = 401
+  return next(err)
+}
+
 var promiseTags = function (tags) {
   return new Promise(function (resolve, reject) {
     var _promises = []
@@ -64,6 +70,23 @@ ReviewController.prototype.remove = function (request, response, next) {
     where: {id: _id}
   }
 
+  // Check if user is logged in and has correct role
+  const loggedUser = request.decoded;
+  if (!loggedUser || loggedUser.role === 'client') {
+    throwUnauthorizedError(next);
+  }
+
+  // If it's a regular user, check if he's the original creator
+  if (loggedUser.role === 'user') {
+    this.model.findOne({ where: { id: _id } })
+      .then(handleNotFound)
+      .then(function (review) {
+        if (review.user_id !== loggedUser.id) {
+          throwUnauthorizedError(next);
+        }
+      });
+  }
+
   this.model.destroy(_query)
     .then(handleNotFound)
     .then(function (rowDeleted) {
@@ -101,6 +124,23 @@ ReviewController.prototype.update = function (request, response, next) {
   let _body = request.body
   let _review = {}
 
+  // Check if user is logged in and has correct role
+  const loggedUser = request.decoded;
+  if (!loggedUser || loggedUser.role === 'client') {
+    throwUnauthorizedError(next);
+  }
+
+  // If it's a regular user, check if he's the original creator
+  if (loggedUser.role === 'user') {
+    this.model.findOne({ where: { id: _id } })
+      .then(handleNotFound)
+      .then(function (review) {
+        if (review.user_id !== loggedUser.id) {
+          throwUnauthorizedError(next);
+        }
+      });
+  }
+
   if (_body.description) _review.description = _body.description
   if (_body.rating) _review.rating = _body.rating
   if (_body.user_id) _review.user_id = _body.user_id
@@ -127,14 +167,13 @@ ReviewController.prototype.create = function (request, response, next) {
   }
   let _tags = _body.tags || []
 
-  // Save author user if there's one authenticated
+  // Check if user is logged in and has correct role
   const loggedUser = request.decoded;
-  if (loggedUser) {
-    // The 'client' role is a user that is authenticated but not logged in
-    if (loggedUser.role !== 'client') {
-      _review.user_id = loggedUser.id;
-    }
+  if (!loggedUser || loggedUser.role === 'client') {
+    throwUnauthorizedError(next);
   }
+
+  _review.user_id = loggedUser.id; 
 
   promiseTags(_tags)
     .then(function (tagsResponse) {
