@@ -3,13 +3,54 @@ let models = require('../models')
 let AWS = require('aws-sdk')
 let s3 = new AWS.S3()
 let sharp = require('sharp')
+
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
 const env = process.env.NODE_ENV || 'development'
 const AWS_PATH_PREFIX = (env === 'development') ? 'https://s3.amazonaws.com/bikedeboa-dev/' : 'https://s3.amazonaws.com/bikedeboa/'
 const BUCKET_NAME = (env === 'development') ? 'bikedeboa-dev' : 'bikedeboa';
 
-
 console.log('AWS_PATH_PREFIX', AWS_PATH_PREFIX);
 console.log('BUCKET_NAME', BUCKET_NAME);
+
+const localAttributes = {
+  light: [
+    'id',
+    'lat',
+    'lng',
+    'isPublic',
+    'isCovered',
+    'structureType',
+    'text',
+    'photo',
+    'address',
+    'city',
+    'state',
+    'country'
+  ],
+  all: [
+    'id',
+    'lat',
+    'lng',
+    'lat',
+    'structureType',
+    'isPublic',
+    'isCovered',
+    'text',
+    'description',
+    'address',
+    'photo',
+    'updatedAt',
+    'createdAt',
+    'views',
+    'city',
+    'state',
+    'country',
+    'isPaid',
+    'slots'
+  ]
+}
 
 
 // PRIVATE FN //
@@ -173,7 +214,7 @@ function LocalController (LocalModel) {
 
 LocalController.prototype.getAll = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'description', 'address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country', 'isPaid', 'slots'].concat([
+    attributes: localAttributes.all.concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'reviews'
@@ -203,7 +244,7 @@ LocalController.prototype.getAll = function (request, response, next) {
 
 LocalController.prototype.getAllLight = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'isPublic', 'isCovered', 'structureType', 'text', 'photo', 'address', 'city', 'state', 'country'].concat([
+    attributes: localAttributes.light.concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'reviews' 
@@ -213,6 +254,48 @@ LocalController.prototype.getAllLight = function (request, response, next) {
         'average'
       ]
     ])
+  }
+
+  this.model.findAll(_query)
+    .then(function (locals) {
+      response.json(locals)
+    })
+    .catch(next)
+}
+
+LocalController.prototype.getAllInsideBoundingBox = function (request, response, next) {
+  const boundingBox = request.query.boundingBox;
+  if (!boundingBox) {
+    let err = new Error('Bad request - missing network and/or socialToken.')
+    err.status = 400
+    return next(err)
+  }
+
+  const { sw, ne } = boundingBox;
+
+  const _query = {
+    attributes: localAttributes.light.concat([
+      [
+        models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
+        'reviews' 
+      ],
+      [
+        models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
+        'average'
+      ]
+    ]),
+    where: {
+      [Op.and]: [
+        Sequelize.where(
+          Sequelize.cast(Sequelize.col('lat'), 'float'),
+          { [Op.between]: [sw.lat, ne.lat] }
+        ),
+        Sequelize.where(
+          Sequelize.cast(Sequelize.col('lng'), 'float'),
+          { [Op.between]: [sw.lng, ne.lng] }
+        ),
+      ],
+    },
   }
 
   this.model.findAll(_query)
@@ -232,14 +315,7 @@ LocalController.prototype.getById = function (request, response, next) {
   // 'Local.*',// 'Review.*'
   // // [models.sequelize.fn('COUNT', '*'), 'reviews'],
   // // [models.sequelize.fn('AVERAGE', 'rating'), 'average']
-  // [
-  //   models.sequelize.literal('(SELECT COUNT(*) FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
-  //   'reviews'
-  // ],
-  // [
-  //   models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
-  //   'average'
-  // ]
+  
    
   var _query = {
     attributes: ['id', 'lat', 'lng', 'lat', 'structureType', 'isPublic', 'isCovered', 'text', 'photo', 'description', 'address', 'createdAt', 'views', 'city', 'state', 'country', 'isPaid', 'slots'].concat([
