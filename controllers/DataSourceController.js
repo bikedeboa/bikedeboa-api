@@ -18,6 +18,14 @@ function DataSource(DataSourceModel) {
 }
 
 DataSource.prototype.getAll = function (request, response, next) {
+    this.model.findAll()
+        .then(function (data) {
+            response.json(data)
+        })
+        .catch(next)
+}
+
+DataSource.prototype.getAllWithPlaces = function (request, response, next) {
     let _query = {
         include: [models.Local]
     }
