@@ -65,6 +65,7 @@ AuthController.prototype._generateJWT = function (foundUser, response, isNewUser
     id: foundUser.id,
     username: foundUser.username || foundUser.name || '',
     role: foundUser.role,
+    fullname: foundUser.fullname || '',
     exp: expires
   }, process.env.JWT_TKN_SECRET)
   
@@ -175,7 +176,7 @@ AuthController.prototype.token = function (request, response, next) {
 AuthController.prototype.middlewareLogging = function (request, response, next) {
   let fullUrl = request.protocol + '://' + request.get('host') + request.originalUrl
   let info = {
-    user: request.decoded.username,
+    user: request.decoded.fullname || request.decoded.username,
     role: request.decoded.role,
     endpoint: fullUrl,
     body: request.body,
