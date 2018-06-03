@@ -186,29 +186,6 @@ AuthController.prototype.middlewareLogging = function (request, response, next) 
   next()
 }
 
-AuthController.prototype.middlewareValidIP = function (request, response, next) {
-  let ipOrigin = request.get('ip_origin') || ''
-  let role = request.decoded.role
-  let query = {
-    attributes: ['id', 'authorIP'],
-    where: {id: request.params._id}
-  }
-  return models.Local.find(query)
-    .then(function (data) {
-      if (ipOrigin === data.authorIP) {
-        next()
-      } else if (role === 'colaborator' || role === 'admin') {
-        next()
-      } else {
-        let err = new Error('Unauthorized')
-        err.status = 401
-        next(err)
-      }
-      return data
-    })
-    .catch(next)
-}
-
 module.exports = function (UserModel) {
   return new AuthController(UserModel)
 }
