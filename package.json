@@ -9,6 +9,9 @@
     "nodemon": "nodemon --inspect ./bin/www",
     "test": ""
   },
+  "engines": {
+    "node": "8.6.0"
+  },
   "author": "Denner Evaldt Machado <dnrevaldt@gmail.com>",
   "license": "MIT",
   "dependencies": {
@@ -27,7 +30,7 @@
     "method-override": "^2.3.6",
     "moment": "^2.15.2",
     "node-uuid": "^1.4.7",
-    "npm": "^4.0.5",
+    "npm": "^5.2.0",
     "pg": "^6.1.0",
     "pg-hstore": "^2.3.2",
     "request": "^2.81.0",
