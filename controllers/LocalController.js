@@ -3,10 +3,8 @@ let models = require('../models')
 let AWS = require('aws-sdk')
 let s3 = new AWS.S3()
 let sharp = require('sharp')
-const env = process.env.NODE_ENV || 'development'
-const AWS_PATH_PREFIX = (env === 'development') ? 'https://s3.amazonaws.com/bikedeboa-dev/' : 'https://s3.amazonaws.com/bikedeboa/'
-const BUCKET_NAME = (env === 'development') ? 'bikedeboa-dev' : 'bikedeboa';
-
+const AWS_PATH_PREFIX = process.env.AWS_PATH_PREFIX
+const BUCKET_NAME = process.env.BUCKET_NAME
 
 console.log('AWS_PATH_PREFIX', AWS_PATH_PREFIX);
 console.log('BUCKET_NAME', BUCKET_NAME);
