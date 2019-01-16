@@ -1,10 +1,8 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const requestLocal = sequelize.define('requestLocal', {
-    firstName: DataTypes.STRING,
     lat: DataTypes.STRING,
     lng: DataTypes.STRING,
-    text: DataTypes.TEXT,
     support: DataTypes.INTEGER,
     description: DataTypes.TEXT,
     photo: DataTypes.STRING,

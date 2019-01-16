@@ -7,18 +7,15 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-      },
-      firstName: {
-        type: Sequelize.STRING
+        allowNull: false,
       },
       lat: {
         type: Sequelize.STRING
+        allowNull: false,
       },
       lng: {
         type: Sequelize.STRING
-      },
-      text: {
-        type: Sequelize.TEXT
+        allowNull: false,
       },
       support: {
         type: Sequelize.INTEGER

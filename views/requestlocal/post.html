@@ -1,0 +1,41 @@
+<li class="endpoint-item noun-post">
+  <div class="endpoint-heading">
+    <span class="noun fleft">POST</span>
+    <span class="endpoint-name fleft">/requestlocal</span>
+  </div>
+  <div class="endpoint-content">
+    <h3>Request Body</h3>
+    <pre>
+    {
+      "lat": "-30.037524579889894",
+      "lng": "-51.2110917075396",
+      "structureType": "deroda",
+      "isPublic": true,
+      "text": "Prato Verde",
+      "photo": (blob64),
+      "authorIP": "199.199.99.9",
+      "description": "Próximo a garagem.",
+      "address": "Rua Santa Terezinha, 50 - Farroupilha, Porto Alegre - RS, 90040-180, Brasil"
+    }
+    </pre>
+
+    <h3>Response Body</h3>
+    <pre>
+     {
+        "id": 1123,
+        "lat": "-30.037524579889894",
+        "lng": "-51.2110917075396",
+        "structureType": "deroda",
+        "isPublic": true,
+        "text": "Prato Verde",
+        "photo": "https://s3.amazonaws.com/bikedeboa/images/1123.jpeg",
+        "authorIP": "199.199.99.9",
+        "description": "Próximo a garagem.",
+        "address": "Rua Santa Terezinha, 50 - Farroupilha, Porto Alegre - RS, 90040-180, Brasil",
+        "reviews": "0",
+        "checkins": "0",
+        "tags": []
+      }
+    </pre>
+  </div><!-- .endpoint-content -->
+</li>
