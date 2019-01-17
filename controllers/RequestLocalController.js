@@ -162,7 +162,7 @@ var deleteImage = function (name) {
 // PRIVATE FN //
 
 function RequestLocalController (RequestLocalModel) {
-  this.model = LocalModel
+  this.model = RequestLocalModel
 }
 
 RequestLocalController.prototype.getAll = function (request, response, next) {
