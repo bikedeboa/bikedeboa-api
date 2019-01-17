@@ -11,6 +11,8 @@ router.use('/user', require('./user'))
 router.use('/tag', require('./tag'))
 // local
 router.use('/local', require('./local'))
+//requestLocal
+router.use('/requestlocal', require('./requestlocal'))
 // checkin
 router.use('/checkin', require('./checkin'))
 // review
