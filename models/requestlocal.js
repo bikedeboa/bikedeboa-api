@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const requestLocal = sequelize.define('requestLocal', {
+  const RequestLocal = sequelize.define('RequestLocal', {
     lat: DataTypes.STRING,
     lng: DataTypes.STRING,
     support: DataTypes.INTEGER,
@@ -17,8 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     commercePhone: DataTypes.STRING,
     commerceRelation: DataTypes.STRING
   }, {});
-  requestLocal.associate = function(models) {
+  RequestLocal.associate = function(models) {
     // associations can be defined here
   };
-  return requestLocal;
+  return RequestLocal;
 };
