@@ -2,7 +2,7 @@ let express = require('express')
 let router = express.Router()
 let acl = require('express-acl')
 let models = require('../models')
-let RequestLocalController = require('../controllers/RequestLocalController')(models.RequestLocal)
+let RequestLocalController = require('../controllers/RequestLocalController')(models.requestLocal)
 let AuthController = require('../controllers/AuthController')(models.User)
 
 router.get('/', AuthController.middlewareAuth, acl.authorize, RequestLocalController.getAll.bind(RequestLocalController))
