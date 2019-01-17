@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('requestLocals', {
+    return queryInterface.createTable('RequestLocal', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -19,6 +19,9 @@ module.exports = {
       },
       support: {
         type: Sequelize.INTEGER
+      },
+      text: {
+        type: Sequelize.TEXT
       },
       description: {
         type: Sequelize.TEXT
@@ -63,10 +66,14 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      user_id: {
+        type: Sequelize.INTEGER,
+        references: { model: 'user', key: 'id' }
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('requestLocals');
+    return queryInterface.dropTable('RequestLocal');
   }
 };
