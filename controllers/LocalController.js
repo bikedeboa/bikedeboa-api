@@ -200,8 +200,8 @@ LocalController.prototype.getAll = function (request, response, next) {
 
   this.model.findAll(_query)
     .then(function (locals) {
-      console.log(locals);
-      locals.map((obj) => {
+      let places = locals.toJSON();
+      places.map((obj) => {
         obj.type = 'rack';
         return obj;
       });
