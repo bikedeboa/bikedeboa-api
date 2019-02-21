@@ -167,7 +167,7 @@ function RequestLocalController (RequestLocalModel) {
 
 RequestLocalController.prototype.getAll = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'description', 'support','address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country', 'isCommerce','commerceName', 'commercePhone', 'commerceRelation'],
+    attributes: ['id', 'lat', 'lng', 'lat', 'text', 'description', 'support','address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country', 'isCommerce','commerceName', 'commercePhone', 'commerceRelation'],
     include: [{
       model: models.User,
       attributes: ['fullname']  
@@ -183,7 +183,7 @@ RequestLocalController.prototype.getAll = function (request, response, next) {
 
 RequestLocalController.prototype.getAllLight = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'support','address', 'photo', 'city', 'state', 'country']
+    attributes: ['id', 'lat', 'lng', 'lat', 'text', 'support','address', 'photo', 'city', 'state', 'country']
   }
   this.model.findAll(_query)
     .then(function (locals) {
