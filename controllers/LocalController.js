@@ -185,6 +185,10 @@ LocalController.prototype.getAll = function (request, response, next) {
       [
         models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'average'
+      ],
+      [
+        'rack',
+        'type'
       ]
     ]),
     include: [{
