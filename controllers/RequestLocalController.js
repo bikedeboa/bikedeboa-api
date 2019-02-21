@@ -196,7 +196,7 @@ RequestLocalController.prototype.getById = function (request, response, next) {
   var self = this;
    
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'description', 'support','address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country', 'isCommerce','commerceName', 'commercePhone', 'commerceRelation'],
+    attributes: ['id', 'lat', 'lng', 'lat', 'text', 'description', 'support','address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country', 'isCommerce','commerceName', 'commercePhone', 'commerceRelation'],
     where: {id: request.params._id},
     include: [{
       model: models.User,
