@@ -187,8 +187,8 @@ LocalController.prototype.getAll = function (request, response, next) {
         'average'
       ],
       [
-        'rack',
-        'type'
+        models.sequelize.literal('rack'),
+        'objectType'
       ]
     ]),
     include: [{
