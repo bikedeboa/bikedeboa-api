@@ -185,10 +185,6 @@ LocalController.prototype.getAll = function (request, response, next) {
       [
         models.sequelize.literal('(SELECT AVG("rating") FROM "Review" WHERE "Review"."local_id" = "Local"."id")'),
         'average'
-      ],
-      [
-        models.sequelize.literal('rack'),
-        'objectType'
       ]
     ]),
     include: [{
@@ -204,6 +200,10 @@ LocalController.prototype.getAll = function (request, response, next) {
 
   this.model.findAll(_query)
     .then(function (locals) {
+      locals.map((obj) => {
+        obj.type = 'rack';
+        return obj;
+      });
       response.json(locals)
     })
     .catch(next)
