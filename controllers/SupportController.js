@@ -61,6 +61,8 @@ SupportController.prototype.remove = function (request, response, next) {
 SupportController.prototype.create = function (request, response, next) {
   let _body = request.body;
 
+  console.log(request);
+
   const loggedUser = request.decoded;
     if (!loggedUser || loggedUser.role === 'client') {
       throwUnauthorizedError(next);
