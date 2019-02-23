@@ -20,7 +20,7 @@ router.use('/review', require('./review'))
 // revision
 router.use('/revision', require('./revision'))
 //support
-router.use('/support', require('./revision'))
+router.use('/support', require('./support'))
 // datasource
 router.use('/datasource', require('./datasource'))
 // datasource
