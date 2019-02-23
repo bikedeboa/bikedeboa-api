@@ -1,3 +1,4 @@
+let debug = require('debug')('api:ctrlSupport');
 let models = require('../models');
 
 // PRIVATE FN
@@ -18,6 +19,8 @@ let throwUnauthorizedError = function (next) {
 }
 
 function SupportController (SupportModel) {
+  console.log("Model");
+  console.log(SupportModel);
   this.model = SupportModel;
 }
 
@@ -72,6 +75,7 @@ SupportController.prototype.create = function (request, response, next) {
   }
   console.log(_support);
   console.log(this.model);
+
   this.model.create(_support)
     .then(function(support){
       response.json(support)
