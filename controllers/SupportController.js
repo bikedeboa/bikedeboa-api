@@ -71,6 +71,7 @@ SupportController.prototype.create = function (request, response, next) {
     user_id: loggedUser.id
   }
   console.log(_support);
+  console.log(this.model);
   this.model.create(_support)
     .then(function(support){
       response.json(support)
