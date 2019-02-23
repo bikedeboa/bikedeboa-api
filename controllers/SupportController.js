@@ -61,8 +61,6 @@ SupportController.prototype.remove = function (request, response, next) {
 SupportController.prototype.create = function (request, response, next) {
   let _body = request.body;
 
-  console.log(request);
-
   const loggedUser = request.decoded;
     if (!loggedUser || loggedUser.role === 'client') {
       throwUnauthorizedError(next);
@@ -72,7 +70,7 @@ SupportController.prototype.create = function (request, response, next) {
     local_id: _body.request_id,
     user_id: loggedUser.id
   }
-
+  console.log(_support);
   this.model.create(_support)
     .then(function(support){
       response.json(support)
