@@ -9,5 +9,5 @@ module.exports = (sequelize, DataTypes) => {
 	Support.belongsTo(models.RequestLocal, {foreignKey: 'requestLocal_id', hooks: true});
 	Support.belongsTo(models.User, {foreignKey: 'user_id', hooks: true});
   };
-  return support;
+  return Support;
 };
