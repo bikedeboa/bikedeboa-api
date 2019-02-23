@@ -67,7 +67,7 @@ SupportController.prototype.create = function (request, response, next) {
     }
 
   let _support = {
-    local_id: _body.request_id,
+    local_id: _body.requestLocal_id,
     user_id: loggedUser.id
   }
   console.log(_support);
