@@ -18,6 +18,7 @@
     "permissions": [
       {"resource": "user", "methods": ["GET","POST"], "action": "allow"},
       {"resource": "review", "methods": "*", "action": "allow"},
+      {"resource": "support", "methods": "*", "action": "allow"},
       {"resource": "local", "methods": "*", "action": "allow"},
       {"resource": "requestlocal", "methods": "*", "action": "allow"},
       {"resource": "tag", "methods": ["GET"], "action": "allow"},
@@ -32,6 +33,7 @@
     "permissions": [
       {"resource": "user", "methods": ["GET","POST"], "action": "allow"},
       {"resource": "review", "methods": "*", "action": "allow"},
+      {"resource": "support", "methods": "*", "action": "allow"},
       {"resource": "local", "methods": "*", "action": "allow"},
       {"resource": "requestlocal", "methods": "*", "action": "allow"},
       {"resource": "tag", "methods": ["GET"], "action": "allow"},
