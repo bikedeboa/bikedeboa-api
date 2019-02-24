@@ -19,11 +19,8 @@ let throwUnauthorizedError = function (next) {
 }
 
 function SupportController (supportModel) {
-  console.log("Model");
-  console.log(supportModel);
   this.model = supportModel;
 }
-
 
 SupportController.prototype.remove = function (request, response, next) {
   let _id = request.params._id
@@ -70,7 +67,7 @@ SupportController.prototype.create = function (request, response, next) {
     }
 
   let _support = {
-    local_id: _body.requestLocal_id,
+    requestLocal_id: _body.requestLocal_id,
     user_id: loggedUser.id
   }
   console.log(_support);
