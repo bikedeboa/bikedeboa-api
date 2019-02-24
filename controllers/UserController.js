@@ -208,7 +208,15 @@ UserController.prototype.getUserReviews = function (request, response, next) {
     })
     .catch(next)
 }
+UserController.prototype.getUserSupports = function (request, response, next) {
+  let _id = request.params._id;
 
+  let _query = {
+    where: {id: currentUser.id},
+    attributes: {exclude: ['password','facebook_id','google_id']},
+    include: [models.Local, models.Support], 
+  }
+}
 UserController.prototype.getCurrentUser = function (request, response, next) {
   const currentUser = request.decoded;
 
