@@ -167,7 +167,12 @@ function RequestLocalController (RequestLocalModel) {
 
 RequestLocalController.prototype.getAll = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'text', 'description', 'support','address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country', 'isCommerce','commerceName', 'commercePhone', 'commerceRelation'],
+    attributes: ['id', 'lat', 'lng', 'lat', 'text', 'description','address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country', 'isCommerce','commerceName', 'commercePhone', 'commerceRelation'].concat([
+      [
+        models.sequelize.literal('(SELECT COUNT(*) FROM "Support" WHERE "Support"."local_id" = "Local"."id")'),
+        'support'
+      ]
+    ]),
     include: [{
       model: models.User,
       attributes: ['fullname']  
