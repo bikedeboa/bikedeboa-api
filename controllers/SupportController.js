@@ -25,7 +25,7 @@ function SupportController (supportModel) {
 SupportController.prototype.remove = function (request, response, next) {
   let _id = request.params._id
   let _query = {
-    where: {requestLocal_id: _id}
+    where: {requestLocal_id: _id, user_id: loggedUser.id}
   }
 
   // Check if user is logged in and has correct role
@@ -34,22 +34,6 @@ SupportController.prototype.remove = function (request, response, next) {
     throwUnauthorizedError(next);
   }
 
-  // If it's a regular user, check if he's the original creator
-  if (loggedUser.role === 'user') {
-    this.model.findOne({ where: { requestLocal_id: _id } })
-      .then(handleNotFound)
-      .then(function (review) {
-        if (review.user_id !== loggedUser.id) {
-          throwUnauthorizedError(next);
-        }else{
-          this.removeQuery(_query);
-        }
-      });
-  }
-
-  
-}
-SupportController.prototype.removeQuery = function(_query){
   this.model.destroy(_query)
     .then(handleNotFound)
     .then(function (rowDeleted) {
@@ -60,6 +44,10 @@ SupportController.prototype.removeQuery = function(_query){
       }
     })
     .catch(next)
+  
+}
+SupportController.prototype.removeQuery = function(_query){
+  
 }
 
 SupportController.prototype.create = function (request, response, next) {
