@@ -212,10 +212,21 @@ UserController.prototype.getUserSupports = function (request, response, next) {
   let _id = request.params._id;
 
   let _query = {
-    where: {id: currentUser.id},
+    where: {id: _id},
     attributes: {exclude: ['password','facebook_id','google_id']},
-    include: [models.Local, models.Support], 
+    include: [
+      {
+        model: models.Support,
+        include: [models.RequestLocal]
+      },
+    ]
   }
+  this.model.find(_query)
+    .then(handleNotFound)
+    .then(function (data) {
+      response.json(data)
+    })
+    .catch(next)
 }
 UserController.prototype.getCurrentUser = function (request, response, next) {
   const currentUser = request.decoded;
