@@ -1,8 +1,15 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Support = sequelize.define('Support', {
-    user_id: DataTypes.INTEGER,
-    requestLocal_id: DataTypes.INTEGER
+    user_id: 
+    {
+      type: DataTypes.INTEGER, 
+      allowNull: false
+    },
+    requestLocal_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {});
   Support.associate = function(models) {
     // associations can be defined here

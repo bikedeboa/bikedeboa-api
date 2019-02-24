@@ -9,11 +9,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       user_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
         references: { model: 'user', key: 'id' }
       },
       requestLocal_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
         references: { model: 'requestlocal', key: 'id' }
       },
       createdAt: {
