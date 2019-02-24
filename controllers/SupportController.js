@@ -23,16 +23,15 @@ function SupportController (supportModel) {
 }
 
 SupportController.prototype.remove = function (request, response, next) {
-  let _id = request.params._id
-  let _query = {
-    where: {requestLocal_id: _id, user_id: loggedUser.id}
-  }
-
-  // Check if user is logged in and has correct role
   const loggedUser = request.decoded;
   if (!loggedUser || loggedUser.role === 'client') {
     throwUnauthorizedError(next);
   }
+
+  let _id = request.params._id
+  let _query = {
+    where: {requestLocal_id: _id, user_id: loggedUser.id}
+  }  
 
   this.model.destroy(_query)
     .then(handleNotFound)
