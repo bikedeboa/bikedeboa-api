@@ -208,13 +208,27 @@ UserController.prototype.getUserReviews = function (request, response, next) {
     })
     .catch(next)
 }
+UserController.prototype.getCurrentUserSupports = function(request, response, next){
+  const currentUser = request.decoded;
+  if (currentUser.role === 'client') {
+    let err = new Error('No logged user.')
+    err.status = 400
+    throw err
+  }
+
+  this.getUserSupports({params: {_id: currentUser.id}}, response, next);
+}
 UserController.prototype.getUserSupports = function (request, response, next) {
   let _id = request.params._id;
 
   let _query = {
     where: {id: _id},
     attributes: {exclude: ['password','facebook_id','google_id']},
-    include: [{all:true}]
+    include: [
+      {
+        model: models.Support
+      },
+    ]
   }
   this.model.find(_query)
     .then(handleNotFound)
