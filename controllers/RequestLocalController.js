@@ -188,7 +188,12 @@ RequestLocalController.prototype.getAll = function (request, response, next) {
 
 RequestLocalController.prototype.getAllLight = function (request, response, next) {
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'text', 'support','address', 'photo', 'city', 'state', 'country']
+    attributes: ['id', 'lat', 'lng', 'lat', 'text', 'support','address', 'photo', 'city', 'state', 'country'].concat([
+      [
+        models.sequelize.literal('(SELECT COUNT(*) FROM "Supports" WHERE "Supports"."requestLocal_id" = "RequestLocal"."id")'),
+        'support'
+      ]
+    ])
   }
   this.model.findAll(_query)
     .then(function (locals) {
@@ -201,7 +206,12 @@ RequestLocalController.prototype.getById = function (request, response, next) {
   var self = this;
    
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'text', 'description', 'support','address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country', 'isCommerce','commerceName', 'commercePhone', 'commerceRelation'],
+    attributes: ['id', 'lat', 'lng', 'lat', 'text', 'description', 'support','address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country', 'isCommerce','commerceName', 'commercePhone', 'commerceRelation'].concat([
+      [
+        models.sequelize.literal('(SELECT COUNT(*) FROM "Supports" WHERE "Supports"."requestLocal_id" = "RequestLocal"."id")'),
+        'support'
+      ]
+    ]),
     where: {id: request.params._id},
     include: [{
       model: models.User,
