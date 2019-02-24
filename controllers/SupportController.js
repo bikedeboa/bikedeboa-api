@@ -41,10 +41,15 @@ SupportController.prototype.remove = function (request, response, next) {
       .then(function (review) {
         if (review.user_id !== loggedUser.id) {
           throwUnauthorizedError(next);
+        }else{
+          SupportController.removeQuery(_query);
         }
       });
   }
 
+  
+}
+SupportController.prototype.removeQuery = function(_query){
   this.model.destroy(_query)
     .then(handleNotFound)
     .then(function (rowDeleted) {
@@ -56,7 +61,6 @@ SupportController.prototype.remove = function (request, response, next) {
     })
     .catch(next)
 }
-
 
 SupportController.prototype.create = function (request, response, next) {
   let _body = request.body;
