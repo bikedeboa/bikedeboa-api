@@ -58,6 +58,8 @@ module.exports = function(sequelize, DataTypes) {
             associate: function(models) {
                 User.hasMany(models.Review, {foreignKey: 'user_id', hooks: true});
                 User.hasMany(models.Local, {foreignKey: 'user_id', hooks: true});
+                User.hasMany(models.RequestLocal, {foreignKey: 'user_id', hooks: true});
+                User.hasMany(models.Support, {foreignKey: 'user_id', hooks: true});
             }
         },
         hooks: {
