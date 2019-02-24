@@ -18,10 +18,10 @@ let throwUnauthorizedError = function (next) {
   return next(err)
 }
 
-function SupportController (SupportModel) {
+function SupportController (supportModel) {
   console.log("Model");
-  console.log(SupportModel);
-  this.model = SupportModel;
+  console.log(supportModel);
+  this.model = supportModel;
 }
 
 
@@ -83,6 +83,6 @@ SupportController.prototype.create = function (request, response, next) {
     .catch(next)
 }
 
-module.exports = function (SupportModel) {
-  return new SupportController(SupportModel)
+module.exports = function (supportModel) {
+  return new SupportController(supportModel)
 }

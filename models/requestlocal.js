@@ -22,5 +22,6 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     RequestLocal.belongsTo(models.User, {foreignKey: 'user_id', hooks: true});
   };
+  console.log(RequestLocal)
   return RequestLocal;
 };
