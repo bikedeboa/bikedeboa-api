@@ -42,7 +42,7 @@ SupportController.prototype.remove = function (request, response, next) {
         if (review.user_id !== loggedUser.id) {
           throwUnauthorizedError(next);
         }else{
-          SupportController.removeQuery(_query);
+          this.removeQuery(_query);
         }
       });
   }
