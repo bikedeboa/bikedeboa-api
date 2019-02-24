@@ -4,11 +4,13 @@ module.exports = (sequelize, DataTypes) => {
     user_id: 
     {
       type: DataTypes.INTEGER, 
-      allowNull: false
+      allowNull: false,
+      primaryKey: true
     },
     requestLocal_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      primaryKey: true
     }
   }, {});
   Support.associate = function(models) {
@@ -16,5 +18,6 @@ module.exports = (sequelize, DataTypes) => {
 	Support.belongsTo(models.RequestLocal, {foreignKey: 'requestLocal_id', hooks: true});
 	Support.belongsTo(models.User, {foreignKey: 'user_id', hooks: true});
   };
+  Support.removeAttribute('id');
   return Support;
 };
