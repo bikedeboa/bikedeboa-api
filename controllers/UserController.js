@@ -214,12 +214,7 @@ UserController.prototype.getUserSupports = function (request, response, next) {
   let _query = {
     where: {id: _id},
     attributes: {exclude: ['password','facebook_id','google_id']},
-    include: [
-      {
-        model: models.Support,
-        include: [models.RequestLocal]
-      },
-    ]
+    include: [{all:true}]
   }
   this.model.find(_query)
     .then(handleNotFound)
