@@ -262,8 +262,8 @@ RequestLocalController.prototype.create = function (request, response, next) {
   if (_body.city) _params.city = _body.city
   if (_body.state) _params.state = _body.state
   if (_body.country) _params.country = _body.country
-  if (_body.isCommerce) {
-    _params.isCommerce = (_body.isCommerce  ? true : false)
+  if (_body.isCommerce && _body.isCommerce === 1) {
+    _params.isCommerce = (_body.isCommerce === 1 ? true : false)
     _params.commerceName = (_body.commerceName) ? _body.commerceName : null
     _params.commercePhone = (_body.commercePhone) ? _body.commercePhone : null
     _params.commerceRelation = (_body.commerceRelation) ? _body.commerceRelation : null
