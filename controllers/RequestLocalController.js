@@ -258,7 +258,7 @@ RequestLocalController.prototype.create = function (request, response, next) {
   } else {
     throwUnauthorizedError(next);
   }
-  
+  console.log(_body);
   if (_body.city) _params.city = _body.city
   if (_body.state) _params.state = _body.state
   if (_body.country) _params.country = _body.country
