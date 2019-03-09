@@ -168,10 +168,6 @@ function RequestLocalController (RequestLocalModel) {
 RequestLocalController.prototype.getAll = function (request, response, next) {
   const loggedUser = request.decoded;
 
-  if (!loggedUser || loggedUser.role === 'client') {
-    throwUnauthorizedError(next);
-  }
-
   let baseAttributes = ['id', 'lat', 'lng', 'lat', 'text', 'description','address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country'];
   if (loggedUser.role === 'admin') {
     baseAttributes = baseAttributes.concat(['isCommerce','commerceName', 'commercePhone', 'commerceRelation']);
@@ -214,9 +210,15 @@ RequestLocalController.prototype.getAllLight = function (request, response, next
 
 RequestLocalController.prototype.getById = function (request, response, next) {
   var self = this;
+  const loggedUser = request.decoded;
+
+  let baseAttributes = ['id', 'lat', 'lng', 'lat', 'text', 'description','address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country'];
+  if (loggedUser.role === 'admin') {
+    baseAttributes = baseAttributes.concat(['isCommerce','commerceName', 'commercePhone', 'commerceRelation']);
+  }
    
   var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'text', 'description', 'support','address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country', 'isCommerce','commerceName', 'commercePhone', 'commerceRelation'].concat([
+    attributes: baseAttributes.concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Supports" WHERE "Supports"."requestLocal_id" = "RequestLocal"."id")'),
         'support'
