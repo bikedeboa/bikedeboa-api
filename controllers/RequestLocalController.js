@@ -166,8 +166,16 @@ function RequestLocalController (RequestLocalModel) {
 }
 
 RequestLocalController.prototype.getAll = function (request, response, next) {
-  var _query = {
-    attributes: ['id', 'lat', 'lng', 'lat', 'text', 'description','address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country', 'isCommerce','commerceName', 'commercePhone', 'commerceRelation'].concat([
+  if (!loggedUser || loggedUser.role === 'client') {
+    throwUnauthorizedError(next);
+  }
+
+  let baseAttributes = ['id', 'lat', 'lng', 'lat', 'text', 'description','address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country'];
+  if (loggedUser.role === 'admin') {
+    baseAttributes = baseAttributes.concat(['isCommerce','commerceName', 'commercePhone', 'commerceRelation']);
+  }
+  let _query = {
+    attributes: baseAttributes.concat([
       [
         models.sequelize.literal('(SELECT COUNT(*) FROM "Supports" WHERE "Supports"."requestLocal_id" = "RequestLocal"."id")'),
         'support'
