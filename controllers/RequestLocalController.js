@@ -210,10 +210,10 @@ RequestLocalController.prototype.getAllLight = function (request, response, next
 
 RequestLocalController.prototype.getById = function (request, response, next) {
   var self = this;
-  const loggedUser = request.decoded;
+  var loggedUser = request.decoded;
 
-  let baseAttributes = ['id', 'lat', 'lng', 'lat', 'text', 'description','address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country'];
-  if (loggedUser.role === 'admin') {
+  var baseAttributes = ['id', 'lat', 'lng', 'lat', 'text', 'description','address', 'photo', 'updatedAt', 'createdAt', 'views', 'city', 'state', 'country'];
+  if (loggedUser && loggedUser.role === 'admin') {
     baseAttributes = baseAttributes.concat(['isCommerce','commerceName', 'commercePhone', 'commerceRelation']);
   }
    
