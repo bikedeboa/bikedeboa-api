@@ -166,6 +166,8 @@ function RequestLocalController (RequestLocalModel) {
 }
 
 RequestLocalController.prototype.getAll = function (request, response, next) {
+  const loggedUser = request.decoded;
+
   if (!loggedUser || loggedUser.role === 'client') {
     throwUnauthorizedError(next);
   }
