@@ -1,18 +1,9 @@
 let debug = require('debug')('api:ctrlLocal')
 let models = require('../models')
-let AWS = require('aws-sdk')
+
 //let sharp = require('sharp')
 const env = process.env.NODE_ENV || 'development'
-//const AWS_PATH_PREFIX = (env === 'development') ? 'https://s3.amazonaws.com/bikedeboa-dev/' : 'https://s3.amazonaws.com/bikedeboa/'
-//const BUCKET_NAME = (env === 'development') ? 'bikedeboa-dev' : 'bikedeboa';
 
-const AWS_PATH_PREFIX = process.env.AWS_PATH_PREFIX || 'https://s3.amazonaws.com/bikedeboa-dev/';
-const BUCKET_NAME = process.env.BUCKET_NAME || 'bikedeboa';
-
-console.log('AWS_PATH_PREFIX', AWS_PATH_PREFIX);
-console.log('BUCKET_NAME', BUCKET_NAME);
-
-let s3 = new AWS.S3()
 
 // PRIVATE FN //
 
@@ -64,7 +55,7 @@ var saveFullImage = function (params) {
     if (!type) {
       reject(_photo)
     }
-
+    return false;
     // Send image blob to Amazon S3
     s3.putObject(
       {
@@ -141,6 +132,7 @@ var saveThumbImage = function (params) {
 }
 
 var deleteImage = function (name) {
+  return ;
   return new Promise(function (resolve, reject) {
     // valid photo 
     if (!name || name === '') resolve('')

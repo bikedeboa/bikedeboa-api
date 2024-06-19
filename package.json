@@ -15,7 +15,6 @@
   "author": "Denner Evaldt Machado <dnrevaldt@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.1644.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
