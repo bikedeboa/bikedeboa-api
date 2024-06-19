@@ -10,7 +10,7 @@
     "test": ""
   },
   "engines": {
-    "node": "8.6.0"
+    "node": "18.0"
   },
   "author": "Denner Evaldt Machado <dnrevaldt@gmail.com>",
   "license": "MIT",
