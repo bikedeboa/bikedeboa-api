@@ -38,3 +38,6 @@ jspm_packages
 
 # Other files
 .DS_Store
+
+.env
+.pyhton-version
