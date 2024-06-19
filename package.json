@@ -12,7 +12,7 @@
   "engines": {
     "node": "16.0"
   },
-  "author": "Denner Evaldt Machado <dnrevaldt@gmail.com>",
+  "author": "",
   "license": "MIT",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
