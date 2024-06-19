@@ -1,7 +1,7 @@
 let debug = require('debug')('api:ctrlLocal')
 let models = require('../models')
 let AWS = require('aws-sdk')
-let sharp = require('sharp')
+//let sharp = require('sharp')
 const env = process.env.NODE_ENV || 'development'
 //const AWS_PATH_PREFIX = (env === 'development') ? 'https://s3.amazonaws.com/bikedeboa-dev/' : 'https://s3.amazonaws.com/bikedeboa/'
 //const BUCKET_NAME = (env === 'development') ? 'bikedeboa-dev' : 'bikedeboa';
@@ -87,6 +87,8 @@ var saveFullImage = function (params) {
 var saveThumbImage = function (params) {
   return new Promise(function (resolve, reject) {
     // params
+
+    return false;
     let _photo = params.photo
     let _id = params.id
 
@@ -107,6 +109,8 @@ var saveThumbImage = function (params) {
     if (!type) {
       reject(_photo)
     }
+
+  
 
     sharp(binaryData)
       .resize(100, 100)
