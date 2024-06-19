@@ -12,7 +12,7 @@
   "engines": {
     "node": "16.0"
   },
-  "author": "ParaCiclo team",
+  "author": "ParaCiclo team tadeu@paraciclo.com.br",
   "license": "MIT",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
