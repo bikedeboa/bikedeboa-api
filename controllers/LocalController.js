@@ -7,7 +7,7 @@ const env = process.env.NODE_ENV || 'development'
 //const BUCKET_NAME = (env === 'development') ? 'bikedeboa-dev' : 'bikedeboa';
 
 const AWS_PATH_PREFIX = process.env.AWS_PATH_PREFIX || 'https://s3.amazonaws.com/bikedeboa-dev/';
-const BUCKET_NAME = process.env.BUCKET_NAME || 'bikedeboa-dev';
+const BUCKET_NAME = process.env.BUCKET_NAME || 'bikedeboa';
 
 console.log('AWS_PATH_PREFIX', AWS_PATH_PREFIX);
 console.log('BUCKET_NAME', BUCKET_NAME);
