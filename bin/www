@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+require('dotenv').config();
 let app = require('../app')
 let debug = require('debug')('api:server')
 let models = require('../models')
